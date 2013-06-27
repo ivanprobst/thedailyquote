@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>The Daily Quote</title>
+
+<script src="jq.js"></script>
+<link rel="stylesheet" type="text/css" href="reset.css">
+
+<style type="text/css">
+body{
+	background: #000;
+}
+
+
+#container{
+}
+#quote{
+	position: absolute;
+	top: 0; right: 0;
+	color: #fff;
+}
+#top-bar, #bottom-bar{
+	width: 100%;
+	height: 80px;
+	background: #000;
+	color: #fff;
+}
+
+/* alernate */
+#info{
+	position: absolute;
+	display: block;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+}
+
+img.bg {
+  /* Set rules to fill background */
+  min-width: 1000px; /* define first... */
+  min-height: 66%; /* then set percentage according to min-width / real size pic ratio */
+	
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+	
+  /* Set up positioning */
+  position: fixed;
+  top: -50px;
+  left: 0;
+}
+
+@media screen and (max-width: 1000px) { /* Specific to this particular image */
+  img.bg {
+    left: 50%;
+    margin-left: -500px;   /* 50% */
+  }
+}
+
+</style>
+
+<script type="text/javascript">
+
+var oPicWidth = 0;
+var oPicHeight = 0;
+var bWidth = 0;
+var bHeight = 0;
+/*
+$(document).ready(function(){
+	oPicWidth = 1500;
+	oPicHeight = 1000;
+
+	bWidth = $(window).width();
+	bHeight = $(window).height();
+
+	displayTxt(bWidth+" - "+bHeight);
+});
+
+
+$(window).resize(function(){
+     var D = document;
+
+	bWidth = $(window).width();
+	bHeight = $(window).height();
+	bHeight = Math.max(Math.max(D.body.scrollHeight, D.documentElement.scrollHeight), Math.max(D.body.offsetHeight, D.documentElement.offsetHeight), Math.max(D.body.clientHeight, D.documentElement.clientHeight));
+
+	printPic();
+});
+
+function printPic(){
+	var aPicWidth = 0;
+	var aPicHeight = 0;
+	var redFact = 0;
+
+	var widthFact = oPicWidth / bWidth;
+	var heightFact = oPicHeight / bHeight;
+
+	if(widthFact > heightFact){
+		aPicWidth = bWidth;
+		aPicHeight = oPicHeight / widthFact;
+	}
+	else{
+		aPicHeight = bHeight;
+		aPicWidth = oPicWidth / heightFact;
+	}
+
+	displayTxt("browser: "+bWidth+" - "+bHeight+", factors: "+widthFact+" - "+heightFact+", pic size: "+aPicWidth+" - "+aPicHeight);
+
+	$("#image").width(aPicWidth);
+	$("#image").height(aPicHeight);
+
+}
+
+function displayTxt(txt){
+	$("#top-bar").html(txt);
+}
+*/
+</script>
+
+</head>
+
+<body>
+
+<!--
+	<div id="container">
+		<div id="top-bar"></div>
+		<img id="image" src="astier.jpg" />
+		<div id="quote">Ils se battent pour la dignit&eacute; des faibles.</div>
+		<div id="bottom-bar"></div>
+	</div>
+-->
+	<img class="bg" src="astier.jpg" />
+<!--
+	<div id="info">
+		<div id="quote">Ils se battent pour la dignit&eacute; des faibles.</div>
+		<div id="menu"></div>
+	</div>
+-->
+</body>
+
+</html>
