@@ -8,6 +8,10 @@
 <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js"></script>
 <![endif]-->
 
+<!--[if lt IE 9]>
+<script src="assets/scripts/html5shiv.js"></script>
+<![endif]-->
+
 <style type="text/css">
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
 	 
@@ -17,7 +21,7 @@
 	}
 
 	#container{
-		text-align: center;
+		background: #ccc;
 	}
 	
 	.bar{
@@ -25,6 +29,25 @@
 		height: 70px; width: 100%;
 		background: #999;
 	}
+	
+	header{}
+		header h1{
+			padding: 15px 0 0 20px;
+			font-size: 2em;
+			color: aaa;
+		}
+	
+	#quote-container{
+		position: relative;
+		margin: auto;
+	}
+		#quote-container blockquote{
+			position: absolute;
+			top: 20px; left: 20px;
+			width: 20%;
+			font-size: 1.8em;
+			color: #fff;
+		}
 </style>
 
 <script type="text/javascript">
@@ -35,13 +58,18 @@
 	var cPicWidth = 0;
 	var cPicHeight = 0;
 	
-	var imgSrc = "assets/photos/marcus_aurelius.jpg";
+	var quotePhoto = "assets/photos/marcus_aurelius.jpg";
+	var quoteTxt = "If unwilling to rise in the morning, say to thyself, 'I awake to do the work of a man.'";
+	var quoteAuthor = "Marcus Aurelius";
 	
 	// INIT
 	$(document).ready(function(){
 		updateWindowSize();	 displayTxt(windowWidth+"*"+windowHeight);
 		
-		updateOriginalPicSize(imgSrc);
+		updateOriginalPicSize(quotePhoto);
+		
+		$("#quote-container blockquote p").html(quoteTxt);
+		$("#quote-container blockquote footer").html("&mdash; "+quoteAuthor);
 	});
 
 	// RESIZE EVENT
@@ -56,9 +84,11 @@
 		cPicHeight = windowHeight - 2*($(".bar").height());
 		if(oPicHeight >= cPicHeight){
 			cPicWidth = (cPicHeight / oPicHeight) * oPicWidth;
-			$("#image").width(cPicWidth);
-			$("#image").height(cPicHeight);
-			$("#image").attr("src",imgSrc);
+			
+			$("#quote-container img").attr("src",quotePhoto);
+			$("#quote-container").width(cPicWidth);
+			$("#quote-container img").width(cPicWidth);
+			$("#quote-container img").height(cPicHeight);
 			//alert("ok, photo is: "+cPicWidth+"*"+cPicHeight);
 		}
 		else {
@@ -72,7 +102,7 @@
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 	}
 	function displayTxt(txt){
-        $("#top-bar").html(txt);
+        $("header h1 span").html(txt);
 	}
 	function updateOriginalPicSize(imgFile) {
 		var newImg = new Image();
@@ -80,12 +110,10 @@
 		newImg.onload = function() {
 			oPicWidth = newImg.width;
 			oPicHeight = newImg.height;
-		  
+		
 			setPhotoSize();
-			//alert ('The image size is '+oPicWidth+'*'+oPicHeight);
 		}
-
-		newImg.src = imgFile; // this must be done AFTER setting onload
+		newImg.src = imgFile;
 	}
 </script>
 
@@ -94,10 +122,23 @@
 <body>
 
 	<div id="container">
-		<div id="top-bar" class="bar"></div>
-		<img id="image" src="" />
-		<!--<div id="quote">Ils se battent pour la dignit&eacute; des faibles.</div>-->
-		<div id="bottom-bar" class="bar"></div>
+		<header class="bar">
+			<h1>The Daily Quote (<span></span>)</h1>
+		</header>
+		
+		<section id="quote-container">
+			<img src="" />
+			<blockquote>
+				<p></p>
+				<footer></footer>
+			</blockquote>
+		</section>
+		
+		<footer id="bottom-bar" class="bar">
+			<nav>
+				<div></div>
+			</nav>
+		</footer>
 	</div>
 
 </body>
