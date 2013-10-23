@@ -4,138 +4,102 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
+<!--[if lt IE 8]>
+<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js"></script>
+<![endif]-->
+
 <style type="text/css">
-@import url(http://reset5.googlecode.com/hg/reset.min.css);
- 
-body{
-	background: #000;
-}
+	@import url(http://reset5.googlecode.com/hg/reset.min.css);
+	 
+	body{
+		background: #000;
+		height: 100%;
+	}
 
-
-#container{
-}
-#quote{
-	position: absolute;
-	top: 0; right: 0;
-	color: #fff;
-}
-#top-bar, #bottom-bar{
-	width: 100%;
-	height: 80px;
-	background: #000;
-	color: #fff;
-}
-
-/* alernate */
-#info{
-	position: absolute;
-	display: block;
-	width: 100%;
-	bottom: 0;
-	left: 0;
-}
-
-img.bg {
-  /* Set rules to fill background */
-  min-width: 1000px; /* define first... */
-  min-height: 66%; /* then set percentage according to min-width / real size pic ratio */
+	#container{
+		text-align: center;
+	}
 	
-  /* Set up proportionate scaling */
-  width: 100%;
-  height: auto;
-	
-  /* Set up positioning */
-  position: fixed;
-  top: -50px;
-  left: 0;
-}
-
-@media screen and (max-width: 1000px) { /* Specific to this particular image */
-  img.bg {
-    left: 50%;
-    margin-left: -500px;   /* 50% */
-  }
-}
-
+	.bar{
+		display: block;
+		height: 70px; width: 100%;
+		background: #999;
+	}
 </style>
 
 <script type="text/javascript">
+	var oPicWidth = 0;
+	var oPicHeight = 0;
+	var windowWidth = 0;
+	var windowHeight = 0;
+	var cPicWidth = 0;
+	var cPicHeight = 0;
+	
+	var imgSrc = "assets/photos/marcus_aurelius.jpg";
+	
+	// INIT
+	$(document).ready(function(){
+		updateWindowSize();	 displayTxt(windowWidth+"*"+windowHeight);
+		
+		updateOriginalPicSize(imgSrc);
+	});
 
-var oPicWidth = 0;
-var oPicHeight = 0;
-var bWidth = 0;
-var bHeight = 0;
-/*
-$(document).ready(function(){
-	oPicWidth = 1500;
-	oPicHeight = 1000;
+	// RESIZE EVENT
+	$(window).resize(function(){
+		updateWindowSize(); displayTxt(windowWidth+"*"+windowHeight);
 
-	bWidth = $(window).width();
-	bHeight = $(window).height();
+		setPhotoSize();
+	});
 
-	displayTxt(bWidth+" - "+bHeight);
-});
-
-
-$(window).resize(function(){
-     var D = document;
-
-	bWidth = $(window).width();
-	bHeight = $(window).height();
-	bHeight = Math.max(Math.max(D.body.scrollHeight, D.documentElement.scrollHeight), Math.max(D.body.offsetHeight, D.documentElement.offsetHeight), Math.max(D.body.clientHeight, D.documentElement.clientHeight));
-
-	printPic();
-});
-
-function printPic(){
-	var aPicWidth = 0;
-	var aPicHeight = 0;
-	var redFact = 0;
-
-	var widthFact = oPicWidth / bWidth;
-	var heightFact = oPicHeight / bHeight;
-
-	if(widthFact > heightFact){
-		aPicWidth = bWidth;
-		aPicHeight = oPicHeight / widthFact;
+	// SET PHOTO
+	function setPhotoSize(){
+		cPicHeight = windowHeight - 2*($(".bar").height());
+		if(oPicHeight >= cPicHeight){
+			cPicWidth = (cPicHeight / oPicHeight) * oPicWidth;
+			$("#image").width(cPicWidth);
+			$("#image").height(cPicHeight);
+			$("#image").attr("src",imgSrc);
+			//alert("ok, photo is: "+cPicWidth+"*"+cPicHeight);
+		}
+		else {
+			alert("ko, increasing each bar height to: "+Math.floor((windowHeight - oPicHeight)/2));
+		}
 	}
-	else{
-		aPicHeight = bHeight;
-		aPicWidth = oPicWidth / heightFact;
+	
+	// TOOLBOX
+	function updateWindowSize(){
+		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 	}
+	function displayTxt(txt){
+        $("#top-bar").html(txt);
+	}
+	function updateOriginalPicSize(imgFile) {
+		var newImg = new Image();
 
-	displayTxt("browser: "+bWidth+" - "+bHeight+", factors: "+widthFact+" - "+heightFact+", pic size: "+aPicWidth+" - "+aPicHeight);
+		newImg.onload = function() {
+			oPicWidth = newImg.width;
+			oPicHeight = newImg.height;
+		  
+			setPhotoSize();
+			//alert ('The image size is '+oPicWidth+'*'+oPicHeight);
+		}
 
-	$("#image").width(aPicWidth);
-	$("#image").height(aPicHeight);
-
-}
-
-function displayTxt(txt){
-	$("#top-bar").html(txt);
-}
-*/
+		newImg.src = imgFile; // this must be done AFTER setting onload
+	}
 </script>
 
 </head>
 
 <body>
 
-<!--
 	<div id="container">
-		<div id="top-bar"></div>
-		<img id="image" src="astier.jpg" />
-		<div id="quote">Ils se battent pour la dignit&eacute; des faibles.</div>
-		<div id="bottom-bar"></div>
+		<div id="top-bar" class="bar"></div>
+		<img id="image" src="" />
+		<!--<div id="quote">Ils se battent pour la dignit&eacute; des faibles.</div>-->
+		<div id="bottom-bar" class="bar"></div>
 	</div>
--->
-	<img class="bg" src="astier.jpg" />
-<!--
-	<div id="info">
-		<div id="quote">Ils se battent pour la dignit&eacute; des faibles.</div>
-		<div id="menu"></div>
-	</div>
--->
+
 </body>
 
 </html>
