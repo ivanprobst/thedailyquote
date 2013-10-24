@@ -26,7 +26,7 @@
 	
 	.bar{
 		display: block;
-		height: 70px; width: 100%;
+		height: 80px; width: 100%;
 		background: #999;
 	}
 	
@@ -34,7 +34,8 @@
 		header h1{
 			padding: 15px 0 0 20px;
 			font-size: 2em;
-			color: aaa;
+			color: #000;
+			opacity: 0.1;
 		}
 	
 	#quote-container{
@@ -48,6 +49,31 @@
 			font-size: 1.8em;
 			color: #fff;
 		}
+		
+	footer{
+	}
+		footer nav{
+			display: block;
+			overflow: hidden;
+			padding: 10px 0 0 0;
+			width: 321px;
+			margin: 0 auto;
+		}
+			footer nav a{
+				float: left; display: block;
+				width: 80px; height: 60px;
+				background: url("assets/img/icons.png") no-repeat;
+				cursor: pointer;
+				opacity: 0.1;
+				transition: opacity .5s ease-in-out;
+				-moz-transition: opacity .5s ease-in-out;
+				-webkit-transition: opacity .5s ease-in-out;
+			}
+				footer nav a:hover{opacity: 0.7;}
+				#about-menu-item{background-position: 5px -7px;}
+				#quote-menu-item{background-position: -147px -7px;}
+				#share-menu-item{background-position: -74px -7px;}
+				#save-menu-item{background-position: -220px -7px;}
 </style>
 
 <script type="text/javascript">
@@ -127,16 +153,19 @@
 		</header>
 		
 		<section id="quote-container">
-			<img src="" />
+			<img src="">
 			<blockquote>
 				<p></p>
 				<footer></footer>
 			</blockquote>
 		</section>
 		
-		<footer id="bottom-bar" class="bar">
+		<footer class="bar">
 			<nav>
-				<div></div>
+				<a href="#" id="about-menu-item" alt="About Website"></a>
+				<a href="#" id="quote-menu-item" alt="About Quote"></a>
+				<a href="#" id="share-menu-item" alt="Share"></a>
+				<a href="#" id="save-menu-item" alt="Save"></a>
 			</nav>
 		</footer>
 	</div>
