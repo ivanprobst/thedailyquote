@@ -12,6 +12,8 @@
 	<!--[if lt IE 9]>
 	<script src="assets/scripts/html5shiv.js"></script>
 	<![endif]-->
+	
+	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab|Open+Sans' rel='stylesheet' type='text/css'>
 
 <style type="text/css">
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
@@ -19,43 +21,54 @@
 	body{
 		background: #000;
 		height: 100%;
+	
+		font-family: 'Arbutus Slab', 'Open Sans', serif;
 	}
 
 	#container{
-		background: #ccc;
+		background: #e7e9e8;
 	}
 	
 	.bar{
+		position: relative; z-index:500;
 		display: block;
 		height: 80px; width: 100%;
-		background: #999;
+		background: #D5D7D6;
 	}
 	
-	header{}
+	#container>header{
+		border-bottom: 1px solid #aeb0af;
+		box-shadow: 0px 2px 8px #aeb0af;
+	}
 		header h1{
 			padding: 15px 0 0 20px;
-			font-size: 2em;
+			font-size: 2.8em;
 			color: #000;
+			text-align: center;
 			opacity: 0.1;
 		}
 	
 	#quote-container{
-		position: relative;
+		position: relative; z-index:5;
 		margin: 0 auto;
 		line-height: 0;
 	}
-		#quote-container img{
-		}
+		#quote-container img{}
 		#quote-container blockquote{
 			position: absolute;
-			top: 20px; left: 20px;
-			width: 20%;
+			top: 30px; left: 30px;
+			width: 40%;
 			line-height: 1.1em;
 			font-size: 1.8em;
 			color: #fff;
+			opacity: 0.8;
 		}
+			#quote-container blockquote p{}
+			#quote-container blockquote footer{margin-top: 10px; padding-left: 0%;}
 		
-	footer{
+	#container>footer{
+		border-top: 1px solid #aeb0af;
+		box-shadow: 0px -2px 8px #aeb0af;
 	}
 		footer nav{
 			display: block;
@@ -95,28 +108,22 @@
 	
 	// INIT
 	$(document).ready(function(){
-		updateWindowSize();	 displayTxt(windowWidth+"*"+windowHeight);
-		
-		updateOriginalPicSize(quotePhoto);
-		
-		$("#quote-container blockquote p").html(quoteTxt);
-		$("#quote-container blockquote footer").html("&mdash; "+quoteAuthor);
+		updateWindowSize();	//displayTxt(windowWidth+"*"+windowHeight);
+		setOriginalQuoteInfo();
 	});
 
 	// RESIZE EVENT
 	$(window).resize(function(){
-		updateWindowSize(); displayTxt(windowWidth+"*"+windowHeight);
-
-		setPhotoSize();
+		updateWindowSize(); //displayTxt(windowWidth+"*"+windowHeight);
+		updatePhotoSize();
 	});
 
 	// SET PHOTO
-	function setPhotoSize(){
-		cPicHeight = windowHeight - 2*($(".bar").height());
+	function updatePhotoSize(){
+		cPicHeight = windowHeight - (2*($(".bar").height()) + 2);
 		if(oPicHeight >= cPicHeight){
 			cPicWidth = (cPicHeight / oPicHeight) * oPicWidth;
 			
-			$("#quote-container img").attr("src",quotePhoto);
 			$("#quote-container").width(cPicWidth);
 			$("#quote-container img").width(cPicWidth);
 			$("#quote-container img").height(cPicHeight);
@@ -132,19 +139,23 @@
 		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 	}
-	function displayTxt(txt){
-        $("header h1 span").html(txt);
-	}
-	function updateOriginalPicSize(imgFile) {
+	function setOriginalQuoteInfo() {
 		var newImg = new Image();
 
 		newImg.onload = function() {
 			oPicWidth = newImg.width;
 			oPicHeight = newImg.height;
 		
-			setPhotoSize();
+			updatePhotoSize();
 		}
-		newImg.src = imgFile;
+		
+		$("#quote-container img").attr("src",quotePhoto);
+		$("#quote-container blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
+		$("#quote-container blockquote footer").html("&mdash; "+quoteAuthor);
+		newImg.src = quotePhoto;
+	}
+	function displayTxt(txt){
+        $("header h1 span").html(" ("+txt+")");
 	}
 </script>
 
@@ -154,7 +165,7 @@
 
 	<div id="container">
 		<header class="bar">
-			<h1>The Daily Quote (<span></span>)</h1>
+			<h1>&mdash; The Daily Quote &mdash;<span></span></h1>
 		</header>
 		
 		<section id="quote-container">
