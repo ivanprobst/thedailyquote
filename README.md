@@ -4,10 +4,10 @@ thedailyquote
 thedailyquote project
 
 tbd
-* centering fix for IE
 * quote placement
 * better margin design
 * menu actions
+* pic too small fallback
 
 scaling
 * quote txt

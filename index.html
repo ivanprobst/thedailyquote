@@ -1,16 +1,17 @@
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-<title>The Daily Quote</title>
+	<title>The Daily Quote</title>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
-<!--[if lt IE 8]>
-<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js"></script>
-<![endif]-->
+	<!--[if lt IE 8]>
+	<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js"></script>
+	<![endif]-->
 
-<!--[if lt IE 9]>
-<script src="assets/scripts/html5shiv.js"></script>
-<![endif]-->
+	<!--[if lt IE 9]>
+	<script src="assets/scripts/html5shiv.js"></script>
+	<![endif]-->
 
 <style type="text/css">
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
@@ -40,12 +41,16 @@
 	
 	#quote-container{
 		position: relative;
-		margin: auto;
+		margin: 0 auto;
+		line-height: 0;
 	}
+		#quote-container img{
+		}
 		#quote-container blockquote{
 			position: absolute;
 			top: 20px; left: 20px;
 			width: 20%;
+			line-height: 1.1em;
 			font-size: 1.8em;
 			color: #fff;
 		}
@@ -63,7 +68,7 @@
 				float: left; display: block;
 				width: 80px; height: 60px;
 				background: url("assets/img/icons.png") no-repeat;
-				cursor: pointer;
+				
 				opacity: 0.1;
 				transition: opacity .5s ease-in-out;
 				-moz-transition: opacity .5s ease-in-out;
