@@ -19,9 +19,7 @@
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
 	 
 	body{
-		background: #000;
-		height: 100%;
-	
+		background: url("assets/photos/marcus_aurelius.jpg") no-repeat; background-size: auto 100%;
 		font-family: 'Arbutus Slab', 'Open Sans', serif;
 	}
 
@@ -30,14 +28,20 @@
 	}
 	
 	.bar{
-		position: relative; z-index:500;
+		position: absolute;
 		display: block;
 		height: 80px; width: 100%;
 		background: #D5D7D6;
+
+		opacity: 0.7;
+		transition: opacity .25s ease-in-out;
+		-moz-transition: opacity .25s ease-in-out;
+		-webkit-transition: opacity .25s ease-in-out;
 	}
+		.bar:hover{opacity: 0.7;}
 	
 	#container>header{
-		border-bottom: 1px solid #aeb0af;
+		top: 0;
 		box-shadow: 0px 2px 8px #aeb0af;
 	}
 		header h1{
@@ -45,7 +49,7 @@
 			font-size: 2.8em;
 			color: #000;
 			text-align: center;
-			opacity: 0.1;
+			opacity: 0.6;
 		}
 	
 	#quote-container{
@@ -54,20 +58,20 @@
 		line-height: 0;
 	}
 		#quote-container img{}
-		#quote-container blockquote{
+		blockquote{
 			position: absolute;
-			top: 30px; left: 30px;
+			top: 120px; left: 50px;
 			width: 40%;
 			line-height: 1.1em;
 			font-size: 1.8em;
 			color: #fff;
 			opacity: 0.8;
 		}
-			#quote-container blockquote p{}
-			#quote-container blockquote footer{margin-top: 10px; padding-left: 0%;}
+			blockquote p{}
+			blockquote footer{margin-top: 10px; padding-left: 0%;}
 		
 	#container>footer{
-		border-top: 1px solid #aeb0af;
+		bottom: 0;
 		box-shadow: 0px -2px 8px #aeb0af;
 	}
 		footer nav{
@@ -138,6 +142,7 @@
 	function updateWindowSize(){
 		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		$("body").height(windowHeight);
 	}
 	function setOriginalQuoteInfo() {
 		var newImg = new Image();
@@ -150,8 +155,8 @@
 		}
 		
 		$("#quote-container img").attr("src",quotePhoto);
-		$("#quote-container blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
-		$("#quote-container blockquote footer").html("&mdash; "+quoteAuthor);
+		$("blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
+		$("blockquote footer").html("&mdash; "+quoteAuthor);
 		newImg.src = quotePhoto;
 	}
 	function displayTxt(txt){
@@ -168,13 +173,18 @@
 			<h1>&mdash; The Daily Quote &mdash;<span></span></h1>
 		</header>
 		
-		<section id="quote-container">
+		<!--<section id="quote-container">
 			<img src="">
 			<blockquote>
 				<p></p>
 				<footer></footer>
 			</blockquote>
-		</section>
+		</section>-->
+		
+			<blockquote>
+				<p></p>
+				<footer></footer>
+			</blockquote>
 		
 		<footer class="bar">
 			<nav>

@@ -4,7 +4,7 @@ thedailyquote
 thedailyquote project
 
 tbd
-* if photo width too big, scoll bars appear -> prevent that
+* alternative design: center background
 * pic too small fallback
 * menu actions
 
@@ -26,4 +26,4 @@ author parameters:
 * author name
 * photo link
 * position (top, left, width)
-* font color, font size
+* font color, font size, bars color
