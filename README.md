@@ -4,12 +4,12 @@ thedailyquote
 thedailyquote project
 
 tbd
-* alternative design: center background
-* pic too small fallback
+* scaling without scroll bars
+* txt still inside when low width
+* better look
+* scale quote txt
 * menu actions
-
-scaling
-* quote txt
+* pic too small fallback
 
 icons ref
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project

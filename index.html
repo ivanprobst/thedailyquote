@@ -19,12 +19,14 @@
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
 	 
 	body{
-		background: url("assets/photos/marcus_aurelius.jpg") no-repeat; background-size: auto 100%;
+		background: url("assets/photos/marcus_aurelius.jpg") no-repeat;
+		background-size: auto 100%;
+		background-position: center;
 		font-family: 'Arbutus Slab', 'Open Sans', serif;
 	}
 
 	#container{
-		background: #e7e9e8;
+		position: relative;
 	}
 	
 	.bar{
@@ -60,9 +62,9 @@
 		#quote-container img{}
 		blockquote{
 			position: absolute;
-			top: 120px; left: 50px;
-			width: 40%;
-			line-height: 1.1em;
+			left: 30px; top: 120px; 
+			width: 35%;
+			line-height: 1.3em;
 			font-size: 1.8em;
 			color: #fff;
 			opacity: 0.8;
@@ -91,7 +93,7 @@
 				-moz-transition: opacity .5s ease-in-out;
 				-webkit-transition: opacity .5s ease-in-out;
 			}
-				footer nav a:hover{opacity: 0.7;}
+				footer nav a:hover{opacity: 0.8;}
 				#about-menu-item{background-position: 5px -7px;}
 				#quote-menu-item{background-position: -147px -7px;}
 				#share-menu-item{background-position: -74px -7px;}
@@ -124,13 +126,18 @@
 
 	// SET PHOTO
 	function updatePhotoSize(){
-		cPicHeight = windowHeight - (2*($(".bar").height()) + 2);
-		if(oPicHeight >= cPicHeight){
+		cPicHeight = windowHeight;
+		if(oPicHeight >= windowHeight){
 			cPicWidth = (cPicHeight / oPicHeight) * oPicWidth;
 			
-			$("#quote-container").width(cPicWidth);
-			$("#quote-container img").width(cPicWidth);
-			$("#quote-container img").height(cPicHeight);
+			$("#container").height(windowHeight);
+			$("#container").width(cPicWidth);
+			$("#container").css("margin-left",(windowWidth-cPicWidth)/2);
+			$(".bar").width(cPicWidth);
+			//$("#container").width(cPicWidth);
+			//$("#quote-container").width(cPicWidth);
+			//$("#quote-container img").width(cPicWidth);
+			//$("#quote-container img").height(cPicHeight);
 			//alert("ok, photo is: "+cPicWidth+"*"+cPicHeight);
 		}
 		else {
@@ -154,7 +161,8 @@
 			updatePhotoSize();
 		}
 		
-		$("#quote-container img").attr("src",quotePhoto);
+		//$("#quote-container img").attr("src",quotePhoto);
+		// QUOTE INIT
 		$("blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
 		$("blockquote footer").html("&mdash; "+quoteAuthor);
 		newImg.src = quotePhoto;
@@ -181,10 +189,10 @@
 			</blockquote>
 		</section>-->
 		
-			<blockquote>
-				<p></p>
-				<footer></footer>
-			</blockquote>
+		<blockquote>
+			<p></p>
+			<footer></footer>
+		</blockquote>
 		
 		<footer class="bar">
 			<nav>
