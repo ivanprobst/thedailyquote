@@ -19,13 +19,13 @@
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
 	 
 	body{
-		background-repeat: no-repeat;
-		background-size: auto 100%;
-		background-position: center;
 		font-family: 'Arbutus Slab', 'Open Sans', serif;
 	}
 
 	#container{
+		background-repeat: no-repeat;
+		background-size: auto 100%;
+		background-position: center;
 		position: relative;
 		margin: 0 auto;
 		border-left: 1px solid #333;
@@ -105,7 +105,7 @@
 	var quotePhoto = "assets/photos/marcus_aurelius.jpg";
 	var quoteTxt = "If unwilling to rise in the morning, say to thyself, 'I awake to do the work of a man.'";
 	var quoteAuthor = "Marcus Aurelius";
-	var quoteTxtSettings = {"positionX":3, "positionY":11, "containerWidth":35, "fontSize":3, "fontColor":"fff", "barsColor":"D5D7D6"};
+	var quoteTxtSettings = {"positionX":3, "positionY":5, "containerWidth":35, "fontSize":3, "fontColor":"fff", "barsColor":"D5D7D6"};
 	
 	// INIT
 	$(document).ready(function(){
@@ -123,41 +123,39 @@
 	function updateScaling(){
 		//displayTxt(windowWidth+"*"+windowHeight);
 		
+		// set the current photo size
 		if(oPicHeight >= windowHeight){
 			cPicHeight = windowHeight;
-			var ratio = cPicHeight / oPicHeight;
-			cPicWidth = Math.floor(ratio * oPicWidth);
+			$("body").css("marginTop","0px");
+		}
+		else{
+			cPicHeight = oPicHeight;
+			$("body").css("marginTop",Math.floor((windowHeight-cPicHeight)/2)+"px");
+		}
+		var ratio = cPicHeight / oPicHeight;
+		cPicWidth = Math.floor(ratio * oPicWidth);
 			
-			// container scaling
-			$("#container").height(windowHeight);
-			if(cPicWidth>windowWidth)
-				$("#container").width(windowWidth-2); // minus 2 due to container borders. automatize???
-			else
-				$("#container").width(cPicWidth);
+		// container scaling
+		$("#container").height(cPicHeight);
+		if(cPicWidth>windowWidth)
+			$("#container").width(windowWidth-2*parseInt($("#container").css("border-left-width"),10)); // substracting the container border size
+		else
+			$("#container").width(cPicWidth);
 				
-			// quote txt scaling
-			console.log("test: "+quoteTxtSettings.fontSize*ratio);
-			$("blockquote").css("font-size", quoteTxtSettings.fontSize*ratio+"em");
-		}
-		else {
-			alert("ko, increasing each bar height to: "+Math.floor((windowHeight - oPicHeight)/2));
-		}
+		// quote txt scaling
+		$("blockquote").css("font-size", quoteTxtSettings.fontSize*ratio+"em");
+
 	}
 	
-	// TOOLBOX
-	function updateWindowSize(){
-		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		$("body").height(windowHeight);
-	}
 	function initQuote() {
 		// init quote content
-		$('body').css('background-image', 'url(' + quotePhoto + ')');
+		$('#container').css('background-image', 'url(' + quotePhoto + ')');
 		$("blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
 		$("blockquote footer").html("&mdash; "+quoteAuthor);
 		
 		// init quote styling
 		$(".bar").css("background-color", "#"+quoteTxtSettings.barsColor);
+		$("blockquote").css("marginTop",$("header").height());
 		$("blockquote").css("color", "#"+quoteTxtSettings.fontColor);
 		$("blockquote").width(quoteTxtSettings.containerWidth+"%");
 		$("blockquote").css("left", quoteTxtSettings.positionX+"%");
@@ -172,6 +170,12 @@
 		}
 		
 		newImg.src = quotePhoto;
+	}
+	
+	// TOOLBOX
+	function updateWindowSize(){
+		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 	}
 	function displayTxt(txt){
         $("header h1 span").html(" ("+txt+")");

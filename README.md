@@ -1,12 +1,9 @@
 thedailyquote
 =============
 
-thedailyquote project
-
 tbd
-* pic too small fallback
 * menu opening actions
-* when scaling top position, offset the header
+* set quote vars in final objects
 * ie fixes
 
 icons ref
