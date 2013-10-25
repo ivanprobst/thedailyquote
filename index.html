@@ -19,7 +19,7 @@
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
 	 
 	body{
-		background: url("assets/photos/marcus_aurelius.jpg") no-repeat;
+		background-repeat: no-repeat;
 		background-size: auto 100%;
 		background-position: center;
 		font-family: 'Arbutus Slab', 'Open Sans', serif;
@@ -36,7 +36,6 @@
 		position: absolute;
 		display: block;
 		width: 100%;
-		background: #D5D7D6;
 
 		opacity: 0.7;
 		transition: opacity .25s ease-in-out;
@@ -62,11 +61,7 @@
 	
 	blockquote{
 		position: absolute;
-		left: 40px; top: 120px; 
-		width: 35%;
 		line-height: 1.3em;
-		font-size: 2em;
-		color: #fff;
 		opacity: 0.8;
 	}
 		blockquote p{text-indent: -18px;}
@@ -110,31 +105,39 @@
 	var quotePhoto = "assets/photos/marcus_aurelius.jpg";
 	var quoteTxt = "If unwilling to rise in the morning, say to thyself, 'I awake to do the work of a man.'";
 	var quoteAuthor = "Marcus Aurelius";
+	var quoteTxtSettings = {"positionX":3, "positionY":11, "containerWidth":35, "fontSize":3, "fontColor":"fff", "barsColor":"D5D7D6"};
 	
 	// INIT
 	$(document).ready(function(){
 		updateWindowSize();
-		setOriginalQuoteInfo();
+		initQuote();
 	});
 
 	// RESIZE EVENT
 	$(window).resize(function(){
 		updateWindowSize();
-		updatePhotoSize();
+		updateScaling();
 	});
 
 	// SET PHOTO
-	function updatePhotoSize(){
+	function updateScaling(){
 		//displayTxt(windowWidth+"*"+windowHeight);
-		cPicHeight = windowHeight;
+		
 		if(oPicHeight >= windowHeight){
-			cPicWidth = (cPicHeight / oPicHeight) * oPicWidth;
+			cPicHeight = windowHeight;
+			var ratio = cPicHeight / oPicHeight;
+			cPicWidth = Math.floor(ratio * oPicWidth);
 			
+			// container scaling
 			$("#container").height(windowHeight);
 			if(cPicWidth>windowWidth)
-				$("#container").width(windowWidth-2); // minus 2 due to container borders
+				$("#container").width(windowWidth-2); // minus 2 due to container borders. automatize???
 			else
-				$("#container").width(Math.floor(cPicWidth));
+				$("#container").width(cPicWidth);
+				
+			// quote txt scaling
+			console.log("test: "+quoteTxtSettings.fontSize*ratio);
+			$("blockquote").css("font-size", quoteTxtSettings.fontSize*ratio+"em");
 		}
 		else {
 			alert("ko, increasing each bar height to: "+Math.floor((windowHeight - oPicHeight)/2));
@@ -147,19 +150,27 @@
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		$("body").height(windowHeight);
 	}
-	function setOriginalQuoteInfo() {
+	function initQuote() {
+		// init quote content
+		$('body').css('background-image', 'url(' + quotePhoto + ')');
+		$("blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
+		$("blockquote footer").html("&mdash; "+quoteAuthor);
+		
+		// init quote styling
+		$(".bar").css("background-color", "#"+quoteTxtSettings.barsColor);
+		$("blockquote").css("color", "#"+quoteTxtSettings.fontColor);
+		$("blockquote").width(quoteTxtSettings.containerWidth+"%");
+		$("blockquote").css("left", quoteTxtSettings.positionX+"%");
+		$("blockquote").css("top", quoteTxtSettings.positionY+"%");
+		
 		var newImg = new Image();
-
 		newImg.onload = function() {
 			oPicWidth = newImg.width;
 			oPicHeight = newImg.height;
 		
-			updatePhotoSize();
+			updateScaling();
 		}
 		
-		// QUOTE INIT
-		$("blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
-		$("blockquote footer").html("&mdash; "+quoteAuthor);
 		newImg.src = quotePhoto;
 	}
 	function displayTxt(txt){

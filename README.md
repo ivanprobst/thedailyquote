@@ -4,9 +4,9 @@ thedailyquote
 thedailyquote project
 
 tbd
-* scale quote txt
-* menu actions
 * pic too small fallback
+* menu opening actions
+* when scaling top position, offset the header
 * ie fixes
 
 icons ref
