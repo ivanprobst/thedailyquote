@@ -13,7 +13,7 @@
 	<script src="assets/scripts/html5shiv.js"></script>
 	<![endif]-->
 	
-	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab|Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab|Open+Sans|Open+Sans:700' rel='stylesheet' type='text/css'>
 
 <style type="text/css">
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
@@ -27,12 +27,15 @@
 
 	#container{
 		position: relative;
+		margin: 0 auto;
+		border-left: 1px solid #333;
+		border-right: 1px solid #333;
 	}
 	
 	.bar{
 		position: absolute;
 		display: block;
-		height: 80px; width: 100%;
+		width: 100%;
 		background: #D5D7D6;
 
 		opacity: 0.7;
@@ -44,44 +47,40 @@
 	
 	#container>header{
 		top: 0;
-		box-shadow: 0px 2px 8px #aeb0af;
+		border-bottom: 1px solid #333;
+		/*box-shadow: 0px 2px 8px #aeb0af;*/
 	}
 		header h1{
-			padding: 15px 0 0 20px;
-			font-size: 2.8em;
+			padding: 15px 0;
+			font-size: 2.2em;
+			font-family: 'Open Sans', serif;
+			font-weight: 700; 
 			color: #000;
 			text-align: center;
 			opacity: 0.6;
 		}
 	
-	#quote-container{
-		position: relative; z-index:5;
-		margin: 0 auto;
-		line-height: 0;
+	blockquote{
+		position: absolute;
+		left: 40px; top: 120px; 
+		width: 35%;
+		line-height: 1.3em;
+		font-size: 2em;
+		color: #fff;
+		opacity: 0.8;
 	}
-		#quote-container img{}
-		blockquote{
-			position: absolute;
-			left: 30px; top: 120px; 
-			width: 35%;
-			line-height: 1.3em;
-			font-size: 1.8em;
-			color: #fff;
-			opacity: 0.8;
-		}
-			blockquote p{}
-			blockquote footer{margin-top: 10px; padding-left: 0%;}
+		blockquote p{text-indent: -18px;}
+		blockquote footer{margin-top: 10px; padding-left: 0%;}
 		
 	#container>footer{
 		bottom: 0;
-		box-shadow: 0px -2px 8px #aeb0af;
+		border-top: 1px solid #333;
 	}
 		footer nav{
-			display: block;
 			overflow: hidden;
-			padding: 10px 0 0 0;
-			width: 321px;
 			margin: 0 auto;
+			padding: 5px 0;
+			width: 321px;
 		}
 			footer nav a{
 				float: left; display: block;
@@ -114,31 +113,28 @@
 	
 	// INIT
 	$(document).ready(function(){
-		updateWindowSize();	//displayTxt(windowWidth+"*"+windowHeight);
+		updateWindowSize();
 		setOriginalQuoteInfo();
 	});
 
 	// RESIZE EVENT
 	$(window).resize(function(){
-		updateWindowSize(); //displayTxt(windowWidth+"*"+windowHeight);
+		updateWindowSize();
 		updatePhotoSize();
 	});
 
 	// SET PHOTO
 	function updatePhotoSize(){
+		//displayTxt(windowWidth+"*"+windowHeight);
 		cPicHeight = windowHeight;
 		if(oPicHeight >= windowHeight){
 			cPicWidth = (cPicHeight / oPicHeight) * oPicWidth;
 			
 			$("#container").height(windowHeight);
-			$("#container").width(cPicWidth);
-			$("#container").css("margin-left",(windowWidth-cPicWidth)/2);
-			$(".bar").width(cPicWidth);
-			//$("#container").width(cPicWidth);
-			//$("#quote-container").width(cPicWidth);
-			//$("#quote-container img").width(cPicWidth);
-			//$("#quote-container img").height(cPicHeight);
-			//alert("ok, photo is: "+cPicWidth+"*"+cPicHeight);
+			if(cPicWidth>windowWidth)
+				$("#container").width(windowWidth-2); // minus 2 due to container borders
+			else
+				$("#container").width(Math.floor(cPicWidth));
 		}
 		else {
 			alert("ko, increasing each bar height to: "+Math.floor((windowHeight - oPicHeight)/2));
@@ -161,7 +157,6 @@
 			updatePhotoSize();
 		}
 		
-		//$("#quote-container img").attr("src",quotePhoto);
 		// QUOTE INIT
 		$("blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
 		$("blockquote footer").html("&mdash; "+quoteAuthor);
