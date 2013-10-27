@@ -2,8 +2,7 @@ thedailyquote
 =============
 
 tbd
-* menu opening actions
-* set quote vars in final objects
+* menu content
 * ie fixes
 
 icons ref

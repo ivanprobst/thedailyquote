@@ -105,13 +105,10 @@
 	var oPicHeight = 0;
 	var windowWidth = 0;
 	var windowHeight = 0;
-	
 	var lastModal = "";
 	
-	var quotePhoto = "assets/photos/marcus_aurelius.jpg";
-	var quoteTxt = "If unwilling to rise in the morning, say to thyself, 'I awake to do the work of a man.'";
-	var quoteAuthor = "Marcus Aurelius";
-	var quoteTxtSettings = {"positionX":3, "positionY":5, "containerWidth":35, "fontSize":3, "fontColor":"fff", "barsColor":"D5D7D6"};
+	var quote =		{"text":"If unwilling to rise in the morning, say to thyself, 'I awake to do the work of a man.'","externalLink":"???","authorID":"marcus_aurelius"}
+	var author =	{"name":"Marcus Aurelius","photoPath":"assets/photos/marcus_aurelius.jpg","positionX":3, "positionY":5, "containerWidth":35, "fontSize":3, "fontColor":"fff", "barsColor":"D5D7D6"};
 	
 	// INIT
 	$(document).ready(function(){
@@ -121,29 +118,36 @@
 		$(window).resize(updateScaling);
 		$("footer nav a").click(function(event){openModal(event);});
 	});
-
-	function openModal(event){
-		var currentModal = event.target.id.replace(/\b-.+/,"-content");
-		console.log("opening modal..." + event.target.id + " -> "+currentModal);
+	
+	// DESIGN INIT
+	function initQuote() {
+		// init quote content
+		$('#container').css('background-image', 'url(' + author.photoPath + ')');
+		$("blockquote p").html("&#8220;"+quote.text+"&#8221;");
+		$("blockquote footer").html("&mdash; "+author.name);
 		
-		// SET MENU ITEM OPACITY
-
-		if(lastModal != "" && currentModal != lastModal)
-			$("footer section#"+lastModal).slideToggle(1000, function() {
-				// Animation complete.
-			});
-		$("footer section#"+currentModal).slideToggle(1000, function() {
-			// Animation complete.
-		});
+		// init quote styling
+		$(".bar").css("background-color", "#"+author.barsColor);
+		$("blockquote").css("marginTop",$("header").height());
+		$("blockquote").css("color", "#"+author.fontColor);
+		$("blockquote").width(author.containerWidth+"%");
+		$("blockquote").css("left", author.positionX+"%");
+		$("blockquote").css("top", author.positionY+"%");
 		
-		lastModal = currentModal;
+		var newImg = new Image();
+		newImg.onload = function() {
+			oPicWidth = newImg.width;
+			oPicHeight = newImg.height;
+			updateScaling();
+		}
+		
+		newImg.src = author.photoPath;
 	}
 
 	// UPDATE SCALING
 	function updateScaling(){
 		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		//displayTxt(windowWidth+"*"+windowHeight);
 		
 		// set the current photo size
 		if(oPicHeight >= windowHeight){
@@ -165,42 +169,28 @@
 			$("#container").width(cPicWidth);
 				
 		// quote txt scaling
-		$("blockquote").css("font-size", quoteTxtSettings.fontSize*ratio+"em");
-		$("blockquote p").css("text-indent", quoteTxtSettings.fontSize*ratio*-10+"px");
-
+		$("blockquote").css("font-size", author.fontSize*ratio+"em");
+		$("blockquote p").css("text-indent", author.fontSize*ratio*-10+"px");
 	}
-	
-	// DESIGN INIT
-	function initQuote() {
-		// init quote content
-		$('#container').css('background-image', 'url(' + quotePhoto + ')');
-		$("blockquote p").html("&#8220;"+quoteTxt+"&#8221;");
-		$("blockquote footer").html("&mdash; "+quoteAuthor);
+
+	// MENU TOGGLING
+	function openModal(event){
+		var currentModal = event.target.id.replace(/\b-.+/,"-content");
 		
-		// init quote styling
-		$(".bar").css("background-color", "#"+quoteTxtSettings.barsColor);
-		$("blockquote").css("marginTop",$("header").height());
-		$("blockquote").css("color", "#"+quoteTxtSettings.fontColor);
-		$("blockquote").width(quoteTxtSettings.containerWidth+"%");
-		$("blockquote").css("left", quoteTxtSettings.positionX+"%");
-		$("blockquote").css("top", quoteTxtSettings.positionY+"%");
-		
-		var newImg = new Image();
-		newImg.onload = function() {
-			oPicWidth = newImg.width;
-			oPicHeight = newImg.height;
-			updateScaling();
+		if(lastModal != "") {
+			$("#"+lastModal.replace(/\b-.+/,"-menu-item")).css("opacity",0.2); // disable menu icon
+			$("footer section#"+lastModal).slideToggle(1000);
 		}
 		
-		newImg.src = quotePhoto;
+		if(currentModal != lastModal) {
+			$("#"+event.target.id).css("opacity",0.8); // enable menu icon
+			$("footer section#"+currentModal).slideToggle(1000);
+			lastModal = currentModal;
+		}
+		else
+			lastModal = "";
 	}
-	
-	// TOOLBOX
-	function updateWindowSize(){
-	}
-	function displayTxt(txt){
-        $("header h1 span").html(" ("+txt+")");
-	}
+
 </script>
 
 </head>
@@ -220,7 +210,6 @@
 		<footer class="bar">
 			<nav id="menu">
 				<a href="#" id="about-menu-item" alt="About Website"></a>
-				<!--<a href="#" id="quote-menu-item" alt="About Quote"></a>-->
 				<a href="#" id="share-menu-item" alt="Share"></a>
 				<a href="#" id="save-menu-item" alt="Save"></a>
 			</nav>
