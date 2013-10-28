@@ -14,13 +14,16 @@
 	<![endif]-->
 	
 	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab|Open+Sans|Open+Sans:700' rel='stylesheet' type='text/css'>
-
+	
 <style type="text/css">
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
 	 
 	body{
+		color: #000;
 		font-family: 'Arbutus Slab', 'Open Sans', serif;
 	}
+	a{color: #000;}
+		a:hover{}
 
 	#container{
 		background-repeat: no-repeat;
@@ -84,20 +87,54 @@
 				-moz-transition: opacity .5s ease-in-out;
 				-webkit-transition: opacity .5s ease-in-out;
 			}
-				footer nav a:hover{opacity: 0.8;}
+				footer nav a:hover, footer nav a.active{opacity: 0.8;}
+
+				#twitter-menu-item{background-position: -303px -7px;}
+				#facebook-menu-item{background-position: -387px -7px;}
 				#about-menu-item{background-position: -147px -7px;}
+/*
 				#quote-menu-item{background-position: 5px -7px;}
 				#share-menu-item{background-position: -74px -7px;}
 				#save-menu-item{background-position: -220px -7px;}
+*/
+
 		footer section{
 			display: none;
-			margin: 0; padding: 20px 25%;
+			margin: 0; padding: 20px 32%;
 			border-top: 1px solid #aaa;
 			background: #fff;
 			text-align: center;
 		}
 			footer section h2{font-size: 2em; margin-bottom: 10px;}
-			footer section p{}
+			footer section p{margin-bottom: 10px; line-height: 1.3em;}
+			footer section q{font-style: italic;}
+			footer section em{color: #666;}
+/*
+			footer section#share-content ul{
+				overflow: hidden;
+				margin: 0 auto;
+				padding: 5px 0;
+				width: 160px;
+				list-style-type: none;
+			}
+				footer section#share-content ul li{float: left;}
+					footer section#share-content ul li a{
+						float: left; display: block;
+						width: 80px; height: 50px;
+						background: url("assets/img/icons.png") no-repeat;
+						
+						opacity: 0.6;
+						transition: opacity .5s ease-in-out;
+						-moz-transition: opacity .5s ease-in-out;
+						-webkit-transition: opacity .5s ease-in-out;
+					}	
+						footer section#share-content ul li a:hover{opacity: 1;}
+						
+						footer section#share-content ul li#twitter-sharing a{background-position: -296px -7px;}
+						footer section#share-content ul li#facebook-sharing a{background-position: -358px -7px;}
+						footer section#share-content ul li#buffer-sharing a{background-position: -420px -7px;}
+						footer section#share-content ul li#email-sharing a{background-position: -488px -7px;}
+*/
 </style>
 
 <script type="text/javascript">
@@ -116,7 +153,7 @@
 		
 		// couple of events listeners
 		$(window).resize(updateScaling);
-		$("footer nav a").click(function(event){openModal(event);});
+		$("footer nav a.modal").click(function(event){openModal(event);});
 	});
 	
 	// DESIGN INIT
@@ -133,6 +170,9 @@
 		$("blockquote").width(author.containerWidth+"%");
 		$("blockquote").css("left", author.positionX+"%");
 		$("blockquote").css("top", author.positionY+"%");
+		
+		// extra inits
+		$("#twitter-menu-item").attr("href","https://twitter.com/share?text=Words%20of%20wisdom%20from%20"+(author.name).replace(" ","%20")+"%20on%20thedailyquote.com%20(%40thedailyquote)");
 		
 		var newImg = new Image();
 		newImg.onload = function() {
@@ -178,18 +218,19 @@
 		var currentModal = event.target.id.replace(/\b-.+/,"-content");
 		
 		if(lastModal != "") {
-			$("#"+lastModal.replace(/\b-.+/,"-menu-item")).css("opacity",0.2); // disable menu icon
+			$("#"+lastModal.replace(/\b-.+/,"-menu-item")).removeClass("active"); // disable menu icon
 			$("footer section#"+lastModal).slideToggle(1000);
 		}
 		
 		if(currentModal != lastModal) {
-			$("#"+event.target.id).css("opacity",0.8); // enable menu icon
+			$("#"+event.target.id).addClass("active"); // enable menu icon
 			$("footer section#"+currentModal).slideToggle(1000);
 			lastModal = currentModal;
 		}
 		else
 			lastModal = "";
 	}
+	
 
 </script>
 
@@ -208,23 +249,49 @@
 		</blockquote>
 		
 		<footer class="bar">
-			<nav id="menu">
-				<a href="#" id="about-menu-item" alt="About Website"></a>
+			<nav id="menu">		
+				<a href="#" id="twitter-menu-item" target="_blank"></a>
+
+				<a href="#" id="facebook-menu-item" onclick="
+					window.open(
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
+						'facebook-share-dialog', 
+						'width=626,height=436'
+					); 
+					return false;" target="_blank">
+				</a>
+				
+				<a href="#" id="about-menu-item" class="modal" alt="About"></a>
+<!--
 				<a href="#" id="share-menu-item" alt="Share"></a>
 				<a href="#" id="save-menu-item" alt="Save"></a>
+-->
 			</nav>
 			<section id="about-content">
 				<h2>ABOUT</h2>
-				<p>This website has been created with dutyful care and feary dust.</p>
+				<p>Some Latin chap once said <q>"Acta Non Verba"</q>, meaning <q>"Actions, not words"</q>. Thoughtful and true.</p>
+				<p>But the thing is, words are powerful, and have always been inspirational fixes for the most beautiful minds of History.</p>
+				<p>So we believe quotes of the greatest must be heard and shared. These are life lessons at a cheap cost, they make you reconsider what you do, they encourage your ego to grow more daring, they...</p>
+				<p>And for us, attaching the author's image to the words makes it even more powerful. It's a visual sting inside your brain.</p>
+				<p>Anything to share? Your words here: <br>sayhi[at]thedailyquote[dot]com</p>
+				<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a></em></p>
 			</section>
+<!--
 			<section id="share-content">
 				<h2>SHARE</h2>
-				<p>This is the sharing menu.</p>
+				<p>Spread the words, because they are worth it (usually)</p>
+				<ul>
+					<li id="twitter-sharing"></li>
+					<li id="facebook-sharing"></li>
+					<li id="buffer-sharing"></li>
+					<li id="email-sharing"></li>
+				</ul>
 			</section>
 			<section id="save-content">
 				<h2>SAVE</h2>
 				<p>This is the saving menu.</p>
 			</section>
+-->
 		</footer>
 	</div>
 
