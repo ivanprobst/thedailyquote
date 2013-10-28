@@ -3,14 +3,12 @@ thedailyquote
 
 tbd
 * set on node
-* get domain
 * pics on s3?
-
+* share: add og tags, smaller twitter popup
 * design: redo icons
 * mail miss
 
 * ie fixes
-* share: add og tags, smaller twitter popup
 
 offset voodoo: max ratio of 0.45
 
