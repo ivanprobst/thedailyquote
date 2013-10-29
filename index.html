@@ -88,8 +88,8 @@
 			footer nav a{
 				float: left; display: block;
 				width: 80px; height: 60px;
-				/*background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat;*/
-				background: url("assets/img/icons.png") no-repeat;
+				background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat;
+				/*background: url("assets/img/icons.png") no-repeat;*/
 				
 				opacity: 0.2;
 				transition: opacity .5s ease-in-out;
@@ -100,7 +100,7 @@
 
 				#twitter-menu-item{background-position: -300px -7px;}
 				#facebook-menu-item{background-position: -380px -7px;}
-				#more-menu-item{background-position: 5px -7px;}
+				#quotedetails-menu-item{background-position: 5px -7px;}
 				#about-menu-item{background-position: -150px -7px;}
 /*
 				#quote-menu-item{background-position: 5px -7px;}
@@ -115,10 +115,14 @@
 			background: #fff;
 			text-align: center;
 		}
-			footer section h2{font-size: 2em; margin-bottom: 10px;}
+			footer section h2{font-size: 2em; margin-bottom: 15px;}
+			footer section h3{margin-bottom: 7px;}
 			footer section p{margin-bottom: 10px; line-height: 1.3em;}
 			footer section q{font-style: italic;}
 			footer section em{color: #666;}
+			
+			footer section#quotedetails-content{}
+				footer section#more-content article{display: none;}
 /*
 			footer section#share-content ul{
 				overflow: hidden;
@@ -154,8 +158,8 @@
 	var windowHeight = 0;
 	var lastModal = "";
 	
-	var quote =		{"text":"If unwilling to rise in the morning, say to thyself, 'I awake to do the work of a man.'","externalLink":"???","authorID":"marcus_aurelius"}
-	var author =	{"name":"Marcus Aurelius","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionX":3, "positionY":5, "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
+	var quote =		{"text":"Waste no more time arguing about what a good man should be. Be one.","quotesomeUrl":"http://quoteso.me/q/9302","authorID":"marcus_aurelius"}
+	var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionX":3, "positionY":5, "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
 	
 	// INIT
 	$(document).ready(function(){
@@ -177,7 +181,7 @@
 		}
 		newImg.src = author.photoPath;
 	
-		// init quote content
+		// init quote main content
 		$('#container').css('background-image', 'url(' + author.photoPath + ')');
 		$("blockquote p").html("&#8220;"+quote.text+"&#8221;");
 		$("blockquote footer").html("&mdash; "+author.name);
@@ -189,6 +193,37 @@
 		$("blockquote").width(author.containerWidth+"%");
 		$("blockquote").css("left", author.positionX+"%");
 		$("blockquote").css("top", author.positionY+"%");
+		
+		// init quote details
+		if(quote.quotesomeUrl){
+			$("article#source p").html('<strong>Quote source</strong>: <a href="'+quote.quotesomeUrl+'" target="_blank">'+quote.quotesomeUrl+'</a>');
+			$("article#source").show();
+		}
+		if(author.wikipediaRef){
+			$("article#wikipedia h3").html('About '+author.name+' (more on <a href="" target="_blank">Wikipedia</a>)');
+			$("article#wikipedia h3 a").attr("href","http://en.wikipedia.org/wiki/"+author.wikipediaRef);
+			$.ajax({
+				type: "GET",
+				url: "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles="+author.wikipediaRef,
+				dataType: "jsonp",
+				success: function(data){
+					if(data.query.pages[-1])
+						return;
+					for(var key in data.query.pages){
+						var wikiData = data.query.pages[key];
+						$("article#wikipedia p").html((wikiData.extract).replace(/(\<[a-z]+\>)+/,""));
+					}
+					$("article#wikipedia").show();
+				},
+				error: function(){
+					 console.log("No Wikipedia data available.");
+				}
+			});
+		}
+		if(author.quotesomeUrl){
+			$("article#more-quotes p").html('<a href="'+author.quotesomeUrl+'" target="_blank">Other quotes from Marcus Aurelius</a>');
+			$("article#more-quotes").show();
+		}
 		
 		// twitter button listener
 		$('#twitter-menu-item').click(function(event) {
@@ -280,26 +315,36 @@
 			<nav id="menu">		
 				<a href="#" id="twitter-menu-item" target="_blank"></a>
 				<a href="#" id="facebook-menu-item" target="_blank"></a>
-				<a href="#" id="more-menu-item" class="modal" alt="More Information"></a>
+				<a href="#" id="quotedetails-menu-item" class="modal" alt="More Information"></a>
 				<a href="#" id="about-menu-item" class="modal" alt="About"></a>
 <!--
 				<a href="#" id="share-menu-item" alt="Share"></a>
 				<a href="#" id="save-menu-item" alt="Save"></a>
 -->
 			</nav>
+			
+			<section id="quotedetails-content">
+				<h2>MORE ABOUT THE QUOTE</h2>
+				<article id="source">
+					<p></p>
+				</article>
+				<article id="wikipedia">
+					<h3></h3>
+					<p></p>
+				</article>
+				<article id="more-quotes">
+					<p></p>
+				</article>
+			</section>
+			
 			<section id="about-content">
-				<h2>ABOUT</h2>
+				<h2>ABOUT THE WEBSITE</h2>
 				<p>Some Latin chap once said <q>"Acta Non Verba"</q>, meaning <q>"Actions, not words"</q>. Thoughtful and true.</p>
 				<p>But the thing is, words are powerful, and have always been inspirational fixes for the most beautiful minds of History.</p>
 				<p>So we believe quotes of the greatest must be heard and shared. These are life lessons at a cheap cost, they make you reconsider what you do, they encourage your ego to grow more daring, they...</p>
 				<p>And for us, attaching the author's image to the words makes it even more powerful. It's a visual sting inside your brain.</p>
 				<p>Anything to share? Your words here: <br>sayhi[at]thequotetribune[dot]com</p>
-				<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a></em></p>
-			</section>
-			
-			<section id="more-content">
-				<h2>MORE INFORMATION</h2>
-				<p>This amazing quote is provided to you by supernova.</p>
+				<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a>, quotes from <a href="https://www.quotesome.com/" target="_blank">Quotesome</a></em></p>
 			</section>
 <!--
 			<section id="share-content">

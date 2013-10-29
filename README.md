@@ -2,13 +2,12 @@ thedailyquote
 =============
 
 tbd
-* design: redo icons
-* information + backlink to quotesome
 * run forever on ec2
+* node side core struct
 * mail miss
 
-* create twitter account -> follow button + auto-publish
-* autotweet + fb?
+* create twitter account -> follow button
+* create fb page -> like button
 * ie fixes
 
 offset voodoo: max ratio of 0.45
