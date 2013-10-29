@@ -2,12 +2,15 @@ thedailyquote
 =============
 
 tbd
-* set on node
 * pics on s3?
 * share: add og tags, smaller twitter popup
 * design: redo icons
+* create twitter account
+* run forever on ec2
+* information + backlink to quotesome
 * mail miss
 
+* autotweet + fb?
 * ie fixes
 
 offset voodoo: max ratio of 0.45
