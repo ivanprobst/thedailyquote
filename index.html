@@ -17,10 +17,10 @@
 	
 	<!-- facebook og -->
 	<meta property="og:url" content="http://thequotetribune.com">
-	<meta property="og:title" content="Words from Marcus Aurelius">
-	<meta property="og:description" content="If unwilling to rise in the morning, say to thyself, 'I awake to do the work of a man.' — Marcus Aurelius" />
+	<meta property="og:title" content="">
+	<meta property="og:description" content="" />
 	<meta property="og:type" content="website">
-	<meta property="og:image" content="https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius_thumb.jpg">
+	<meta property="og:image" content="">
 	<meta property="og:site_name" content="The Quote Tribune">
 	
 <style type="text/css">
@@ -179,8 +179,11 @@
 		$("blockquote").css("left", author.positionX+"%");
 		$("blockquote").css("top", author.positionY+"%");
 		
-		// extra inits
-		$("#twitter-menu-item").attr("href","https://twitter.com/share?text=Words%20of%20wisdom%20from%20"+(author.name).replace(" ","%20")+"%20on%20thedailyquote.com%20(%40thedailyquote)");
+		// social inits
+		$("#twitter-menu-item").attr("href","https://twitter.com/share?text=Words%20of%20wisdom%20from%20"+(author.name).replace(" ","%20")+"%20on%20thequotetribune.com%20(%40thequotetribune)");
+		$("meta[property='og:title']").attr("content","Words of wisdom from "+author.name);
+		$("meta[property='og:description']").attr("content","&#8220;"+quote.text+"&#8221; &mdash; "+author.name);
+		$("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
 		
 		var newImg = new Image();
 		newImg.onload = function() {

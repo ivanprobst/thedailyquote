@@ -2,13 +2,13 @@ thedailyquote
 =============
 
 tbd
-* create twitter account
 * share: smaller twitter popup
 * design: redo icons
 * run forever on ec2
 * information + backlink to quotesome
 * mail miss
 
+* create twitter account
 * autotweet + fb?
 * ie fixes
 
