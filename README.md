@@ -2,9 +2,7 @@ thedailyquote
 =============
 
 tbd
-* run forever on ec2
 * node side core struct
-* mail miss
 
 * create twitter account -> follow button
 * create fb page -> like button
