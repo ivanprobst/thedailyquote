@@ -2,10 +2,9 @@ thedailyquote
 =============
 
 tbd
-* pics on s3?
-* share: add og tags, smaller twitter popup
-* design: redo icons
 * create twitter account
+* share: smaller twitter popup
+* design: redo icons
 * run forever on ec2
 * information + backlink to quotesome
 * mail miss
