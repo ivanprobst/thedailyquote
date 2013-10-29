@@ -83,12 +83,13 @@
 			overflow: hidden;
 			margin: 0 auto;
 			padding: 5px 0;
-			width: 240px;
+			width: 320px;
 		}
 			footer nav a{
 				float: left; display: block;
 				width: 80px; height: 60px;
-				background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat;
+				/*background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat;*/
+				background: url("assets/img/icons.png") no-repeat;
 				
 				opacity: 0.2;
 				transition: opacity .5s ease-in-out;
@@ -97,9 +98,10 @@
 			}
 				footer nav a:hover, footer nav a.active{opacity: 0.8;}
 
-				#twitter-menu-item{background-position: -303px -7px;}
-				#facebook-menu-item{background-position: -387px -7px;}
-				#about-menu-item{background-position: -147px -7px;}
+				#twitter-menu-item{background-position: -300px -7px;}
+				#facebook-menu-item{background-position: -380px -7px;}
+				#more-menu-item{background-position: 5px -7px;}
+				#about-menu-item{background-position: -150px -7px;}
 /*
 				#quote-menu-item{background-position: 5px -7px;}
 				#share-menu-item{background-position: -74px -7px;}
@@ -166,6 +168,15 @@
 	
 	// DESIGN INIT
 	function initQuote() {
+		// Determine original photo dimensions
+		var newImg = new Image();
+		newImg.onload = function() {
+			oPicWidth = newImg.width;
+			oPicHeight = newImg.height;
+			updateScaling();
+		}
+		newImg.src = author.photoPath;
+	
 		// init quote content
 		$('#container').css('background-image', 'url(' + author.photoPath + ')');
 		$("blockquote p").html("&#8220;"+quote.text+"&#8221;");
@@ -179,20 +190,28 @@
 		$("blockquote").css("left", author.positionX+"%");
 		$("blockquote").css("top", author.positionY+"%");
 		
-		// social inits
-		$("#twitter-menu-item").attr("href","https://twitter.com/share?text=Words%20of%20wisdom%20from%20"+(author.name).replace(" ","%20")+"%20on%20thequotetribune.com%20(%40thequotetribune)");
+		// twitter button listener
+		$('#twitter-menu-item').click(function(event) {
+			window.open(
+						"https://twitter.com/share?url="+encodeURIComponent(location.href)+"&via=thequotetribune&text=Words%20of%20wisdom%20from%20"+(author.name).replace(" ","%20")+":",
+						'twitter',
+						'width=626,height=436'
+			);
+			return false;
+		});
+		  
+		// facebook meta and button listener
 		$("meta[property='og:title']").attr("content","Words of wisdom from "+author.name);
 		$("meta[property='og:description']").attr("content","&#8220;"+quote.text+"&#8221; &mdash; "+author.name);
-		$("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
-		
-		var newImg = new Image();
-		newImg.onload = function() {
-			oPicWidth = newImg.width;
-			oPicHeight = newImg.height;
-			updateScaling();
-		}
-		
-		newImg.src = author.photoPath;
+		$("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));44
+		$('#facebook-menu-item').click(function(event) {
+			window.open(
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
+						'facebook-share-dialog', 
+						'width=626,height=436'
+			);
+			return false;
+		});
 	}
 
 	// UPDATE SCALING
@@ -260,16 +279,8 @@
 		<footer class="bar">
 			<nav id="menu">		
 				<a href="#" id="twitter-menu-item" target="_blank"></a>
-
-				<a href="#" id="facebook-menu-item" onclick="
-					window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
-						'facebook-share-dialog', 
-						'width=626,height=436'
-					); 
-					return false;" target="_blank">
-				</a>
-				
+				<a href="#" id="facebook-menu-item" target="_blank"></a>
+				<a href="#" id="more-menu-item" class="modal" alt="More Information"></a>
 				<a href="#" id="about-menu-item" class="modal" alt="About"></a>
 <!--
 				<a href="#" id="share-menu-item" alt="Share"></a>
@@ -284,6 +295,11 @@
 				<p>And for us, attaching the author's image to the words makes it even more powerful. It's a visual sting inside your brain.</p>
 				<p>Anything to share? Your words here: <br>sayhi[at]thequotetribune[dot]com</p>
 				<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a></em></p>
+			</section>
+			
+			<section id="more-content">
+				<h2>MORE INFORMATION</h2>
+				<p>This amazing quote is provided to you by supernova.</p>
 			</section>
 <!--
 			<section id="share-content">

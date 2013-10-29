@@ -2,13 +2,12 @@ thedailyquote
 =============
 
 tbd
-* share: smaller twitter popup
 * design: redo icons
-* run forever on ec2
 * information + backlink to quotesome
+* run forever on ec2
 * mail miss
 
-* create twitter account
+* create twitter account -> follow button + auto-publish
 * autotweet + fb?
 * ie fixes
 
@@ -19,3 +18,5 @@ icons ref
 * share: <a href="http://thenounproject.com/noun/network/#icon-No14269" target="_blank">Network</a> designed by <a href="http://thenounproject.com/gregpabst" target="_blank">Greg Pabst</a> from The Noun Project
 * save: <a href="http://thenounproject.com/noun/paper-clip/#icon-No17647" target="_blank">Paper Clip</a> designed by <a href="http://thenounproject.com/tinyxl" target="_blank">Erin Standley</a> from The Noun Project
 * mail: <a href="http://thenounproject.com/noun/mail/#icon-No994" target="_blank">Mail</a> designed by <a href="http://thenounproject.com/marchaumann" target="_blank">Marc Haumann</a> from The Noun Project
+* twitter: <a href="http://thenounproject.com/noun/tweet/#icon-No16224" target="_blank">Tweet</a> designed by <a href="http://thenounproject.com/joe_harrison" target="_blank">Joe Harrison</a> from The Noun Project
+* fb: <a href="http://thenounproject.com/noun/facebook/#icon-No20845" target="_blank">Facebook</a> designed by <a href="http://thenounproject.com/Luboš Volkov" target="_blank">Luboš Volkov</a> from The Noun Project
