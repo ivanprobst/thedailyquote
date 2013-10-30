@@ -2,10 +2,12 @@ thedailyquote
 =============
 
 tbd
-* node side core struct
+* final check -> send email
+* setup twitter + fb -> button on website -> push updates to feeds
+* rss
+* create an other author -> better design variation (bars color)
 
-* create twitter account -> follow button
-* create fb page -> like button
+* move to node
 * ie fixes
 
 offset voodoo: max ratio of 0.45

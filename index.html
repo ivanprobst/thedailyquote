@@ -16,7 +16,7 @@
 	<![endif]-->
 	
 	<!-- facebook og -->
-	<meta property="og:url" content="http://thequotetribune.com">
+	<meta property="og:url" content="">
 	<meta property="og:title" content="">
 	<meta property="og:description" content="" />
 	<meta property="og:type" content="website">
@@ -58,12 +58,16 @@
 	#container>header{
 		top: 0;
 		border-bottom: 1px solid #555;
+		text-align: center;
 	}
 		header h1{
+			padding-top: 15px;
+			font-size: 2em;
+			opacity: 0.8;
+		}
+		header h2{
 			padding: 15px 0;
-			font-size: 2.5em;
-			color: #000;
-			text-align: center;
+			font-size: 1.2em;
 			opacity: 0.6;
 		}
 	
@@ -115,8 +119,8 @@
 			background: #fff;
 			text-align: center;
 		}
-			footer section h2{font-size: 2em; margin-bottom: 15px;}
-			footer section h3{margin-bottom: 7px;}
+			footer section h3{font-size: 2em; margin-bottom: 15px;}
+			footer section h4{margin-bottom: 7px;}
 			footer section p{margin-bottom: 10px; line-height: 1.3em;}
 			footer section q{font-style: italic;}
 			footer section em{color: #666;}
@@ -158,7 +162,7 @@
 	var windowHeight = 0;
 	var lastModal = "";
 	
-	var quote =		{"text":"Waste no more time arguing about what a good man should be. Be one.","quotesomeUrl":"http://quoteso.me/q/9302","authorID":"marcus_aurelius"}
+	var quote =		{"id":"1234","text":"Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.","quotesomeUrl":"http://quoteso.me/q/9323","authorID":"marcus_aurelius"}
 	var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionX":3, "positionY":5, "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
 	
 	// INIT
@@ -196,12 +200,12 @@
 		
 		// init quote details
 		if(quote.quotesomeUrl){
-			$("article#source p").html('<strong>Quote source</strong>: <a href="'+quote.quotesomeUrl+'" target="_blank">'+quote.quotesomeUrl+'</a>');
+			$("article#source p").html('<strong>Source</strong>: <a href="'+quote.quotesomeUrl+'" target="_blank">'+quote.quotesomeUrl+'</a>');
 			$("article#source").show();
 		}
 		if(author.wikipediaRef){
-			$("article#wikipedia h3").html('About '+author.name+' (more on <a href="" target="_blank">Wikipedia</a>)');
-			$("article#wikipedia h3 a").attr("href","http://en.wikipedia.org/wiki/"+author.wikipediaRef);
+			$("article#wikipedia h4").html('About '+author.name+' (more on <a href="" target="_blank">Wikipedia</a>)');
+			$("article#wikipedia h4 a").attr("href","http://en.wikipedia.org/wiki/"+author.wikipediaRef);
 			$.ajax({
 				type: "GET",
 				url: "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles="+author.wikipediaRef,
@@ -236,6 +240,7 @@
 		});
 		  
 		// facebook meta and button listener
+		$("meta[property='og:url']").attr("content","http://thequotetribune.com?fbrefresh="+quote.id);
 		$("meta[property='og:title']").attr("content","Words of wisdom from "+author.name);
 		$("meta[property='og:description']").attr("content","&#8220;"+quote.text+"&#8221; &mdash; "+author.name);
 		$("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));44
@@ -303,7 +308,8 @@
 
 	<div id="container">
 		<header class="bar">
-			<h1>&mdash; THE QUOTE TRIBUNE &mdash;<span></span></h1>
+			<h1>&mdash; THE QUOTE TRIBUNE &mdash;</h1>
+			<h2>Your daily inspirational fix</h2>
 		</header>
 		
 		<blockquote>
@@ -324,12 +330,12 @@
 			</nav>
 			
 			<section id="quotedetails-content">
-				<h2>MORE ABOUT THE QUOTE</h2>
+				<h3>ABOUT THE QUOTE</h3>
 				<article id="source">
 					<p></p>
 				</article>
 				<article id="wikipedia">
-					<h3></h3>
+					<h4></h4>
 					<p></p>
 				</article>
 				<article id="more-quotes">
@@ -338,17 +344,18 @@
 			</section>
 			
 			<section id="about-content">
-				<h2>ABOUT THE WEBSITE</h2>
+				<h3>ABOUT THE QUOTE TRIBUNE</h3>
 				<p>Some Latin chap once said <q>"Acta Non Verba"</q>, meaning <q>"Actions, not words"</q>. Thoughtful and true.</p>
-				<p>But the thing is, words are powerful, and have always been inspirational fixes for the most beautiful minds of History.</p>
-				<p>So we believe quotes of the greatest must be heard and shared. These are life lessons at a cheap cost, they make you reconsider what you do, they encourage your ego to grow more daring, they...</p>
-				<p>And for us, attaching the author's image to the words makes it even more powerful. It's a visual sting inside your brain.</p>
+				<p>But the thing is, words are powerful, and have always been inspirational for the most beautiful minds history has seen.</p>
+				<p>So we believe quotes of the greatest must be heard and shared. These are packaged life lessons, they make you reconsider what you do and think, they encourage your ego to grow more daring, they make you laugh.</p>
+				<p>And for us, attaching the author's photo to the words makes it even more powerful. It's a visual gong inside your brain.</p>
+				<p>This is what we do here, everyday we give you a new awesome quote with that crazy one's picture.</p>
 				<p>Anything to share? Your words here: <br>sayhi[at]thequotetribune[dot]com</p>
-				<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a>, quotes from <a href="https://www.quotesome.com/" target="_blank">Quotesome</a></em></p>
+				<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a>, quotes curated by <a href="https://www.quotesome.com/" target="_blank">Quotesome</a></em></p>
 			</section>
 <!--
 			<section id="share-content">
-				<h2>SHARE</h2>
+				<h3>SHARE</h3>
 				<p>Spread the words, because they are worth it (usually)</p>
 				<ul>
 					<li id="twitter-sharing"></li>
@@ -358,7 +365,7 @@
 				</ul>
 			</section>
 			<section id="save-content">
-				<h2>SAVE</h2>
+				<h3>SAVE</h3>
 				<p>This is the saving menu.</p>
 			</section>
 -->
