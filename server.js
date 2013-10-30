@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var xml;
 
 var extensionMapping = {
 						".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",
@@ -9,6 +10,13 @@ var extensionMapping = {
 
 http.createServer(function (request, response) {
 	console.log("asked for: "+request.url);
+
+	if(request.url == "/rss.xml"){
+		console.log("-> push xml: "+xml);
+		response.writeHead(200, {'Content-Type': 'application/rss+xml'});
+		response.write(xml);
+		response.end();
+	}
 	
 	var requestExtension = request.url.match(/\.[0-9a-z]+$/);
 	var file;
@@ -93,7 +101,7 @@ function updateRSS(){
 	var currentDate = date.toDateString()+", "+date.getHours()+":"+date.getMinutes();
 	var itemOptions = {"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"thequotetribune.com","guid":"id"+nb,"date":currentDate,"categories":[],"author":""};
 	feed.item(itemOptions);
-	var xml = feed.xml();
+	xml = feed.xml();
 	console.log(xml);
 	nb++;
 }
