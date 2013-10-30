@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+
 var extensionMapping = {
 						".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",
 						".js":"text/javascript",".css":"text/css",
@@ -37,5 +38,21 @@ http.createServer(function (request, response) {
 		console.log("# no existing file: "+err);
 	});
 }).listen(8124);
-
 console.log('Server running at http://127.0.0.1:8124/');
+
+// Posting stuff to twitter
+function updateTwitterStatus(post){
+	var Twit = require('twit')
+
+	var T = new Twit({
+		consumer_key:         ''
+	  , consumer_secret:      ''
+	  , access_token:         ''
+	  , access_token_secret:  ''
+	});
+	
+	T.post('statuses/update', { status: post }, function(err, reply) {
+		if(err) console.log("error: "+err);
+		else console.log("reply: "+reply);
+	});
+}

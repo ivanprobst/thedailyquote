@@ -157,6 +157,16 @@
 		// couple of events listeners
 		$(window).resize(updateScaling);
 		$("footer nav a.modal").click(function(event){openModal(event);});
+		$("header h1").click(function(event){
+			console.log("hey");
+			$.ajax({
+				type: 'get',
+				url: '127.0.0.1:8086',
+				success: function (data) {
+					// use data
+				}
+			})
+		});
 	});
 	
 	// DESIGN INIT
