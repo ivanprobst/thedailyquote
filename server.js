@@ -37,7 +37,7 @@ http.createServer(function (request, response) {
 	file.on("error",function(err){
 		console.log("# no existing file: "+err);
 	});
-	updateRSS();
+	//updateRSS();
 }).listen(8124);
 console.log('Server running at http://127.0.0.1:8124/');
 
