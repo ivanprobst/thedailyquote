@@ -6,8 +6,9 @@ tbd
 * rss
 * create an other author -> better design variation (bars color)
 
-* move to node
+* move to node (remove default og values)
 * ie fixes
+* fix fb sharing caching
 
 offset voodoo: max ratio of 0.45
 
