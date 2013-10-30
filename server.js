@@ -37,7 +37,7 @@ http.createServer(function (request, response) {
 	file.on("error",function(err){
 		console.log("# no existing file: "+err);
 	});
-	
+	updateRSS();
 }).listen(8124);
 console.log('Server running at http://127.0.0.1:8124/');
 
@@ -82,3 +82,19 @@ function updateFacebookPage(post){
 		  console.log(output);
 	});
 }
+
+var nb = 1;
+var feedOptions = {"title":"The Quote Tribune","description":"Your daily inspirational fix","feed_url":"thequotetribune.com","site_url":"thequotetribune.com","author":"The Quote Tribune"};
+var RSS = require('rss');
+var feed = new RSS(feedOptions);
+// Posting stuff on rss
+function updateRSS(){
+	var date = new Date();
+	var currentDate = date.toDateString()+", "+date.getHours()+":"+date.getMinutes();
+	var itemOptions = {"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"thequotetribune.com","guid":"id"+nb,"date":currentDate,"categories":[],"author":""};
+	feed.item(itemOptions);
+	var xml = feed.xml();
+	console.log(xml);
+	nb++;
+}
+
