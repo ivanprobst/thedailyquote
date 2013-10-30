@@ -37,6 +37,7 @@ http.createServer(function (request, response) {
 	file.on("error",function(err){
 		console.log("# no existing file: "+err);
 	});
+	
 }).listen(8124);
 console.log('Server running at http://127.0.0.1:8124/');
 
@@ -51,8 +52,33 @@ function updateTwitterStatus(post){
 	  , access_token_secret:  ''
 	});
 	
+	// Send the request
 	T.post('statuses/update', { status: post }, function(err, reply) {
 		if(err) console.log("error: "+err);
 		else console.log("reply: "+reply);
+	});
+}
+
+// Posting stuff on facebook
+function updateFacebookPage(post){
+	var request = require('request');
+
+	var url = 'https://graph.facebook.com/1410710079162036/feed';
+	var params = {
+		access_token: '',
+		message: post
+	};
+
+	// Send the request
+	request.post({url: url, qs: params}, function(err, resp, body) {
+		  // Handle any errors that occur
+		  if (err) return console.error("Error occured: ", err);
+		  body = JSON.parse(body);
+		  if (body.error) return console.error("Error returned from facebook: ", body.error);
+
+		  // Generate output
+		  var output = '<p>Message has been posted to your feed. Here is the id generated:</p>';
+		  output += '<pre>' + JSON.stringify(body, null, '\t') + '</pre>';
+		  console.log(output);
 	});
 }
