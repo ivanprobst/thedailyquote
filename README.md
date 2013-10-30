@@ -2,7 +2,6 @@ thedailyquote
 =============
 
 tbd
-* final check -> send email
 * setup twitter + fb -> button on website -> push updates to feeds
 * rss
 * create an other author -> better design variation (bars color)

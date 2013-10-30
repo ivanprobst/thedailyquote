@@ -240,13 +240,13 @@
 		});
 		  
 		// facebook meta and button listener
-		$("meta[property='og:url']").attr("content","http://thequotetribune.com?fbrefresh="+quote.id);
+		$("meta[property='og:url']").attr("content","http://thequotetribune.com");
 		$("meta[property='og:title']").attr("content","Words of wisdom from "+author.name);
 		$("meta[property='og:description']").attr("content","&#8220;"+quote.text+"&#8221; &mdash; "+author.name);
 		$("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));44
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href+'?fbrefresh='+quote.id), 
 						'facebook-share-dialog', 
 						'width=626,height=436'
 			);
