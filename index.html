@@ -16,11 +16,11 @@
 	<![endif]-->
 	
 	<!-- facebook og -->
-	<meta property="og:url" content="">
-	<meta property="og:title" content="">
-	<meta property="og:description" content="" />
+	<meta property="og:url" content="http://thequotetribune.com">
+	<meta property="og:title" content="Words of wisdom from Marcus Aurelius">
+	<meta property="og:description" content="&#8220;Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.&#8221; &mdash; Marcus Aurelius" />
 	<meta property="og:type" content="website">
-	<meta property="og:image" content="">
+	<meta property="og:image" content="https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius_thumb.jpg">
 	<meta property="og:site_name" content="The Quote Tribune">
 	
 <style type="text/css">
@@ -240,13 +240,13 @@
 		});
 		  
 		// facebook meta and button listener
-		$("meta[property='og:url']").attr("content","http://thequotetribune.com");
-		$("meta[property='og:title']").attr("content","Words of wisdom from "+author.name);
-		$("meta[property='og:description']").attr("content","&#8220;"+quote.text+"&#8221; &mdash; "+author.name);
-		$("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));44
+		// $("meta[property='og:url']").attr("content","http://thequotetribune.com");
+		// $("meta[property='og:title']").attr("content","Words of wisdom from "+author.name);
+		//$("meta[property='og:description']").attr("content","&#8220;"+quote.text+"&#8221; &mdash; "+author.name);
+		// $("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));44
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href+'?fbrefresh='+quote.id), 
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
 						'facebook-share-dialog', 
 						'width=626,height=436'
 			);
