@@ -1,14 +1,17 @@
 thedailyquote
 =============
 
-tbd
-* setup twitter + fb -> button on website -> push updates to feeds
+tobd
+* push updates to feeds
 * rss
 * create an other author -> better design variation (bars color)
-
 * move to node (remove default og values)
-* ie fixes
-* fix fb sharing caching
+
+tobf
+* ie7+
+* fb sharing caching
+* scrolling fallback when resolution too small
+* email address overlap in about
 
 offset voodoo: max ratio of 0.45
 
