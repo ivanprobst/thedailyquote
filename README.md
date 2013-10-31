@@ -3,7 +3,6 @@ thedailyquote
 
 tobd
 * create an other author -> better design variation (bars color)
-* push updates to rss
 * move to node (remove default og values)
 
 tobf
