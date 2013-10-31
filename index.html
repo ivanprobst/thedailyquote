@@ -38,7 +38,7 @@
 	#container{
 		background-repeat: no-repeat;
 		background-size: auto 100%;
-		background-position: center;
+		background-position-x: center; background-position-y: center;
 		position: relative;
 		margin: 0 auto;
 		border-left: 1px solid #333;
@@ -75,8 +75,9 @@
 	
 	blockquote{
 		position: absolute;
+		padding: 0.5% 0.5% 0.5% 2%;
 		line-height: 1.3em;
-		opacity: 0.8;
+		opacity: 0.7;
 	}
 		blockquote p{}
 		blockquote footer{margin-top: 10px;}
@@ -141,7 +142,7 @@
 					footer section#about-content li#rss-link a{
 						display: block;
 						width: 30px; height: 30px; margin: 0 auto;
-						background: url("assets/img/icons.png") no-repeat -11px -99px;
+						background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat -11px -99px;
 					}
 </style>
 
@@ -151,13 +152,13 @@
 	var windowWidth = 0;
 	var windowHeight = 0;
 	var lastModal = "";
-	
-	var quote =		{"id":"1234","text":"Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.","quotesomeUrl":"http://quoteso.me/q/9323","authorID":"marcus_aurelius"}
-	var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionX":3, "positionY":5, "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
 	/*
 	var quote =		{"id":"1234","text":"Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.","quotesomeUrl":"http://quoteso.me/q/9323","authorID":"marcus_aurelius"}
-	var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionX":3, "positionY":5, "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
+	var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionLeft":3, "positionTop":5, "positionSlide":"left", "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
 	*/
+	var quote =		{"id":"2345","text":"Great minds discuss ideas. Average minds discuss events. Small minds discuss people.","quotesomeUrl":"http://quoteso.me/q/224850","authorID":"eleanor_roosevelt"}
+	var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"assets/photos/eleanor_roosevelt.jpg","positionRight":3, "positionBottom":3, "positionSlide":"left", "containerWidth":35, "fontSize":3.2, "fontColor":"000", "bgColor":"D5D7D6", "barsColor":"D5D7D6"};
+	
 	
 	// INIT
 	$(document).ready(function(){
@@ -196,11 +197,14 @@
 		
 		// init quote styling
 		$(".bar").css("background-color", "#"+author.barsColor);
-		$("blockquote").css("marginTop",$("header").height());
+		$("#container").css("background-position-x", author.positionSlide);
 		$("blockquote").css("color", "#"+author.fontColor);
-		$("blockquote").width(author.containerWidth+"%");
-		$("blockquote").css("left", author.positionX+"%");
-		$("blockquote").css("top", author.positionY+"%");
+		$("blockquote").css("max-width",author.containerWidth+"%");
+		if(author.bgColor) $("blockquote").css("background", "#"+author.bgColor);
+		if(author.positionLeft) $("blockquote").css("left", author.positionLeft+"%");
+		if(author.positionRight) $("blockquote").css("right", author.positionRight+"%");
+		if(author.positionTop) {$("blockquote").css("top", author.positionTop+"%"); $("blockquote").css("marginTop",$("header").height());}
+		if(author.positionBottom) {$("blockquote").css("bottom", author.positionBottom+"%"); $("blockquote").css("marginBottom",$("header").height());}
 		
 		// init quote details
 		if(quote.quotesomeUrl){
@@ -219,7 +223,7 @@
 						return;
 					for(var key in data.query.pages){
 						var wikiData = data.query.pages[key];
-						$("article#wikipedia p").html((wikiData.extract).replace(/(\<[a-z]+\>)+/,""));
+						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
 					}
 					$("article#wikipedia").show();
 				},
@@ -229,7 +233,7 @@
 			});
 		}
 		if(author.quotesomeUrl){
-			$("article#more-quotes p").html('<a href="'+author.quotesomeUrl+'" target="_blank">Other quotes from Marcus Aurelius</a>');
+			$("article#more-quotes p").html('<a href="'+author.quotesomeUrl+'" target="_blank">Other quotes from '+author.name+'</a>');
 			$("article#more-quotes").show();
 		}
 		

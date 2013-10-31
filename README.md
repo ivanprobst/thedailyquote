@@ -2,8 +2,8 @@ thedailyquote
 =============
 
 tobd
-* create an other author -> better design variation (bars color)
 * move to node (remove default og values)
+* design review
 
 tobf
 * ie7+
