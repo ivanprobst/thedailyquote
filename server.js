@@ -3,7 +3,7 @@ var quote =		{"id":"1234","text":"Begin - to begin is half the work, let half st
 var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionLeft":3, "positionTop":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":3.2, "blockFontColor":"fff", "barsColor":"D5D7D6"};
 */
 var quote =		{"id":"2345","text":"Great minds discuss ideas. Average minds discuss events. Small minds discuss people.","quotesomeUrl":"http://quoteso.me/q/224850","authorID":"eleanor_roosevelt"}
-var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","positionRight":3, "positionBottom":3, "directionSlide":"left", "blockWidth":35, "blockFontSize":3.2, "blockFontColor":"000", "blockBackgroundColor":"D5D7D6", "barsColor":"D5D7D6"};
+var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665, "photoHeight":1203, "positionRight":3, "positionBottom":3, "directionSlide":"left", "blockWidth":35, "blockFontSize":3.2, "blockFontColor":"000", "blockBackgroundColor":"D5D7D6", "barsColor":"D5D7D6"};
 
 var http = require('http');
 var fs = require('fs');
@@ -60,52 +60,30 @@ function initHome(response){
 	file.on('end', function(err){
 		console.log("html: "+htmlPage);
 		
-		// init quote main content
-		htmlPage = htmlPage.replace('{{authorPhotoPath}}', author.photoPath);
-		htmlPage = htmlPage.replace('{{quoteText}}', quote.text);
-		htmlPage = htmlPage.replace(/{{authorName}}/g, author.name);
+		// init quote content and photos
+		parseTemplate('quoteText', quote.text);
+		parseTemplate('authorName', author.name);
+		parseTemplate('authorPhotoPath', author.photoPath);
+		parseTemplate('authorThumbPath', (author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
 		
 		// init quote styling
-		htmlPage = htmlPage.replace('{{authorBarsColor}}', '#'+author.barsColor);
-		author.directionSlide ? htmlPage = htmlPage.replace('{{authorDirectionSlide}}', author.directionSlide) : htmlPage = htmlPage.replace('{{authorDirectionSlide}}', 'center');
-		author.blockFontColor ? htmlPage = htmlPage.replace('{{authorBlockFontColor}}', '#'+author.blockFontColor) : htmlPage = htmlPage.replace('{{authorBlockFontColor}}', '#000');
-		author.blockWidth ? htmlPage = htmlPage.replace('{{authorBlockWidth}}', author.blockWidth+'%') : htmlPage = htmlPage.replace('{{authorBlockWidth}}', '35%');
-		author.blockBackgroundColor ? htmlPage = htmlPage.replace('{{authorBlockBackgroundColor}}', '#'+author.blockBackgroundColor) : htmlPage.replace('{{authorBlockBackgroundColor}}', 'none');
-		author.positionLeft ? htmlPage = htmlPage.replace('{{authorPositionLeft}}', author.positionLeft+'%') : htmlPage = htmlPage.replace('{{authorPositionLeft}}', 'auto');
-		author.positionRight ? htmlPage = htmlPage.replace('{{authorPositionRight}}', author.positionRight+'%') : htmlPage = htmlPage.replace('{{authorPositionRight}}', 'auto');
-		author.positionTop ? htmlPage = htmlPage.replace('{{authorPositionTop}}', author.positionTop+'%') : htmlPage = htmlPage.replace('{{authorPositionTop}}', 'auto');
-		author.positionBottom ? htmlPage = htmlPage.replace('{{authorPositionBottom}}', author.positionBottom+'%') : htmlPage = htmlPage.replace('{{authorPositionBottom}}', 'auto');
+		parseTemplate('authorBarsColor', author.barsColor ? '#'+author.barsColor : '#D5D7D6');
+		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : 'center');
+		parseTemplate('authorBlockFontColor', author.blockFontColor ? '#'+author.blockFontColor : '#000');
+		parseTemplate('authorBlockWidth', author.blockWidth ? author.blockWidth+'%' : '35%');
+		parseTemplate('authorBlockBackgroundColor', author.blockBackgroundColor ? '#'+author.blockBackgroundColor : 'none');
+		parseTemplate('authorPositionLeft', author.positionLeft ? author.positionLeft+'%' : 'auto');
+		parseTemplate('authorPositionRight', author.positionRight ? author.positionRight+'%' : 'auto');
+		parseTemplate('authorPositionTop', author.positionTop ? author.positionTop+'%' : 'auto');
+		parseTemplate('authorPositionBottom', author.positionBottom ? author.positionBottom+'%' : 'auto');
+		parseTemplate('authorPhotoWidth', author.photoWidth ? author.photoWidth : 0);
+		parseTemplate('authorPhotoHeight', author.photoHeight ? author.photoHeight : 0);
 		
 		// init quote details
 		parseTemplate('quoteQuotesomeUrl', quote.quotesomeUrl);
 		parseTemplate('authorQuotesomeUrl', author.quotesomeUrl);
-
-		/*
-		if(author.wikipediaRef){
-			$("article#wikipedia h4").html('About '+author.name+' (more on <a href="" target="_blank">Wikipedia</a>)');
-			$("article#wikipedia h4 a").attr("href","http://en.wikipedia.org/wiki/"+author.wikipediaRef);
-			$.ajax({
-				type: "GET",
-				url: "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles="+author.wikipediaRef,
-				dataType: "jsonp",
-				success: function(data){
-					if(data.query.pages[-1])
-						return;
-					for(var key in data.query.pages){
-						var wikiData = data.query.pages[key];
-						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
-					}
-					$("article#wikipedia").show();
-				},
-				error: function(){
-					 console.log("No Wikipedia data available.");
-				}
-			});
-		}
-		if(author.quotesomeUrl){
-			$("article#more-quotes p").html('<a href="'+author.quotesomeUrl+'" target="_blank">Other quotes from '+author.name+'</a>');
-		}
-		*/
+		parseTemplate('authorWikipediaRef', author.wikipediaRef);			
+		
 		// fire in the hole!!!
 		response.write(htmlPage);
 		response.end();
@@ -119,6 +97,7 @@ function initHome(response){
 				htmlPage = htmlPage.replace(regex, '');
 			}
 			else{
+				htmlPage = htmlPage.replace(regex, null);
 				regex = new RegExp('{{#'+property+'}}(.|\n|\r)+{{/'+property+'}}','g');
 				htmlPage = htmlPage.replace(regex, '');
 			}

@@ -2,8 +2,7 @@ thedailyquote
 =============
 
 tobd
-* move to node (remove default og values)
-* get default values for node assigned vars
+* move to node: window sizing
 * design review
 
 tobf
@@ -12,6 +11,7 @@ tobf
 * scrolling fallback when resolution too small
 * email address overlap in about
 * resolution check
+* move wikipedia code to server side
 
 offset voodoo: max ratio of 0.45
 

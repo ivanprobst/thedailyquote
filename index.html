@@ -18,10 +18,10 @@
 	
 	<!-- facebook og -->
 	<meta property="og:url" content="http://thequotetribune.com">
-	<meta property="og:title" content="Words of wisdom from Marcus Aurelius">
-	<meta property="og:description" content="&#8220;Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.&#8221; &mdash; Marcus Aurelius" />
+	<meta property="og:title" content="Words of wisdom from {{authorName}}">
+	<meta property="og:description" content="&#8220;{{quoteText}}&#8221; &mdash; {{authorName}}" />
 	<meta property="og:type" content="website">
-	<meta property="og:image" content="https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius_thumb.jpg">
+	<meta property="og:image" content="{{authorThumbPath}}">
 	<meta property="og:site_name" content="The Quote Tribune">
 	
 <style type="text/css">
@@ -153,42 +153,18 @@
 </style>
 
 <script type="text/javascript">
-	var oPicWidth = 0;
-	var oPicHeight = 0;
 	var windowWidth = 0;
 	var windowHeight = 0;
 	var lastModal = "";
-	/*
-	var quote =		{"id":"1234","text":"Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.","quotesomeUrl":"http://quoteso.me/q/9323","authorID":"marcus_aurelius"}
-	var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionLeft":3, "positionTop":5, "positionSlide":"left", "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
-	*/
-	var quote =		{"id":"2345","text":"Great minds discuss ideas. Average minds discuss events. Small minds discuss people.","quotesomeUrl":"http://quoteso.me/q/224850","authorID":"eleanor_roosevelt"}
-	var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","positionRight":3, "positionBottom":3, "positionSlide":"left", "containerWidth":35, "fontSize":3.2, "fontColor":"000", "bgColor":"D5D7D6", "barsColor":"D5D7D6"};
-	
 	
 	// INIT
 	$(document).ready(function(){
-		initQuote();
-		
-		// couple of events listeners
-		$(window).resize(updateScaling);
-		$("footer nav a.modal").click(function(event){openModal(event);});
-	});
 	
-	// DESIGN INIT
-	function initQuote() {
-		// Determine original photo dimensions
-		var newImg = new Image();
-		newImg.onload = function() {
-			oPicWidth = newImg.width;
-			oPicHeight = newImg.height;
-			updateScaling();
-		}
-		newImg.src = author.photoPath;
+		// attach a couple of events listeners
+		$(window).resize(updateScaling);
 		
-
+		$("footer nav a.modal").click(function(event){openModal(event);});
 		
-		// twitter button listener
 		$('#twitter-menu-item').click(function(event) {
 			window.open(
 						"https://twitter.com/share?url="+encodeURIComponent(location.href)+"&via=thequotetribune&text=Words%20of%20wisdom%20from%20"+(author.name).replace(" ","%20")+":",
@@ -197,12 +173,6 @@
 			);
 			return false;
 		});
-		  
-		// facebook meta and button listener (commented until server-side generated)
-		// $("meta[property='og:url']").attr("content","http://thequotetribune.com");
-		// $("meta[property='og:title']").attr("content","Words of wisdom from "+author.name);
-		//$("meta[property='og:description']").attr("content","&#8220;"+quote.text+"&#8221; &mdash; "+author.name);
-		// $("meta[property='og:image']").attr("content",(author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));44
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
 						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
@@ -211,7 +181,33 @@
 			);
 			return false;
 		});
-	}
+		
+		// wikipedia data call
+		$("article#wikipedia").hide();
+		if('{{authorWikipediaRef}}' != 'null'){
+			$("article#wikipedia h4").html('About '+'{{authorName}}'+' (more on <a href="" target="_blank">Wikipedia</a>)');
+			$("article#wikipedia h4 a").attr('href','http://en.wikipedia.org/wiki/{{authorWikipediaRef}}');
+			$.ajax({
+				type: "GET",
+				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles={{authorWikipediaRef}}',
+				dataType: "jsonp",
+				success: function(data){
+					if(data.query.pages[-1])
+						return;
+					for(var key in data.query.pages){
+						var wikiData = data.query.pages[key];
+						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
+					}
+					$("article#wikipedia").show();
+				},
+				error: function(){
+					 console.log("No Wikipedia data available.");
+				}
+			});
+		}
+		
+		updateScaling();
+	});
 
 	// UPDATE SCALING
 	function updateScaling(){
@@ -219,16 +215,16 @@
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		
 		// set the current photo size
-		if(oPicHeight >= windowHeight){
+		if({{authorPhotoHeight}} >= windowHeight){
 			var cPicHeight = windowHeight;
 			$("body").css("marginTop","0px");
 		}
 		else{
-			var cPicHeight = oPicHeight;
+			var cPicHeight = {{authorPhotoHeight}};
 			$("body").css("marginTop",Math.floor((windowHeight-cPicHeight)/2)+"px");
 		}
-		var ratio = cPicHeight / oPicHeight;
-		var cPicWidth = Math.floor(ratio * oPicWidth);
+		var ratio = cPicHeight / {{authorPhotoHeight}};
+		var cPicWidth = Math.floor(ratio * {{authorPhotoWidth}});
 			
 		// container scaling
 		$("#container").height(cPicHeight);
