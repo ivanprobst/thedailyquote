@@ -36,9 +36,10 @@
 	ul{list-style-type: none;}
 
 	#container{
+		background-image: url('{{authorPhotoPath}}');
 		background-repeat: no-repeat;
 		background-size: auto 100%;
-		background-position-x: center; background-position-y: center;
+		background-position-x: {{authorDirectionSlide}}; background-position-y: center;
 		position: relative;
 		margin: 0 auto;
 		border-left: 1px solid #333;
@@ -49,6 +50,7 @@
 		position: absolute;
 		display: block;
 		width: 100%;
+		background: {{authorBarsColor}};
 
 		opacity: 0.7;
 		transition: opacity .25s ease-in-out;
@@ -75,9 +77,14 @@
 	
 	blockquote{
 		position: absolute;
+		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
+		max-width: {{authorBlockWidth}};
 		padding: 0.5% 0.5% 0.5% 2%;
 		line-height: 1.3em;
+		color: {{authorBlockFontColor}};
+		background: {{authorBlockBackgroundColor}};
 		opacity: 0.7;
+		/*box-shadow: 5px 5px 10px #333;*/
 	}
 		blockquote p{}
 		blockquote footer{margin-top: 10px;}
@@ -125,7 +132,6 @@
 			footer section em{color: #666;}
 			
 			footer section#quotedetails-content{}
-				footer section#quotedetails-content article{display: none;}
 				
 			footer section#about-content{}
 				footer section#about-content ul{
@@ -157,7 +163,7 @@
 	var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionLeft":3, "positionTop":5, "positionSlide":"left", "containerWidth":35, "fontSize":3.2, "fontColor":"fff", "barsColor":"D5D7D6"};
 	*/
 	var quote =		{"id":"2345","text":"Great minds discuss ideas. Average minds discuss events. Small minds discuss people.","quotesomeUrl":"http://quoteso.me/q/224850","authorID":"eleanor_roosevelt"}
-	var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"assets/photos/eleanor_roosevelt.jpg","positionRight":3, "positionBottom":3, "positionSlide":"left", "containerWidth":35, "fontSize":3.2, "fontColor":"000", "bgColor":"D5D7D6", "barsColor":"D5D7D6"};
+	var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","positionRight":3, "positionBottom":3, "positionSlide":"left", "containerWidth":35, "fontSize":3.2, "fontColor":"000", "bgColor":"D5D7D6", "barsColor":"D5D7D6"};
 	
 	
 	// INIT
@@ -167,16 +173,6 @@
 		// couple of events listeners
 		$(window).resize(updateScaling);
 		$("footer nav a.modal").click(function(event){openModal(event);});
-		$("header h1").click(function(event){
-			console.log("hey");
-			$.ajax({
-				type: 'get',
-				url: '127.0.0.1:8086',
-				success: function (data) {
-					// use data
-				}
-			})
-		});
 	});
 	
 	// DESIGN INIT
@@ -189,53 +185,8 @@
 			updateScaling();
 		}
 		newImg.src = author.photoPath;
-	
-		// init quote main content
-		$('#container').css('background-image', 'url(' + author.photoPath + ')');
-		$("blockquote p").html("&#8220;"+quote.text+"&#8221;");
-		$("blockquote footer").html("&mdash; "+author.name);
 		
-		// init quote styling
-		$(".bar").css("background-color", "#"+author.barsColor);
-		$("#container").css("background-position-x", author.positionSlide);
-		$("blockquote").css("color", "#"+author.fontColor);
-		$("blockquote").css("max-width",author.containerWidth+"%");
-		if(author.bgColor) $("blockquote").css("background", "#"+author.bgColor);
-		if(author.positionLeft) $("blockquote").css("left", author.positionLeft+"%");
-		if(author.positionRight) $("blockquote").css("right", author.positionRight+"%");
-		if(author.positionTop) {$("blockquote").css("top", author.positionTop+"%"); $("blockquote").css("marginTop",$("header").height());}
-		if(author.positionBottom) {$("blockquote").css("bottom", author.positionBottom+"%"); $("blockquote").css("marginBottom",$("header").height());}
-		
-		// init quote details
-		if(quote.quotesomeUrl){
-			$("article#source p").html('<strong>Source</strong>: <a href="'+quote.quotesomeUrl+'" target="_blank">'+quote.quotesomeUrl+'</a>');
-			$("article#source").show();
-		}
-		if(author.wikipediaRef){
-			$("article#wikipedia h4").html('About '+author.name+' (more on <a href="" target="_blank">Wikipedia</a>)');
-			$("article#wikipedia h4 a").attr("href","http://en.wikipedia.org/wiki/"+author.wikipediaRef);
-			$.ajax({
-				type: "GET",
-				url: "http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles="+author.wikipediaRef,
-				dataType: "jsonp",
-				success: function(data){
-					if(data.query.pages[-1])
-						return;
-					for(var key in data.query.pages){
-						var wikiData = data.query.pages[key];
-						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
-					}
-					$("article#wikipedia").show();
-				},
-				error: function(){
-					 console.log("No Wikipedia data available.");
-				}
-			});
-		}
-		if(author.quotesomeUrl){
-			$("article#more-quotes p").html('<a href="'+author.quotesomeUrl+'" target="_blank">Other quotes from '+author.name+'</a>');
-			$("article#more-quotes").show();
-		}
+
 		
 		// twitter button listener
 		$('#twitter-menu-item').click(function(event) {
@@ -329,8 +280,8 @@
 		</header>
 		
 		<blockquote>
-			<p></p>
-			<footer></footer>
+			<p>&#8220;{{quoteText}}&#8221;</p>
+			<footer>&mdash; {{authorName}}</footer>
 		</blockquote>
 		
 		<footer class="bar">
@@ -343,16 +294,20 @@
 			
 			<section id="quotedetails-content">
 				<h3>ABOUT TODAY'S QUOTE</h3>
+				{{#quoteQuotesomeUrl}}
 				<article id="source">
-					<p></p>
+					<p><strong>Source</strong>: <a href="{{quoteQuotesomeUrl}}" target="_blank">{{quoteQuotesomeUrl}}</a></p>
 				</article>
+				{{/quoteQuotesomeUrl}}
 				<article id="wikipedia">
 					<h4></h4>
 					<p></p>
 				</article>
+				{{#authorQuotesomeUrl}}
 				<article id="more-quotes">
-					<p></p>
+					<p><a href="{{authorQuotesomeUrl}}" target="_blank">Other quotes from {{authorName}}</a></p>
 				</article>
+				{{/authorQuotesomeUrl}}
 			</section>
 			
 			<section id="about-content">

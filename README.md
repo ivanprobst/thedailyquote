@@ -3,6 +3,7 @@ thedailyquote
 
 tobd
 * move to node (remove default og values)
+* get default values for node assigned vars
 * design review
 
 tobf
