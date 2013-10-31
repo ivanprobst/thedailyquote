@@ -94,8 +94,8 @@ function updateFacebookPage(post){
 var nb = 1; // replace by real content, title, author
 var date = new Date(); // replace by quote published time
 var RSS = require('rss');
-var feed = new RSS({"title":"The Quote Tribune","description":"Your daily inspirational fix","feed_url":"thequotetribune.com/rss.xml","site_url":"thequotetribune.com","author":"The Quote Tribune"});
-var rssXML = feed.item({"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"thequotetribune.com?id="+nb,"guid":"id"+nb,"date":date.toDateString()+", "+date.getHours()+":"+date.getMinutes(),"categories":["cat1"],"author":"Marcus Aurelius"}).xml();
+var feed = new RSS({"title":"The Quote Tribune","description":"Your daily inspirational fix","feed_url":"http://thequotetribune.com/rss.xml","site_url":"http://thequotetribune.com"});
+var rssXML = feed.item({"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"http://thequotetribune.com?id="+nb,"guid":"id"+nb,"date":date.toDateString()+", "+date.getHours()+":"+date.getMinutes(),"categories":["cat1"],"author":"Marcus Aurelius"}).xml();
 // Posting stuff on rss
 function updateRSS(){
 	rssXML = feed.item({"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"thequotetribune.com?id="+nb,"guid":"id"+nb,"date":date.toDateString()+", "+date.getHours()+":"+date.getMinutes(),"categories":["cat1"],"author":"Marcus Aurelius"}).xml();
