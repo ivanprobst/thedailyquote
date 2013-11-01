@@ -2,8 +2,9 @@ thedailyquote
 =============
 
 tobd
-* move to node: window sizing
 * design review
+* put quotes in a DB
+* test quote time switching
 
 tobf
 * ie7+
@@ -12,6 +13,8 @@ tobf
 * email address overlap in about
 * resolution check
 * move wikipedia code to server side
+* simplify scaling, too much js
+* get out of js code: authorName, authorWikipediaRef
 
 offset voodoo: max ratio of 0.45
 

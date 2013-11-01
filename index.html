@@ -36,14 +36,16 @@
 	ul{list-style-type: none;}
 
 	#container{
-		background-image: url('{{authorPhotoPath}}');
 		background-repeat: no-repeat;
 		background-size: auto 100%;
-		background-position-x: {{authorDirectionSlide}}; background-position-y: center;
 		position: relative;
 		margin: 0 auto;
 		border-left: 1px solid #333;
 		border-right: 1px solid #333;
+		
+		background-image: url('{{authorPhotoPath}}');
+		width: {{authorPhotoWidth}}px; height: {{authorPhotoHeight}}px;
+		background-position-x: {{authorDirectionSlide}}; background-position-y: center;
 	}
 	
 	.bar{
@@ -77,16 +79,18 @@
 	
 	blockquote{
 		position: absolute;
-		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
-		max-width: {{authorBlockWidth}};
+		margin-top: 100px; margin-bottom: 70px; /* set to current header and footer height, might change */
 		padding: 0.5% 0.5% 0.5% 2%;
 		line-height: 1.3em;
-		color: {{authorBlockFontColor}};
-		background: {{authorBlockBackgroundColor}};
 		opacity: 0.7;
+		
+		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
+		max-width: {{authorBlockWidth}};
+		color: {{authorBlockFontColor}};
+		font-size: {{authorBlockFontSize}};
+		background: {{authorBlockBackgroundColor}};
 		/*box-shadow: 5px 5px 10px #333;*/
 	}
-		blockquote p{}
 		blockquote footer{margin-top: 10px;}
 		
 	#container>footer{
@@ -155,24 +159,36 @@
 <script type="text/javascript">
 	var windowWidth = 0;
 	var windowHeight = 0;
-	var lastModal = "";
+	var lastMenu = "";
+	var originalBlockFontSize = 0;
+	var originalAuthorPhotoWidth = 0;
+	var originalAuthorPhotoHeight = 0;
 	
 	// INIT
 	$(document).ready(function(){
 	
-		// attach a couple of events listeners
+		// couple of var init
+		originalBlockFontSize = parseInt($('blockquote').css('font-size'));
+		originalAuthorPhotoWidth = parseInt($('#container').width());
+		originalAuthorPhotoHeight = parseInt($('#container').height());
+	
+		// autosize listener
 		$(window).resize(updateScaling);
 		
-		$("footer nav a.modal").click(function(event){openModal(event);});
+		// menu opening listening
+		$("footer nav a.modal").click(function(event){openMenu(event);});
 		
+		// tweet button listener
 		$('#twitter-menu-item').click(function(event) {
 			window.open(
-						"https://twitter.com/share?url="+encodeURIComponent(location.href)+"&via=thequotetribune&text=Words%20of%20wisdom%20from%20"+(author.name).replace(" ","%20")+":",
+						'https://twitter.com/share?url='+encodeURIComponent(location.href)+'&via=thequotetribune&text=Words%20of%20wisdom%20from%20'+('{{authorName}}').replace(/ /g,'%20')+':',
 						'twitter',
 						'width=626,height=436'
 			);
 			return false;
 		});
+		
+		// fb sharer button listener
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
 						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
@@ -215,16 +231,16 @@
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		
 		// set the current photo size
-		if({{authorPhotoHeight}} >= windowHeight){
+		if(originalAuthorPhotoHeight >= windowHeight){
 			var cPicHeight = windowHeight;
 			$("body").css("marginTop","0px");
 		}
 		else{
-			var cPicHeight = {{authorPhotoHeight}};
+			var cPicHeight = originalAuthorPhotoHeight;
 			$("body").css("marginTop",Math.floor((windowHeight-cPicHeight)/2)+"px");
 		}
-		var ratio = cPicHeight / {{authorPhotoHeight}};
-		var cPicWidth = Math.floor(ratio * {{authorPhotoWidth}});
+		var ratio = cPicHeight / originalAuthorPhotoHeight;
+		var cPicWidth = Math.floor(ratio * originalAuthorPhotoWidth);
 			
 		// container scaling
 		$("#container").height(cPicHeight);
@@ -234,26 +250,26 @@
 			$("#container").width(cPicWidth);
 				
 		// quote txt scaling
-		$("blockquote").css("font-size", author.fontSize*ratio+"em");
-		$("blockquote p").css("text-indent", author.fontSize*ratio*-10+"px");
+		$('blockquote').css('font-size', parseInt(originalBlockFontSize)*ratio+'px');
+		$('blockquote p').css('text-indent', parseInt(originalBlockFontSize)*ratio*-0.6+'px');
 	}
 
 	// MENU TOGGLING
-	function openModal(event){
-		var currentModal = event.target.id.replace(/\b-.+/,"-content");
+	function openMenu(event){
+		var currentMenu = event.target.id.replace(/\b-.+/,"-content");
 		
-		if(lastModal != "") {
-			$("#"+lastModal.replace(/\b-.+/,"-menu-item")).removeClass("active"); // disable menu icon
-			$("footer section#"+lastModal).slideToggle(1000);
+		if(lastMenu != "") {
+			$("#"+lastMenu.replace(/\b-.+/,"-menu-item")).removeClass("active"); // disable menu icon
+			$("footer section#"+lastMenu).slideToggle(1000);
 		}
 		
-		if(currentModal != lastModal) {
+		if(currentMenu != lastMenu) {
 			$("#"+event.target.id).addClass("active"); // enable menu icon
-			$("footer section#"+currentModal).slideToggle(1000);
-			lastModal = currentModal;
+			$("footer section#"+currentMenu).slideToggle(1000);
+			lastMenu = currentMenu;
 		}
 		else
-			lastModal = "";
+			lastMenu = "";
 	}
 </script>
 

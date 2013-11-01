@@ -1,9 +1,9 @@
 /*
 var quote =		{"id":"1234","text":"Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.","quotesomeUrl":"http://quoteso.me/q/9323","authorID":"marcus_aurelius"}
-var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","positionLeft":3, "positionTop":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":3.2, "blockFontColor":"fff", "barsColor":"D5D7D6"};
+var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","photoWidth":3256, "photoHeight":1600, "positionLeft":2, "positionTop":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":48, "blockFontColor":"fff", "barsColor":"D5D7D6"};
 */
 var quote =		{"id":"2345","text":"Great minds discuss ideas. Average minds discuss events. Small minds discuss people.","quotesomeUrl":"http://quoteso.me/q/224850","authorID":"eleanor_roosevelt"}
-var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665, "photoHeight":1203, "positionRight":3, "positionBottom":3, "directionSlide":"left", "blockWidth":35, "blockFontSize":3.2, "blockFontColor":"000", "blockBackgroundColor":"D5D7D6", "barsColor":"D5D7D6"};
+var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665, "photoHeight":1203, "positionRight":3, "positionBottom":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":48, "blockFontColor":"000", "blockBackgroundColor":"D5D7D6", "barsColor":"D5D7D6"};
 
 var http = require('http');
 var fs = require('fs');
@@ -58,8 +58,7 @@ function initHome(response){
 	file.on('data', function(data){htmlPage = htmlPage + data;});
 	file.on('error', function(err){console.error("no index file found...");});
 	file.on('end', function(err){
-		console.log("html: "+htmlPage);
-		
+	
 		// init quote content and photos
 		parseTemplate('quoteText', quote.text);
 		parseTemplate('authorName', author.name);
@@ -70,6 +69,7 @@ function initHome(response){
 		parseTemplate('authorBarsColor', author.barsColor ? '#'+author.barsColor : '#D5D7D6');
 		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : 'center');
 		parseTemplate('authorBlockFontColor', author.blockFontColor ? '#'+author.blockFontColor : '#000');
+		parseTemplate('authorBlockFontSize', author.blockFontSize ? author.blockFontSize+'px' : '48px');
 		parseTemplate('authorBlockWidth', author.blockWidth ? author.blockWidth+'%' : '35%');
 		parseTemplate('authorBlockBackgroundColor', author.blockBackgroundColor ? '#'+author.blockBackgroundColor : 'none');
 		parseTemplate('authorPositionLeft', author.positionLeft ? author.positionLeft+'%' : 'auto');
