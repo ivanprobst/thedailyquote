@@ -28,10 +28,10 @@
 	@import url(http://reset5.googlecode.com/hg/reset.min.css);
 	 
 	body{
-		color: #000;
+		color: #242323;
 		font-family: 'Arbutus Slab', 'Open Sans', serif;
 	}
-	a{color: #000;}
+	a{color: #242323;}
 		a:hover{}
 	ul{list-style-type: none;}
 
@@ -52,37 +52,38 @@
 		position: absolute;
 		display: block;
 		width: 100%;
-		background: {{authorBarsColor}};
+		background: #fff;
 
-		opacity: 0.7;
+		opacity: 0.9;
 		transition: opacity .25s ease-in-out;
 		-moz-transition: opacity .25s ease-in-out;
 		-webkit-transition: opacity .25s ease-in-out;
 	}
-		.bar:hover{opacity: 0.7;}
 	
 	#container>header{
 		top: 0;
 		border-bottom: 1px solid #555;
 		text-align: center;
+		box-shadow: 0px 3px 10px #555;
 	}
 		header h1{
 			padding-top: 15px;
 			font-size: 2em;
-			opacity: 0.8;
+			opacity: 0.9;
 		}
+			header h1 a{text-decoration: none;}
 		header h2{
 			padding: 15px 0;
 			font-size: 1.2em;
-			opacity: 0.6;
+			opacity: 0.7;
 		}
 	
 	blockquote{
 		position: absolute;
-		margin-top: 100px; margin-bottom: 70px; /* set to current header and footer height, might change */
-		padding: 0.5% 0.5% 0.5% 2%;
+		margin-top: 100px; margin-bottom: 80px; /* set to current header and footer height, might change */
+		padding: 0.6% 0.3% 0.6% 2%;
 		line-height: 1.3em;
-		opacity: 0.7;
+		opacity: 0.6;
 		
 		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
 		max-width: {{authorBlockWidth}};
@@ -100,14 +101,13 @@
 		footer nav{
 			overflow: hidden;
 			margin: 0 auto;
-			padding: 5px 0;
+			padding: 10px 0;
 			width: 320px;
 		}
 			footer nav a{
 				float: left; display: block;
 				width: 80px; height: 60px;
 				background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat;
-				/*background: url("assets/img/icons.png") no-repeat;*/
 				
 				opacity: 0.2;
 				transition: opacity .5s ease-in-out;
@@ -118,42 +118,47 @@
 
 				#twitter-menu-item{background-position: -302px -6px;}
 				#facebook-menu-item{background-position: -380px -7px;}
+				#register-menu-item{background-position: -150px -7px;}
 				#quotedetails-menu-item{background-position: 5px -7px;}
-				#about-menu-item{background-position: -150px -7px;}
+				#about-menu-item{position: absolute; top: 10px; right: 10px; background-position: -446px -7px;}
 
 		footer section{
 			display: none;
-			padding: 20px 30%;
-			border-top: 1px solid #aaa;
+			padding: 20px 0;
+			border-top: 1px solid #ddd;
 			background: #fff;
-			text-align: center;
+			text-align: justify;
+			line-height: 1.4em;
 		}
-			footer section article{margin-bottom: 15px;}
-			footer section h3{font-size: 2em; margin-bottom: 15px;}
-			footer section h4{margin: 5px 0 7px 0;}
-			footer section p{margin-bottom: 10px; line-height: 1.3em;}
+			footer section article{margin: 0 auto 15px auto; width: 650px;}
+			footer section h3{text-align: center; font-size: 2em; margin-bottom: 20px;}
+			footer section h4{margin: 5px 0 10px 0;}
+			footer section p{margin-bottom: 10px;}
 			footer section q{font-style: italic;}
 			footer section em{color: #666;}
 			
 			footer section#quotedetails-content{}
 				
-			footer section#about-content{}
-				footer section#about-content ul{
+			footer section#register-content{}
+				footer section#register-content ul{
 					overflow: hidden;
-					clear: both;
-					margin: 15px auto 0 auto;
-					width: 50%;
 				}
-					footer section#about-content li{
+					footer section#register-content li{
+						line-height: 2.5em;
+						clear: both;
+					}
+						footer section#register-content li div{float: left;}
+						footer section#register-content li div.tleft{width: 90px;}
+						footer section#register-content li div.tright{margin-top: -5px;}
+						
+					footer section#register-content li#rss-link a{
 						float: left;
-						width: 33%;
-						line-height: 2em;
-					}
-					footer section#about-content li#rss-link a{
 						display: block;
-						width: 30px; height: 30px; margin: 0 auto;
-						background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat -11px -99px;
+						width: 80px; height: 30px;
+						background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat -11px -97px;
+						opacity: 0.7;
 					}
+						footer section#register-content li#rss-link a:hover{opacity: 1;}
 </style>
 
 <script type="text/javascript">
@@ -287,8 +292,8 @@
 
 	<div id="container">
 		<header class="bar">
-			<h1>&mdash; THE QUOTE TRIBUNE &mdash;</h1>
-			<h2>Your daily inspirational fix</h2>
+			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a></h1>
+			<h2>your daily inspirational fix</h2>
 		</header>
 		
 		<blockquote>
@@ -300,9 +305,38 @@
 			<nav id="menu">		
 				<a href="#" id="twitter-menu-item" target="_blank"></a>
 				<a href="#" id="facebook-menu-item" target="_blank"></a>
+				<a href="#" id="register-menu-item" class="modal" alt="About"></a>
 				<a href="#" id="quotedetails-menu-item" class="modal" alt="More Information"></a>
 				<a href="#" id="about-menu-item" class="modal" alt="About"></a>
 			</nav>
+			
+			
+			
+			<section id="register-content">
+				<h3>GET THE WORDS, WRITE SOME</h3>
+				<article>
+					<h4>Want to keep fresh and up to date?</h4>
+					<ul>
+						<li>
+							<div class="tleft"><a href="https://twitter.com/thequotetribune" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @thequotetribune</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></div>
+							<div class="tright">Follow us to infinity (might even be beyond)</div>
+						</li>
+						<li>
+							<div class="tleft"><div class="fb-like" data-href="https://www.facebook.com/thequotetribune" data-width="60" data-height="20" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="false" data-send="false"></div></div>
+							<div class="tright">Like us very very much (with love and butterflies)</div>
+						</li>
+						<li id="rss-link">
+							<div class="tleft"><a href="http://feeds.feedburner.com/TheQuoteTribune" target="_blank"></a></div>
+							<div class="tright">Get yourself a feed (see what we did?)</div>
+						</li>
+					</ul>
+				</article>
+				<article>
+					<h4>Anything to share?</h4>
+					<p>We promise we will listen (maybe): <a href="mailto:sayhi@thequotetribune.com">sayhi@thequotetribune.com</a></p>
+				</article>
+			</section>
 			
 			<section id="quotedetails-content">
 				<h3>ABOUT TODAY'S QUOTE</h3>
@@ -323,32 +357,14 @@
 			</section>
 			
 			<section id="about-content">
-				<h3>ABOUT THE QUOTE TRIBUNE</h3>
+				<h3>WHAT IS THE QUOTE TRIBUNE</h3>
 				<article>
+					<h4>Everyday we give you a new awesome quote with that crazy one's handsome photo.</h4>
 					<p>Some Latin chap once said <q>"Acta Non Verba"</q>, meaning <q>"Actions, not words"</q>. Thoughtful and true.</p>
 					<p>But the thing is, words are powerful, and have always been inspirational for the most beautiful minds history has seen.</p>
 					<p>So we believe quotes of the greatest must be heard and shared. These are packaged life lessons, they make you reconsider what you do and think, they encourage your ego to grow more daring, they make you laugh.</p>
 					<p>And for us, attaching the author's photo to the words makes it even more powerful. It's a visual gong inside your brain.</p>
-					<p>This is what we do here, everyday we give you a new awesome quote with that crazy one's picture.</p>
-				</article>
-				<article>
-					<h4>Want to keep fresh and up to date?</h4>
-					<ul>
-						<li>
-							<a href="https://twitter.com/thequotetribune" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @thequotetribune</a>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-						</li>
-						<li id="rss-link">
-							<a href="http://feeds.feedburner.com/TheQuoteTribune" target="_blank"></a>
-						</li>
-						<li>
-							<div class="fb-like" data-href="https://www.facebook.com/thequotetribune" data-width="60" data-height="20" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="false" data-send="false"></div>
-						</li>
-					</ul>
-				</article>
-				<article>
-					<h4>Anything to share?</h4>
-					<p>sayhi@thequotetribune.com</p>
+					<p>So that's what we do. Simply.</p>
 				</article>
 				<article>
 					<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a>, quotes curated by <a href="https://www.quotesome.com/" target="_blank">Quotesome</a></em></p>

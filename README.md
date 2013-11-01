@@ -2,9 +2,9 @@ thedailyquote
 =============
 
 tobd
-* design review
 * put quotes in a DB
 * test quote time switching
+* get config outside (default var, etc.)
 
 tobf
 * ie7+
@@ -26,3 +26,4 @@ icons ref
 * twitter: <a href="http://thenounproject.com/noun/tweet/#icon-No16224" target="_blank">Tweet</a> designed by <a href="http://thenounproject.com/joe_harrison" target="_blank">Joe Harrison</a> from The Noun Project
 * fb: <a href="http://thenounproject.com/noun/facebook/#icon-No20845" target="_blank">Facebook</a> designed by <a href="http://thenounproject.com/Luboš Volkov" target="_blank">Luboš Volkov</a> from The Noun Project
 * rss: <a href="http://thenounproject.com/noun/rss/#icon-No16950" target="_blank">RSS</a> designed by <a href="http://thenounproject.com/mollybramlet" target="_blank">Molly Bramlet</a> from The Noun Project
+* info: <a href="http://thenounproject.com/noun/information/#icon-No2824" target="_blank">Information</a> designed by <a href="http://thenounproject.com/somerandomdude" target="_blank">P.J. Onori</a> from The Noun Project
