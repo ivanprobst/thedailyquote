@@ -62,7 +62,7 @@ function initHome(request, response){
 	var ip = request.headers['x-forwarded-for'];
 	console.log("--> "+ip);	
 	var geo = geoip.lookup(ip);
-	console.log("the country code: "+geo);
+	console.log("the country code: "+geo.country);
 
 	// query the db
 	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {

@@ -2,7 +2,7 @@ thedailyquote
 =============
 
 tobd
-* quote selection with browser + server timestamp
+* get the country from the IP -> fake timezone for switch testing (later build mapping from country to tz)
 * get config outside (default design var, hour in the design when to switch quote etc.)
 
 * better sharing button
