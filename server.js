@@ -62,7 +62,14 @@ function initHome(request, response){
 	var ip = request.headers['x-forwarded-for'];
 	console.log("--> "+ip);	
 	var geo = geoip.lookup(ip);
-	console.log("the country code: "+geo.country);
+	// console.log("the country code: "+geo.country);
+	// map the country to get the tzOffset
+	
+	// time stuff
+	var now = new Date();
+	console.log("now: "+now);
+	now.setHours(now.getHours()+7); // add to tzOffset
+	console.log("then: "+now);
 
 	// query the db
 	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
@@ -70,7 +77,6 @@ function initHome(request, response){
 		console.log("We are connected");
 		
 		// couple of vars
-		var now = new Date();
 		var quotes = db.collection('quotes');
 		var authors = db.collection('authors');
 

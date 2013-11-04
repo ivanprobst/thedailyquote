@@ -2,12 +2,14 @@ thedailyquote
 =============
 
 tobd
-* get the country from the IP -> fake timezone for switch testing (later build mapping from country to tz)
+* build timezone table
 * get config outside (default design var, hour in the design when to switch quote etc.)
+* admin mock-up
 
 * better sharing button
 
 tobf
+* clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * ie7+
 * fb sharing caching
 * scrolling fallback when resolution too small
