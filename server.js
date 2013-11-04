@@ -65,8 +65,34 @@ function initHome(request, response){
 	console.log("the country code: "+geo);
 
 	// query the db
+	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
+		if (err) throw err;
+		console.log("We are connected");
+		
+		// couple of vars
+		var now = new Date();
+		var quotes = db.collection('quotes');
+		var authors = db.collection('authors');
 
+		// figure out the date
+		var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear());
+		console.log("fetching: "+dateToFetch);
 
+		// fetch the relevant quote
+		quotes.findOne({date:dateToFetch}, function(err, item){
+			quote = item;
+			console.log("item: "+quote.date.getDate()+" - now: "+now);
+
+			authors.findOne({iid:quote.authorID}, function(err,item){
+				author = item;
+				console.log("fetched quote from "+author.name+": "+quote.text);
+				buildHome(response)
+			});
+		});
+
+	});
+
+function buildHome(response){
 	// and build that page
 	var htmlPage = '';
 	var file = fs.createReadStream('index.html');
@@ -175,30 +201,3 @@ function updateRSS(){
 	nb++;
 }
 
-// init DB
-mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
-	if (err) throw err;
-	console.log("We are connected");
-	
-	// couple of vars
-	var now = new Date();
-	var quotes = db.collection('quotes');
-	var authors = db.collection('authors');
-
-	// figure out the date
-	
-	var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear());
-	console.log("fetching: "+dateToFetch);
-
-	// fetch the relevant quote
-	quotes.findOne({date:dateToFetch}, function(err, item){
-		quote = item;
-		console.log("item: "+quote.date.getDate()+" - now: "+now);
-
-		authors.findOne({iid:quote.authorID}, function(err,item){
-			author = item;
-			console.log("author: "+author.name);
-		});
-	});
-
-});
