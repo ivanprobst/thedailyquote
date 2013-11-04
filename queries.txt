@@ -1,0 +1,19 @@
+{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","photoWidth":3256, "photoHeight":1600, "positionLeft":2, "positionTop":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":48, "blockFontColor":"fff", "barsColor":"fff"}
+
+{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665, "photoHeight":1203, "positionRight":3, "positionBottom":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":48, "blockFontColor":"000", "blockBackgroundColor":"fff", "barsColor":"fff"};
+
+
+/***********/
+
+{"text":"Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.","quotesomeUrl":"http://quoteso.me/q/9323","authorID":"marcus_aurelius"}
+
+{"text":"Great minds discuss ideas. Average minds discuss events. Small minds discuss people.","quotesomeUrl":"http://quoteso.me/q/224850","authorID":"eleanor_roosevelt"}
+
+
+/***********/
+
+db.authors.insert()
+
+db.quotes.insert()
+
+db.quotes.update({authorID:"marcus_aurelius"}, {$set:{date:new Date('Nov 05, 2013')}})

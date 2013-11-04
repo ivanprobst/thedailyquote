@@ -7,6 +7,7 @@ var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quo
 
 var http = require('http');
 var fs = require('fs');
+var mongo = require('mongodb').MongoClient;
 
 var extensionMapping = {
 						".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",

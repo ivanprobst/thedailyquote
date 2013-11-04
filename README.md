@@ -2,19 +2,24 @@ thedailyquote
 =============
 
 tobd
-* put quotes in a DB
-* test quote time switching
-* get config outside (default var, etc.)
+* quote selection with browser + server timestamp
+* get config outside (default design var, hour in the design when to switch quote etc.)
+
+* better sharing button
 
 tobf
 * ie7+
 * fb sharing caching
 * scrolling fallback when resolution too small
-* email address overlap in about
-* resolution check
-* move wikipedia code to server side
+* check that all classic resolutions are good
+* get out of js code: authorName, authorWikipediaRef,move wikipedia code to server side
 * simplify scaling, too much js
-* get out of js code: authorName, authorWikipediaRef
+
+final
+* better permissions on ec2
+* db redundancy
+* setup sandbox env
+
 
 offset voodoo: max ratio of 0.45
 
