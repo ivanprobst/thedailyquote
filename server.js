@@ -91,6 +91,7 @@ function initHome(request, response){
 		});
 
 	});
+}
 
 function buildHome(response){
 	// and build that page
@@ -200,4 +201,3 @@ function updateRSS(){
 	rssXML = feed.item({"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"thequotetribune.com?id="+nb,"guid":"id"+nb,"date":date.toDateString()+", "+date.getHours()+":"+date.getMinutes(),"categories":["cat1"],"author":"Marcus Aurelius"}).xml();
 	nb++;
 }
-
