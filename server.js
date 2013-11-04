@@ -1,13 +1,18 @@
 /*
 var quote =		{"id":"1234","text":"Begin - to begin is half the work, let half still remain; again begin this, and thou wilt have finished.","quotesomeUrl":"http://quoteso.me/q/9323","authorID":"marcus_aurelius"}
 var author =	{"name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","photoWidth":3256, "photoHeight":1600, "positionLeft":2, "positionTop":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":48, "blockFontColor":"fff", "barsColor":"fff"};
-*/
+
 var quote =		{"id":"2345","text":"Great minds discuss ideas. Average minds discuss events. Small minds discuss people.","quotesomeUrl":"http://quoteso.me/q/224850","authorID":"eleanor_roosevelt"}
 var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665, "photoHeight":1203, "positionRight":3, "positionBottom":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":48, "blockFontColor":"000", "blockBackgroundColor":"fff", "barsColor":"fff"};
+*/
 
 var http = require('http');
 var fs = require('fs');
+var mongo = require('mongodb').MongoClient;
+var geoip = require('geoip-lite');
 
+var quote = {};
+var author = {};
 var extensionMapping = {
 						".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",
 						".js":"text/javascript",".css":"text/css",
@@ -19,7 +24,7 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		initHome(response);
+		initHome(request, response);
 		return;
 	}
 	
@@ -50,9 +55,19 @@ http.createServer(function (request, response) {
 console.log('Server running at http://127.0.0.1:8124/');
 
 // initialize the home
-function initHome(response){
+function initHome(request, response){
 	console.log('... initializing home page');
 
+	// defining timeoffset
+	var ip = request.headers['x-forwarded-for'];
+	console.log("--> "+ip);	
+	var geo = geoip.lookup(ip);
+	console.log("the country code: "+geo);
+
+	// query the db
+
+
+	// and build that page
 	var htmlPage = '';
 	var file = fs.createReadStream('index.html');
 	file.on('data', function(data){htmlPage = htmlPage + data;});
@@ -64,7 +79,7 @@ function initHome(response){
 		parseTemplate('authorName', author.name);
 		parseTemplate('authorPhotoPath', author.photoPath);
 		parseTemplate('authorThumbPath', (author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
-		
+
 		// init quote styling
 		parseTemplate('authorBarsColor', author.barsColor ? '#'+author.barsColor : '#fff');
 		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : 'center');
@@ -159,3 +174,31 @@ function updateRSS(){
 	rssXML = feed.item({"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"thequotetribune.com?id="+nb,"guid":"id"+nb,"date":date.toDateString()+", "+date.getHours()+":"+date.getMinutes(),"categories":["cat1"],"author":"Marcus Aurelius"}).xml();
 	nb++;
 }
+
+// init DB
+mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
+	if (err) throw err;
+	console.log("We are connected");
+	
+	// couple of vars
+	var now = new Date();
+	var quotes = db.collection('quotes');
+	var authors = db.collection('authors');
+
+	// figure out the date
+	
+	var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear());
+	console.log("fetching: "+dateToFetch);
+
+	// fetch the relevant quote
+	quotes.findOne({date:dateToFetch}, function(err, item){
+		quote = item;
+		console.log("item: "+quote.date.getDate()+" - now: "+now);
+
+		authors.findOne({iid:quote.authorID}, function(err,item){
+			author = item;
+			console.log("author: "+author.name);
+		});
+	});
+
+});
