@@ -2,35 +2,41 @@ thedailyquote
 =============
 
 tobd
-* admin mock-up
+* admin SHIT
+
+* time the quote request and social updates
 
 tobf
 * move fontsize in quote rather than author
-* clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * better sharing button
-* ie7+
-* fb sharing caching
 * scrolling fallback when resolution too small
 * check that all classic resolutions are good
-* get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * simplify scaling, too much js
-* fallback to override date switching
+* ie7+
+* fb sharing caching
+* get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
+* fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found
-* complete tz mapping
 
 final
+* clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
+* FILL THAT DB
+
+maybe
+* complete tz mapping
+* handle carriage return in quote txt
 
 
 offset voodoo: max ratio of 0.45
 
 modules
-Twitter API: https://github.com/ttezel/twit
-HTTP calls: https://github.com/mikeal/request
-RSS: https://github.com/dylang/node-rss
-mongo: http://mongodb.github.io/node-mongodb-native/
-geoip: https://github.com/bluesmoon/node-geoip
+* Twitter API: https://github.com/ttezel/twit
+* HTTP calls: https://github.com/mikeal/request
+* RSS: https://github.com/dylang/node-rss
+* mongo: http://mongodb.github.io/node-mongodb-native/
+* geoip: https://github.com/bluesmoon/node-geoip
 
 icons ref
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project

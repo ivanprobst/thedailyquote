@@ -1,43 +1,22 @@
 // external modules
 var http = require('http');
 var fs = require('fs');
-var mongo = require('mongodb').MongoClient;
 var geoip = require('geoip-lite');
 
 // internal modules
 var social = require('./assets/scripts/social.js');
+var pageBuilder = require('./assets/scripts/pageBuilder.js');
 var CONST = require('./assets/scripts/CONST.js');
 
 // varz
-var quote = {};
-var author = {};
 var timmy = null;
-
-// Launch init
-console.log('...server running at http://127.0.0.1:8124/');
-
-// timer stuff
-var timmyNow = new Date();
-var nextTick = new Date(timmyNow.getFullYear(), timmyNow.getMonth(), timmyNow.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
-var delay = nextTick - timmyNow;
-console.log("delay: "+delay);
-timmy = setTimeout(tick,delay);
-//trig social update timer...
-function tick(){
-	timmyNow = new Date();
-	console.log('tick @'+timmyNow);
-	nextTick = new Date(timmyNow.getFullYear(), timmyNow.getMonth(), timmyNow.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
-	delay = nextTick - timmyNow;
-	console.log("next tick in: "+delay);
-	timmy = setTimeout(tick,delay);
-}
 
 http.createServer(function (request, response) {
 	console.log('# client asked for: '+request.url);
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		initHome(request, response);
+		pageBuilder.publishIndex(response);
 		return;
 	}
 	
@@ -64,7 +43,26 @@ http.createServer(function (request, response) {
 	});
 }).listen(8124);
 
-// initialize the home
+// Launch init
+console.log('...running server on http://127.0.0.1:8124/');
+
+// timer stuff
+var timmyNow = new Date();
+var nextTick = new Date(timmyNow.getFullYear(), timmyNow.getMonth(), timmyNow.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
+var delay = nextTick - timmyNow;
+console.log("delay: "+delay);
+timmy = setTimeout(tick,delay);
+//trig social update timer...
+function tick(){
+	timmyNow = new Date();
+	console.log('tick @'+timmyNow);
+	nextTick = new Date(timmyNow.getFullYear(), timmyNow.getMonth(), timmyNow.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
+	delay = nextTick - timmyNow;
+	console.log("next tick in: "+delay);
+	timmy = setTimeout(tick,delay);
+}
+
+/* FOR NOW USELESS GEOLOC, SWITCHING WILL MOST PROBABLY BE DONE WITH TIMER
 function initHome(request, response){
 	console.log('... initializing home page');
 
@@ -88,84 +86,5 @@ function initHome(request, response){
 		}
 	}
 	console.log("---> then: "+now);
-
-	// query the db
-	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
-		if (err){console.error('!!! no db found, returning error page...'); response.write('NO DB FOUND'); response.end(); return;}
-		console.log("DB connected");
-		
-		// couple of vars
-		var quotes = db.collection('quotes');
-		var authors = db.collection('authors');
-
-		// figure out the date
-		var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear());
-		console.log("fetching quote from date: "+dateToFetch);
-
-		// fetch the relevant quote
-		quotes.findOne({date:dateToFetch}, function(err, item){
-			quote = item;
-
-			authors.findOne({iid:quote.authorID}, function(err,item){
-				author = item;
-				console.log("fetched quote from "+author.name+": "+quote.text);
-				buildHome(response);
-			});
-		});
-	});
 }
-
-function buildHome(response){
-	// and build that page
-	var htmlPage = '';
-	var file = fs.createReadStream('assets/templates/index.html');
-	file.on('data', function(data){htmlPage = htmlPage + data;});
-	file.on('error', function(err){console.error("no index file found...");});
-	file.on('end', function(err){
-	
-		// init quote content and photos
-		parseTemplate('quoteText', quote.text);
-		parseTemplate('authorName', author.name);
-		parseTemplate('authorPhotoPath', author.photoPath);
-		parseTemplate('authorThumbPath', (author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
-
-		// init quote styling
-		parseTemplate('authorBarsColor', author.barsColor ? '#'+author.barsColor : CONST.default_barsColor);
-		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : CONST.default_directionSlide);
-		parseTemplate('authorBlockFontColor', author.blockFontColor ? '#'+author.blockFontColor : CONST.default_blockFontColor);
-		parseTemplate('authorBlockFontSize', author.blockFontSize ? author.blockFontSize+'px' : CONST.default_blockFontSize);
-		parseTemplate('authorBlockWidth', author.blockWidth ? author.blockWidth+'%' : CONST.default_blockWidth);
-		parseTemplate('authorBlockBackgroundColor', author.blockBackgroundColor ? '#'+author.blockBackgroundColor : CONST.default_blockBackgroundColor);
-		parseTemplate('authorPositionLeft', author.positionLeft ? author.positionLeft+'%' : CONST.default_positionLeft);
-		parseTemplate('authorPositionRight', author.positionRight ? author.positionRight+'%' : CONST.default_positionRight);
-		parseTemplate('authorPositionTop', author.positionTop ? author.positionTop+'%' : CONST.default_positionTop);
-		parseTemplate('authorPositionBottom', author.positionBottom ? author.positionBottom+'%' : CONST.default_positionBottom);
-		parseTemplate('authorPhotoWidth', author.photoWidth ? author.photoWidth : CONST.default_photoWidth);
-		parseTemplate('authorPhotoHeight', author.photoHeight ? author.photoHeight : CONST.default_photoHeight);
-		
-		// init quote details
-		parseTemplate('quoteQuotesomeUrl', quote.quotesomeUrl);
-		parseTemplate('authorQuotesomeUrl', author.quotesomeUrl);
-		parseTemplate('authorWikipediaRef', author.wikipediaRef);			
-		
-		// fire in the hole!!!
-		response.write(htmlPage);
-		response.end();
-		
-		// template parser
-		function parseTemplate(property, value){
-			var regex = new RegExp('{{'+property+'}}','g');
-			if(value){
-				htmlPage = htmlPage.replace(regex, value);
-				regex = new RegExp('{{(#|\/)'+property+'}}','g');
-				htmlPage = htmlPage.replace(regex, '');
-			}
-			else{
-				htmlPage = htmlPage.replace(regex, null);
-				regex = new RegExp('{{#'+property+'}}(.|\n|\r)+{{/'+property+'}}','g');
-				htmlPage = htmlPage.replace(regex, '');
-			}
-		}
-	});
-}
-
+*/
