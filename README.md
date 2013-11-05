@@ -5,6 +5,7 @@ tobd
 * admin mock-up
 
 tobf
+* move fontsize in quote rather than author
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * better sharing button
 * ie7+
@@ -23,6 +24,13 @@ final
 
 
 offset voodoo: max ratio of 0.45
+
+modules
+Twitter API: https://github.com/ttezel/twit
+HTTP calls: https://github.com/mikeal/request
+RSS: https://github.com/dylang/node-rss
+mongo: http://mongodb.github.io/node-mongodb-native/
+geoip: https://github.com/bluesmoon/node-geoip
 
 icons ref
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project

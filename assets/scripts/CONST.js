@@ -1,3 +1,5 @@
+var dailyTransitionHour = 6; // UTC
+
 module.exports = {
 
 	extension_map : {
@@ -20,6 +22,12 @@ module.exports = {
 	default_positionTop: 'auto',
 	default_positionBottom: 'auto',
 	default_photoWidth: 0,
-	default_photoHeight: 0
+	default_photoHeight: 0,
+	
+	// RSS consts
+	rssTitle : 'The Quote Tribune',
+	
+	// timerz
+	daily_transition_hour : dailyTransitionHour
 };
 

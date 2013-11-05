@@ -11,12 +11,26 @@ var CONST = require('./assets/scripts/CONST.js');
 // varz
 var quote = {};
 var author = {};
-var rssXML = '';
+var timmy = null;
 
 // Launch init
-rssXML = social.initRSS();
 console.log('...server running at http://127.0.0.1:8124/');
-//trig social update timer
+
+// timer stuff
+var timmyNow = new Date();
+var nextTick = new Date(timmyNow.getFullYear(), timmyNow.getMonth(), timmyNow.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
+var delay = nextTick - timmyNow;
+console.log("delay: "+delay);
+timmy = setTimeout(tick,delay);
+//trig social update timer...
+function tick(){
+	timmyNow = new Date();
+	console.log('tick @'+timmyNow);
+	nextTick = new Date(timmyNow.getFullYear(), timmyNow.getMonth(), timmyNow.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
+	delay = nextTick - timmyNow;
+	console.log("next tick in: "+delay);
+	timmy = setTimeout(tick,delay);
+}
 
 http.createServer(function (request, response) {
 	console.log('# client asked for: '+request.url);
@@ -28,9 +42,9 @@ http.createServer(function (request, response) {
 	}
 	
 	// if asked and if existing, serve rss xml...
-	if(request.url == '/rss.xml' && rssXML){
+	if(request.url == '/rss.xml' && social.getRSS()){
 		response.writeHead(200, {'Content-Type': 'application/rss+xml'});
-		response.write(rssXML);
+		response.write(social.getRSS());
 		response.end();
 		return;
 	}
@@ -77,7 +91,7 @@ function initHome(request, response){
 
 	// query the db
 	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
-		if (err) throw err;
+		if (err){console.error('!!! no db found, returning error page...'); response.write('NO DB FOUND'); response.end(); return;}
 		console.log("DB connected");
 		
 		// couple of vars
@@ -95,7 +109,7 @@ function initHome(request, response){
 			authors.findOne({iid:quote.authorID}, function(err,item){
 				author = item;
 				console.log("fetched quote from "+author.name+": "+quote.text);
-				buildHome(response)
+				buildHome(response);
 			});
 		});
 	});
