@@ -6,6 +6,7 @@ var quote =		{"id":"2345","text":"Great minds discuss ideas. Average minds discu
 var author =	{"name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665, "photoHeight":1203, "positionRight":3, "positionBottom":5, "directionSlide":"left", "blockWidth":35, "blockFontSize":48, "blockFontColor":"000", "blockBackgroundColor":"fff", "barsColor":"fff"};
 */
 
+var CONST = require('./assets/scripts/CONST.js');
 var http = require('http');
 var fs = require('fs');
 var mongo = require('mongodb').MongoClient;
@@ -58,23 +59,31 @@ console.log('Server running at http://127.0.0.1:8124/');
 function initHome(request, response){
 	console.log('... initializing home page');
 
-	// defining timeoffset
-	var ip = request.headers['x-forwarded-for'];
-	console.log("--> "+ip);	
-	var geo = geoip.lookup(ip);
-	// console.log("the country code: "+geo.country);
-	// map the country to get the tzOffset
-	
-	// time stuff
+	// defining timezone offset
 	var now = new Date();
 	console.log("now: "+now);
-	now.setHours(now.getHours()+7); // add to tzOffset
-	console.log("then: "+now);
+	var ip = request.headers['x-forwarded-for']; console.log("ip: "+ip);
+	if(ip){
+		var geo = geoip.lookup(ip); console.log("-> ccode: "+geo.country);
+		if(geo){
+			var tz = CONST.ccode_to_tz_map[geo.country]; console.log("--> offset: "+tz);
+			if(tz && tz != "0"){
+				var offset = {
+					hours : parseInt(tz.match(/[+-][0-9]+/)),
+					minutes : parseInt((tz.match(/[+-]/))+((tz.match(/:[0-9]+/))?((''+tz.match(/:[0-9]+/)).substring(1)):'0'))
+				}
+			
+				now.setHours(now.getHours()+offset.hours); // add to tzOffset
+				now.setMinutes(now.getMinutes()+offset.minutes); // add to tzOffset
+			}
+		}
+	}
+	console.log("---> then: "+now);
 
 	// query the db
 	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
 		if (err) throw err;
-		console.log("We are connected");
+		console.log("DB connected");
 		
 		// couple of vars
 		var quotes = db.collection('quotes');
@@ -82,12 +91,11 @@ function initHome(request, response){
 
 		// figure out the date
 		var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear());
-		console.log("fetching: "+dateToFetch);
+		console.log("fetching quote from date: "+dateToFetch);
 
 		// fetch the relevant quote
 		quotes.findOne({date:dateToFetch}, function(err, item){
 			quote = item;
-			console.log("item: "+quote.date.getDate()+" - now: "+now);
 
 			authors.findOne({iid:quote.authorID}, function(err,item){
 				author = item;
@@ -95,7 +103,6 @@ function initHome(request, response){
 				buildHome(response)
 			});
 		});
-
 	});
 }
 
@@ -114,18 +121,18 @@ function buildHome(response){
 		parseTemplate('authorThumbPath', (author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
 
 		// init quote styling
-		parseTemplate('authorBarsColor', author.barsColor ? '#'+author.barsColor : '#fff');
-		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : 'center');
-		parseTemplate('authorBlockFontColor', author.blockFontColor ? '#'+author.blockFontColor : '#000');
-		parseTemplate('authorBlockFontSize', author.blockFontSize ? author.blockFontSize+'px' : '48px');
-		parseTemplate('authorBlockWidth', author.blockWidth ? author.blockWidth+'%' : '35%');
-		parseTemplate('authorBlockBackgroundColor', author.blockBackgroundColor ? '#'+author.blockBackgroundColor : 'none');
-		parseTemplate('authorPositionLeft', author.positionLeft ? author.positionLeft+'%' : 'auto');
-		parseTemplate('authorPositionRight', author.positionRight ? author.positionRight+'%' : 'auto');
-		parseTemplate('authorPositionTop', author.positionTop ? author.positionTop+'%' : 'auto');
-		parseTemplate('authorPositionBottom', author.positionBottom ? author.positionBottom+'%' : 'auto');
-		parseTemplate('authorPhotoWidth', author.photoWidth ? author.photoWidth : 0);
-		parseTemplate('authorPhotoHeight', author.photoHeight ? author.photoHeight : 0);
+		parseTemplate('authorBarsColor', author.barsColor ? '#'+author.barsColor : CONST.default_barsColor);
+		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : CONST.default_directionSlide);
+		parseTemplate('authorBlockFontColor', author.blockFontColor ? '#'+author.blockFontColor : CONST.default_blockFontColor);
+		parseTemplate('authorBlockFontSize', author.blockFontSize ? author.blockFontSize+'px' : CONST.default_blockFontSize);
+		parseTemplate('authorBlockWidth', author.blockWidth ? author.blockWidth+'%' : CONST.default_blockWidth);
+		parseTemplate('authorBlockBackgroundColor', author.blockBackgroundColor ? '#'+author.blockBackgroundColor : CONST.default_blockBackgroundColor);
+		parseTemplate('authorPositionLeft', author.positionLeft ? author.positionLeft+'%' : CONST.default_positionLeft);
+		parseTemplate('authorPositionRight', author.positionRight ? author.positionRight+'%' : CONST.default_positionRight);
+		parseTemplate('authorPositionTop', author.positionTop ? author.positionTop+'%' : CONST.default_positionTop);
+		parseTemplate('authorPositionBottom', author.positionBottom ? author.positionBottom+'%' : CONST.default_positionBottom);
+		parseTemplate('authorPhotoWidth', author.photoWidth ? author.photoWidth : CONST.default_photoWidth);
+		parseTemplate('authorPhotoHeight', author.photoHeight ? author.photoHeight : CONST.default_photoHeight);
 		
 		// init quote details
 		parseTemplate('quoteQuotesomeUrl', quote.quotesomeUrl);

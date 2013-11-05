@@ -2,24 +2,23 @@ thedailyquote
 =============
 
 tobd
-* build timezone table
-* get config outside (default design var, hour in the design when to switch quote etc.)
 * admin mock-up
-
-* better sharing button
 
 tobf
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
+* better sharing button
 * ie7+
 * fb sharing caching
 * scrolling fallback when resolution too small
 * check that all classic resolutions are good
-* get out of js code: authorName, authorWikipediaRef,move wikipedia code to server side
+* get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * simplify scaling, too much js
+* fallback to override date switching
+* fallback when no quote/author found
+* complete tz mapping
 
 final
-* better permissions on ec2
-* db redundancy
+* setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
 
 
