@@ -26,6 +26,9 @@ module.exports = {
 	rssTitle : 'The Quote Tribune',
 	
 	// timerz
-	daily_transition_hour : 6 // 6am UTC
+	daily_transition_hour : 6, // 6am UTC
+	
+	// other
+	db_url : 'mongodb://localhost:27017/thequotetribune'
 };
 

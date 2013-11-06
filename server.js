@@ -64,16 +64,27 @@ function tick(){
 }
 
 // admin srv
+var adminPage = new admin();
 http.createServer(function (request, response) {
 	console.log('# admin srv asked for: '+request.url);
 
 	// if asked, serve home page...
-	if(request.url == '/admin'){
+	if(request.url == '/admin' && request.method != 'POST'){
 		console.log('going to build admin');
-		var adminPage = new admin(response);
+		adminPage.create(response);
 		return;
 	}
-
+	else if(request.method == 'POST'){
+		var dbData = ''; 
+		console.log('get posted data');
+		request.on('data', function(data){
+			dbData += data;
+		});
+		request.on('end', function(data){
+			console.log("received a quote from: "+(JSON.parse(dbData)).author);
+			adminPage.addQuote(JSON.parse(dbData));
+		});
+	}
 	response.end();
 }).listen(8125);
 

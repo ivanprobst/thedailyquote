@@ -19,26 +19,68 @@
 	}
 	
 	header{
-		margin-bottom: 50px;
+		margin-bottom: 30px;
 		font-size: 1.2em;
 	}
 	
-	input{
+	section{
+		float: left;
+		width: 800px;
+	}
+	
+	input, textarea{
 		display: block;
 		margin-bottom: 20px;
+		padding: 5px;
 	}
 </style>
 
 <script type="text/javascript">	
 	// INIT
-	$(document).ready(function(){		
-		$("form input[type='submit']").click(function(event){
-			console.log("getting: "+$("form input[type='url']").val());
-			$.get($("form input[type='url']").val(), function( data ) {
-				console.log( data );
+	$(document).ready(function(){
+		// fetch url form
+		$("form#fetch-url input[type='submit']").click(function(event){
+			console.log("fetching "+$("form input[type='url']").val()+"...");
+			fetchQuotesome($("form input[type='url']").val());
+		});
+		
+		// update db form
+		$("form#update-db").submit(function(event){
+			console.log("updating db...");
+			var data = {
+				author:		$('#author').val(),
+				authorID:	$('#author-id').val(),
+				quoteUrl:	$('#quote-url').val(),
+				quoteText:	$('#quote-text').val(),
+				pubDate:	$('#pubdate').val(),
+			};
+			
+			$.ajax({
+			  type: "POST",
+			  url: '/admin',
+			  data: JSON.stringify(data)
 			});
 		});
 	});
+	
+	function fetchQuotesome(url){
+		var ExternalURL = url; // This address must not contain any leading 'http://'
+
+		var QueryURL = "http://anyorigin.com/get?url=" + ExternalURL + "&callback=?";
+		$.getJSON(QueryURL, function(data){
+			if (data && data != null && typeof data == 'object' && data.contents && data.contents != null && typeof data.contents == 'string'){
+				data = data.contents.replace(/<script[^>]*>[sS]*?<\/script>/gi, '');
+				if (data.length > 0){
+					$('#author').val($('.row .author', data).html());
+					$('#author-id').val((($('.author', data).html()).toLowerCase()).replace(/ /g,'_'));
+					$('#quote-url').val(url);
+					$('#quote-text').val($('.quote-block-quote-text', data).html());
+					var now = new Date();
+					$('#pubdate').val(now.getFullYear()+'-'+(now.getMonth()<9 ? '0'+(now.getMonth()+1) : now.getMonth()+1)+'-'+(now.getDate()<10 ? '0'+now.getDate() : now.getDate()));
+				}
+			}
+		});
+	}
 	
 
 </script>
@@ -52,9 +94,22 @@
 		</header>
 		
 		<section>
-			<form onsubmit="return false;">
-				<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required />
+			<form id="fetch-url" onsubmit="return false;">
+				<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required value="http://quoteso.me/q/226937" />
+				
 				<input type="submit" value="fetch url" />
+			</form>
+		</section>
+		
+		<section>
+			<form id="update-db" onsubmit="return false;">
+				<input id="author" name="author" type="text" size="60" placeholder="author" />
+				<input id="author-id" name="author-id" type="text" size="60" placeholder="authorID" />
+				<input id="quote-url" name="quote-url" type="url" size="60" placeholder="quote url" />
+				<textarea id="quote-text" name="quote-text" rows="5" cols="60" placeholder="quote text"></textarea>
+				<input id="pubdate" name="pubdate" type="date"/>
+				
+				<input type="submit" value="update db" />
 			</form>
 		</section>
 		
