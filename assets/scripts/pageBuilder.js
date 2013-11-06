@@ -25,11 +25,11 @@ module.exports = {
 
 			// fetch the relevant quote
 			quotes.findOne({date:dateToFetch}, function(err, item){
-				if(err){console.log("!!! no quote found"); buildError(response); return;}
+				if(err || !item){console.log("!!! no quote found"); buildError(response); return;}
 				quote = item;
 
 				authors.findOne({iid:quote.authorID}, function(err,item){
-					if(err){console.log("!!! no author found"); buildError(response); return;}
+					if(err || !item){console.log("!!! no author found"); buildError(response); return;}
 					author = item;
 					console.log("fetched quote from "+author.name+": "+quote.text);
 					buildIndex(response);
