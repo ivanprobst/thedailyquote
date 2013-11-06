@@ -19,7 +19,7 @@ module.exports = {
 			var authors = db.collection('authors');
 
 			// figure out the date
-			var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear());
+			var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear()); // replace with relevant!!!
 			console.log("fetching quote from date: "+dateToFetch);
 
 			// fetch the relevant quote
@@ -38,6 +38,7 @@ module.exports = {
 
 // building index page
 function buildIndex(response){
+	htmlPage = '';
 	var file = fs.createReadStream('assets/templates/index.html');
 	file.on('data', function(data){htmlPage = htmlPage + data;});
 	file.on('error', function(err){console.error("no index file found...");});
@@ -76,6 +77,7 @@ function buildIndex(response){
 
 // building index page
 function buildError(response){
+	htmlPage = '';
 	var file = fs.createReadStream('assets/templates/index.html');
 	file.on('data', function(data){htmlPage = htmlPage + data;});
 	file.on('error', function(err){console.error("no index file found...");});

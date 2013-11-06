@@ -6,13 +6,14 @@ var geoip = require('geoip-lite');
 // internal modules
 var social = require('./assets/scripts/social.js');
 var pageBuilder = require('./assets/scripts/pageBuilder.js');
+var admin = require('./assets/scripts/admin.js');
 var CONST = require('./assets/scripts/CONST.js');
 
 // varz
 var timmy = null;
 
 http.createServer(function (request, response) {
-	console.log('# client asked for: '+request.url);
+	console.log('# classic srv asked for: '+request.url);
 
 	// if asked, serve home page...
 	if(request.url == '/'){
@@ -50,7 +51,7 @@ console.log('...running server on http://127.0.0.1:8124/');
 var timmyNow = new Date();
 var nextTick = new Date(timmyNow.getFullYear(), timmyNow.getMonth(), timmyNow.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
 var delay = nextTick - timmyNow;
-console.log("delay: "+delay);
+//console.log("delay: "+delay);
 timmy = setTimeout(tick,delay);
 //trig social update timer...
 function tick(){
@@ -61,6 +62,20 @@ function tick(){
 	console.log("next tick in: "+delay);
 	timmy = setTimeout(tick,delay);
 }
+
+// admin srv
+http.createServer(function (request, response) {
+	console.log('# admin srv asked for: '+request.url);
+
+	// if asked, serve home page...
+	if(request.url == '/admin'){
+		console.log('going to build admin');
+		var adminPage = new admin(response);
+		return;
+	}
+
+	response.end();
+}).listen(8125);
 
 /* FOR NOW USELESS GEOLOC, SWITCHING WILL MOST PROBABLY BE DONE WITH TIMER
 function initHome(request, response){

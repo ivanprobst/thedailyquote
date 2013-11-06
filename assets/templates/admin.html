@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>The QT Admin</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	
+<style type="text/css">
+	@import url(http://reset5.googlecode.com/hg/reset.min.css);
+	 
+	body{
+		color: #242323;
+	}
+	a{color: #242323;}
+		a:hover{}
+	ul{list-style-type: none;}
+	
+	#container{
+		padding: 20px;
+	}
+	
+	header{
+		margin-bottom: 50px;
+		font-size: 1.2em;
+	}
+	
+	input{
+		display: block;
+		margin-bottom: 20px;
+	}
+</style>
+
+<script type="text/javascript">	
+	// INIT
+	$(document).ready(function(){		
+		$("form input[type='submit']").click(function(event){
+			console.log("getting: "+$("form input[type='url']").val());
+			$.get($("form input[type='url']").val(), function( data ) {
+				console.log( data );
+			});
+		});
+	});
+	
+
+</script>
+
+</head>
+
+<body>
+	<div id="container">
+		<header>
+			<h1>QUOTES ADMIN (go to <a href="">authors admin</a>)</h1>
+		</header>
+		
+		<section>
+			<form onsubmit="return false;">
+				<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required />
+				<input type="submit" value="fetch url" />
+			</form>
+		</section>
+		
+		<footer>
+		</footer>
+	</div>
+</body>
+
+</html>

@@ -1,5 +1,3 @@
-var dailyTransitionHour = 6; // UTC
-
 module.exports = {
 
 	extension_map : {
@@ -28,6 +26,6 @@ module.exports = {
 	rssTitle : 'The Quote Tribune',
 	
 	// timerz
-	daily_transition_hour : dailyTransitionHour
+	daily_transition_hour : 6 // 6am UTC
 };
 
