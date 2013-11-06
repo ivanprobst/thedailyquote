@@ -19,7 +19,8 @@ module.exports = {
 			var authors = db.collection('authors');
 
 			// figure out the date
-			var dateToFetch = new Date((now.getMonth()+1)+' '+now.getDate()+', '+now.getFullYear()); // replace with relevant!!!
+			var now = new Date();
+			var dateToFetch = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // replace with relevant!!!
 			console.log("fetching quote from date: "+dateToFetch);
 
 			// fetch the relevant quote
