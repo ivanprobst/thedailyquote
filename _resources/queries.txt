@@ -17,3 +17,4 @@ db.authors.insert()
 db.quotes.insert()
 
 db.quotes.update({authorID:"eleanor_roosevelt"}, {$set:{date:new Date('Nov 07, 2013')}})
+db.quotes.update({authorID:"oscar_wilde"}, {$set:{authorID:"eleanor_roosevelt"}})

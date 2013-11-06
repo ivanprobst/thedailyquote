@@ -25,6 +25,7 @@ final
 * FILL THAT DB
 
 maybe
+* crashed admin shouldn't crash prod
 * complete tz mapping
 * handle carriage return in quote txt
 
