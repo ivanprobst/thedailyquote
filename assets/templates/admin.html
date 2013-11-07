@@ -10,9 +10,11 @@
 	body{
 		color: #242323;
 	}
-	a{color: #242323;}
+	a{}
 		a:hover{}
 	ul{list-style-type: none;}
+	
+	h3{font-size: 1.3em;}
 	
 	#container{
 		padding: 20px;
@@ -22,16 +24,17 @@
 		margin-bottom: 30px;
 		font-size: 1.2em;
 	}
+
+	section{
+		overflow: hidden;
+		padding: 20px 0;
+		border-bottom: 3px solid #555;
+	}
 	
 	form{
 		float: left;
 		width: 800px;
 		padding: 20px;u
-	}
-
-	section{
-		overflow: hidden;
-		border-bottom: 3px solid #555;
 	}
 	
 	input, textarea{
@@ -39,9 +42,22 @@
 		margin-bottom: 20px;
 		padding: 5px;
 	}
+	
+	#schedule{}
+		#schedule .year{overflow: hidden; display: block;}
+		#schedule .month{overflow: hidden; display: block; float: left; width: 300px; height: 200px; margin-right: 40px;}
+		#schedule p{display: block; float: left; padding: 10px; width: 20px; height: 20px; text-align: center;}
+		
+		#schedule .no-quote{color: #ff0000;}
+		#schedule .quote{color: #00ff00;}
+		#schedule .today{background: #aaa;}
+	
 </style>
 
-<script type="text/javascript">	
+<script type="text/javascript">
+	var monthNames = [ "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December" ];
+
 	// INIT
 	$(document).ready(function(){
 		// fetch url form
@@ -69,18 +85,49 @@
 		});
 		
 		// fetch schedule form
-		$("form#fetch-schedule").submit(function(event){
+		$("a#fetch-schedule").click(function(event){
 			console.log("fetching schedule...");
 			
 			$.ajax({
-			  type: "POST",
-			  url: '/admin-fetch-schedule'
+				type: "POST",
+				url: '/admin-fetch-schedule',
+				success: displaySchedule
 			});
+			
+			function displaySchedule(data){
+				console.log('got something back from node: '+data);
+				
+				var json = $.parseJSON(data);
+				var now = new Date();
+				var endDate = new Date(now.getFullYear(), now.getMonth()+2, 1);
+				
+				// display these 3 months
+				for(var startDate = new Date(now.getFullYear(), now.getMonth()-1, 1); startDate < endDate; startDate.setDate(startDate.getDate()+1)){
+					var year = startDate.getFullYear();
+					var month = startDate.getMonth();
+					var day = startDate.getDate();
+					
+					if($('#schedule #y'+year).length == 0)
+						$('#schedule').append('<div class="year" id="y'+year+'"><h3>'+year+'<h3></div>');
+					
+					if($('#schedule #y'+year+' #m'+month).length == 0)
+						$('#schedule #y'+year).append('<div class="month" id="m'+month+'"><h4>'+monthNames[month]+'<h4></div>');
+					
+					if(json[year] && (json[year])[month] && ((json[year])[month])[day])
+						$('#schedule #y'+year+' #m'+month).append('<p class="quote" id="d'+day+'-'+month+'">'+day+'</p>');
+					else
+						$('#schedule #y'+year+' #m'+month).append('<p class="no-quote" id="d'+day+'-'+month+'">'+day+'</p>');
+					
+				}
+				
+				$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #d'+now.getDate()+'-'+now.getMonth()).addClass('today');
+			}
 		});
 	});
 	
 	function fetchQuotesome(url){
 		var ExternalURL = url; // This address must not contain any leading 'http://'
+		var freeDaySet = false;
 
 		var QueryURL = "http://anyorigin.com/get?url=" + ExternalURL + "&callback=?";
 		$.getJSON(QueryURL, function(data){
@@ -92,13 +139,38 @@
 					$('#quote-url').val(url);
 					$('#quote-text').val($('.quote-block-quote-text', data).html());
 					var now = new Date();
-					$('#pubdate').val(now.getFullYear()+'-'+(now.getMonth()<9 ? '0'+(now.getMonth()+1) : now.getMonth()+1)+'-'+(now.getDate()<10 ? '0'+now.getDate() : now.getDate()));
+					if(!freeDaySet)
+						$('#pubdate').val(now.getFullYear()+'-'+(now.getMonth()<9 ? '0'+(now.getMonth()+1) : now.getMonth()+1)+'-'+(now.getDate()<10 ? '0'+now.getDate() : now.getDate()));
 				}
 			}
 		});
+		
+					
+		$.ajax({
+			type: "POST",
+			url: '/admin-fetch-schedule',
+			success: updateDate
+		});
+		
+		function updateDate(data){
+			console.log('got something back from node: '+data);
+				
+			var json = $.parseJSON(data);
+			var now = new Date();
+			var safety = 0;
+			while(true){
+				if(!((json[now.getFullYear()]) && ((json[now.getFullYear()])[now.getMonth()]) && (((json[now.getFullYear()])[now.getMonth()])[now.getDate()]))){
+					$('#pubdate').val(now.getFullYear()+'-'+(now.getMonth()<9 ? '0'+(now.getMonth()+1) : now.getMonth()+1)+'-'+(now.getDate()<10 ? '0'+now.getDate() : now.getDate()));
+					freeDaySet = true;
+					break;
+				}
+				now.setDate(now.getDate()+1);
+				safety++;
+				if(safety == 60) break;
+			}
+		}
 	}
 	
-
 </script>
 
 </head>
@@ -128,10 +200,10 @@
 		</section>
 		
 		<section id="output">
-			<form id="fetch-schedule" onsubmit="return false;">
-				<input type="submit" value="fetch schedule" />
-			</form>
-		
+			<a id="fetch-schedule" href="#" />FETCH SCHEDULE</a>
+			
+			<article id="schedule">
+			</article>
 		</section>
 		
 		<footer>

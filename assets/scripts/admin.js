@@ -40,10 +40,26 @@ function admin(){
 	
 	// fetch schedule
 	this.fetchSchedule = function(callback){
-		console.log("adding the quote...");
+		console.log("building the schedule...");
+		
+		var testdata = {
+			2013 : {
+				10: {
+					6: '527a71f67a399b9460000001',
+					7: '5277a35bcaf70e963527e67a',
+					8: '5277a35bcaf70e963527e67a',
+					5: '5277a331caf70e963527e678',
+					10: '527b96b1dc68690e66000001'
+				},
+				11: {
+					10: '527b96bcdc68690e66000002',
+					12: '527b96bfdc68690e66000003'
+				}
+			}
+		};
 	
 		mongo.connect(CONST.db_url, function(err, db) {
-			if (err){console.error('!!! no db found, returning...'); return;}
+			if (err){console.error('!!! no db found, returning...'); callback(testdata); return;}
 			console.log("DB connected");
 			
 			var quotes = db.collection('quotes');
