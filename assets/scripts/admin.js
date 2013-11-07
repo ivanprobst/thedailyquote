@@ -39,7 +39,7 @@ function admin(){
 	}
 	
 	// fetch schedule
-	this.fetchSchedule = function(){
+	this.fetchSchedule = function(callback){
 		console.log("adding the quote...");
 	
 		mongo.connect(CONST.db_url, function(err, db) {
@@ -51,9 +51,41 @@ function admin(){
 				if (err){console.error('!!! error fetching all items, returning...'); return;}
 				if (!items || items.length == 0){console.error('!!! no quotes found, returning...'); return;}
 				
+				var schedule = {};
 				items.forEach(function(item){
-					console.log('this is a date: '+item.date);
+					console.log('adding: '+item.date.getFullYear()+'->'+(item.date).getMonth()+'->'+(item.date).getDate());
+					var year = item.date.getFullYear();
+					var month = item.date.getMonth();
+					var day = item.date.getDate();
+					var nested = {};
+					var tmpjson1 = {};
+					var tmpjson2 = {};
+					if(schedule[year]){
+						nested = schedule[year];
+						if(nested[month]){
+							nested = nested[month];
+							if(nested[day]){
+								// dup check, but for now simple overwrite
+								((schedule[year])[month])[day] = item._id;
+							}
+							else{
+								((schedule[year])[month])[day] = item._id;
+							}
+						}
+						else{
+							tmpjson1[day] = item._id;
+							(schedule[year])[month] = tmpjson1;
+						}
+					}
+					else{
+						tmpjson1[day] = item._id;
+						tmpjson2[month] = tmpjson1;				
+						schedule[year] = tmpjson2;
+					}
 				});
+				console.log("final: "+Object.keys((schedule[2013])[11]));
+				callback(schedule);
+
 			});
 		});
 	}

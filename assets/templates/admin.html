@@ -23,9 +23,15 @@
 		font-size: 1.2em;
 	}
 	
-	section{
+	form{
 		float: left;
 		width: 800px;
+		padding: 20px;u
+	}
+
+	section{
+		overflow: hidden;
+		border-bottom: 3px solid #555;
 	}
 	
 	input, textarea{
@@ -63,7 +69,7 @@
 		});
 		
 		// fetch schedule form
-		$("form#update-db").submit(function(event){
+		$("form#fetch-schedule").submit(function(event){
 			console.log("fetching schedule...");
 			
 			$.ajax({

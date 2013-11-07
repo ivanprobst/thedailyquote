@@ -76,7 +76,7 @@ http.createServer(function (request, response) {
 	}
 	else if(request.url == '/admin-fetch-schedule'){
 		console.log('...received schedule request');
-		adminPage.fetchSchedule();
+		adminPage.fetchSchedule(callbackTest);
 	}
 	else if(request.url == '/admin-add-quote' && request.method == 'POST'){
 		var dbData = ''; 
@@ -91,6 +91,10 @@ http.createServer(function (request, response) {
 	}
 	response.end();
 }).listen(8125);
+
+function callbackTest(data){
+	console.log("callback called, data: "+data);
+}
 
 /* FOR NOW USELESS GEOLOC, SWITCHING WILL MOST PROBABLY BE DONE WITH TIMER
 function initHome(request, response){
