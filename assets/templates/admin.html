@@ -80,12 +80,20 @@
 			$.ajax({
 			  type: "POST",
 			  url: '/admin-add-quote',
-			  data: JSON.stringify(data)
+			  data: JSON.stringify(data),
+			  success: fetchSchedule
 			});
 		});
 		
-		// fetch schedule form
-		$("a#fetch-schedule").click(function(event){
+		// fetch schedule link listener
+		$("a#fetch-schedule").click(fetchSchedule);
+
+		fetchSchedule();
+
+	});
+
+	// fetch schedule function
+	function fetchSchedule(){
 			console.log("fetching schedule...");
 			
 			$.ajax({
@@ -97,6 +105,7 @@
 			function displaySchedule(data){
 				console.log('got something back from node: '+data);
 				
+				$('#schedule').empty();
 				var json = $.parseJSON(data);
 				var now = new Date();
 				var endDate = new Date(now.getFullYear(), now.getMonth()+2, 1);
@@ -122,9 +131,7 @@
 				
 				$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #d'+now.getDate()+'-'+now.getMonth()).addClass('today');
 			}
-		});
-	});
-	
+	}	
 	function fetchQuotesome(url){
 		var ExternalURL = url; // This address must not contain any leading 'http://'
 		var freeDaySet = false;
