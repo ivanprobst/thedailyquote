@@ -19,7 +19,8 @@ function admin(){
 	// update the db
 	this.addQuote = function(data){
 		console.log("adding the quote...");
-	
+		if (!data){console.error('!!! no data to add, returning...'); return;}
+		
 		mongo.connect(CONST.db_url, function(err, db) {
 			if (err){console.error('!!! no db found, returning...'); return;}
 			console.log("DB connected");
@@ -34,6 +35,26 @@ function admin(){
 			};
 			
 			quotes.insert(finalData, {w:1}, function(err, result) {});
+		});
+	}
+	
+	// fetch schedule
+	this.fetchSchedule = function(){
+		console.log("adding the quote...");
+	
+		mongo.connect(CONST.db_url, function(err, db) {
+			if (err){console.error('!!! no db found, returning...'); return;}
+			console.log("DB connected");
+			
+			var quotes = db.collection('quotes');
+			quotes.find().toArray(function(err, items) {
+				if (err){console.error('!!! error fetching all items, returning...'); return;}
+				if (!items || items.length == 0){console.error('!!! no quotes found, returning...'); return;}
+				
+				items.forEach(function(item){
+					console.log('this is a date: '+item.date);
+				});
+			});
 		});
 	}
 }

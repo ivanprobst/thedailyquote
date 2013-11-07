@@ -46,7 +46,7 @@
 		
 		// update db form
 		$("form#update-db").submit(function(event){
-			console.log("updating db...");
+			console.log("posting DB update...");
 			var data = {
 				author:		$('#author').val(),
 				authorID:	$('#author-id').val(),
@@ -57,8 +57,18 @@
 			
 			$.ajax({
 			  type: "POST",
-			  url: '/admin',
+			  url: '/admin-add-quote',
 			  data: JSON.stringify(data)
+			});
+		});
+		
+		// fetch schedule form
+		$("form#update-db").submit(function(event){
+			console.log("fetching schedule...");
+			
+			$.ajax({
+			  type: "POST",
+			  url: '/admin-fetch-schedule'
 			});
 		});
 	});
@@ -93,15 +103,13 @@
 			<h1>QUOTES ADMIN (go to <a href="">authors admin</a>)</h1>
 		</header>
 		
-		<section>
+		<section id="input">
 			<form id="fetch-url" onsubmit="return false;">
 				<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required value="http://quoteso.me/q/226937" />
 				
 				<input type="submit" value="fetch url" />
 			</form>
-		</section>
 		
-		<section>
 			<form id="update-db" onsubmit="return false;">
 				<input id="author" name="author" type="text" size="60" placeholder="author" />
 				<input id="author-id" name="author-id" type="text" size="60" placeholder="authorID" />
@@ -111,6 +119,13 @@
 				
 				<input type="submit" value="update db" />
 			</form>
+		</section>
+		
+		<section id="output">
+			<form id="fetch-schedule" onsubmit="return false;">
+				<input type="submit" value="fetch schedule" />
+			</form>
+		
 		</section>
 		
 		<footer>

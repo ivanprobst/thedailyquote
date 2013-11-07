@@ -2,7 +2,9 @@ thedailyquote
 =============
 
 tobd
-* admin SHIT
+* set date to next empty day
+* fetch date status
+* check authorID validity
 
 * time the quote request and social updates
 

@@ -70,13 +70,17 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/admin' && request.method != 'POST'){
-		console.log('going to build admin');
+		console.log('...received admin page request');
 		adminPage.create(response);
 		return;
 	}
-	else if(request.method == 'POST'){
+	else if(request.url == '/admin-fetch-schedule'){
+		console.log('...received schedule request');
+		adminPage.fetchSchedule();
+	}
+	else if(request.url == '/admin-add-quote' && request.method == 'POST'){
 		var dbData = ''; 
-		console.log('get posted data');
+		console.log('...received posted data');
 		request.on('data', function(data){
 			dbData += data;
 		});
