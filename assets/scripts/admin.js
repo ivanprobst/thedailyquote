@@ -114,7 +114,7 @@ function admin(){
 				});
 			}
 			else{
-				authors.find().toArray(function(err, items) {
+				authors.find().sort({authorID:1}).toArray(function(err, items) {
 					if (err){console.error('!!! error fetching all authors, returning...'); return;}
 					if (!items || items.length == 0){console.error('!!! no authors found, returning...'); return;}
 
