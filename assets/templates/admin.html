@@ -86,6 +86,9 @@
 		
 		// fetch schedule link listener
 		$("a#fetch-schedule").click(fetchSchedule);
+		
+		// fetch authors link listener
+		$("a#fetch-authors").click(fetchAuthors);
 
 		// admin menu toggling
 		$("a#admin-switch").click(function(event){
@@ -110,7 +113,7 @@
 		};
 		
 		console.log(data);
-		
+
 		$.ajax({
 		  type: "POST",
 		  url: '/admin-add-quote',
@@ -143,47 +146,63 @@
 	// fetch authors function
 	function fetchAuthors(){
 		console.log("fetching authors...");
+			
+		$.ajax({
+			type: "POST",
+			url: '/admin-fetch-authors',
+			success: listAuthors
+		});
+
+		function listAuthors(data){
+			console.log('got authors list back from node:');
+			console.log(data);
+
+			$.each(data, function(index, value){
+				$('#author-output').append('<p>'+value+'</p>');
+			});
+		}
 	}
 
 	// fetch schedule function
 	function fetchSchedule(){
-			console.log("fetching schedule...");
+		console.log("fetching schedule...");
+		
+		$.ajax({
+			type: "POST",
+			url: '/admin-fetch-schedule',
+			success: displaySchedule
+		});
+		
+		function displaySchedule(data){
+			console.log('got schedule back from node:');
+			console.log(data);
 			
-			$.ajax({
-				type: "POST",
-				url: '/admin-fetch-schedule',
-				success: displaySchedule
-			});
+			$('#schedule').empty();
+			var json = $.parseJSON(data);
+			var now = new Date();
+			var endDate = new Date(now.getFullYear(), now.getMonth()+2, 1);
 			
-			function displaySchedule(data){
-				console.log('got something back from node: '+data);
+			// display these 3 months
+			for(var startDate = new Date(now.getFullYear(), now.getMonth()-1, 1); startDate < endDate; startDate.setDate(startDate.getDate()+1)){
+				var year = startDate.getFullYear();
+				var month = startDate.getMonth();
+				var day = startDate.getDate();
 				
-				$('#schedule').empty();
-				var json = $.parseJSON(data);
-				var now = new Date();
-				var endDate = new Date(now.getFullYear(), now.getMonth()+2, 1);
+				if($('#schedule #y'+year).length == 0)
+					$('#schedule').append('<div class="year" id="y'+year+'"><h3>'+year+'<h3></div>');
 				
-				// display these 3 months
-				for(var startDate = new Date(now.getFullYear(), now.getMonth()-1, 1); startDate < endDate; startDate.setDate(startDate.getDate()+1)){
-					var year = startDate.getFullYear();
-					var month = startDate.getMonth();
-					var day = startDate.getDate();
-					
-					if($('#schedule #y'+year).length == 0)
-						$('#schedule').append('<div class="year" id="y'+year+'"><h3>'+year+'<h3></div>');
-					
-					if($('#schedule #y'+year+' #m'+month).length == 0)
-						$('#schedule #y'+year).append('<div class="month" id="m'+month+'"><h4>'+monthNames[month]+'<h4></div>');
-					
-					if(json[year] && (json[year])[month] && ((json[year])[month])[day])
-						$('#schedule #y'+year+' #m'+month).append('<p class="quote" id="d'+day+'-'+month+'">'+day+'</p>');
-					else
-						$('#schedule #y'+year+' #m'+month).append('<p class="no-quote" id="d'+day+'-'+month+'">'+day+'</p>');
-					
-				}
+				if($('#schedule #y'+year+' #m'+month).length == 0)
+					$('#schedule #y'+year).append('<div class="month" id="m'+month+'"><h4>'+monthNames[month]+'<h4></div>');
 				
-				$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #d'+now.getDate()+'-'+now.getMonth()).addClass('today');
+				if(json[year] && (json[year])[month] && ((json[year])[month])[day])
+					$('#schedule #y'+year+' #m'+month).append('<p class="quote" id="d'+day+'-'+month+'">'+day+'</p>');
+				else
+					$('#schedule #y'+year+' #m'+month).append('<p class="no-quote" id="d'+day+'-'+month+'">'+day+'</p>');
+				
 			}
+			
+			$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #d'+now.getDate()+'-'+now.getMonth()).addClass('today');
+		}
 	}
 
 	// fetch quote detail from quotesome
@@ -266,7 +285,7 @@
 			</section>
 			
 			<section id="quote-output">
-				<a id="fetch-schedule" href="#" />FETCH SCHEDULE</a>
+				<a id="fetch-schedule" href="#">FETCH SCHEDULE</a>
 				
 				<article id="schedule">
 				</article>
@@ -307,6 +326,7 @@
 			</section>
 
 			<section id="author-output">
+				<a id="fetch-authors" href="#">FETCH AUTHORS</a>
 
 			</section>
 		</div>

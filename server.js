@@ -76,7 +76,12 @@ http.createServer(function (request, response) {
 	}
 	else if(request.url == '/admin-fetch-schedule'){
 		console.log('...received schedule request');
-		adminPage.fetchSchedule(callbackTest);
+		adminPage.fetchSchedule(sendDataToClient);
+		return;
+	}
+	else if(request.url == '/admin-fetch-authors'){
+		console.log('...received authors request');
+		adminPage.fetchAuthors(sendDataToClient);
 		return;
 	}
 	else if(request.url == '/admin-add-quote' && request.method == 'POST'){
@@ -97,15 +102,15 @@ http.createServer(function (request, response) {
 			dbData += data;
 		});
 		request.on('end', function(data){
-			console.log("new author:: "+(JSON.parse(dbData)).name);
+			console.log("new author: "+(JSON.parse(dbData)).name);
 			adminPage.addAuthor(JSON.parse(dbData));
 		});
 	}
 	response.end();
 	
 	
-	function callbackTest(data){
-		console.log("callback called, data: "+data);
+	function sendDataToClient(data){
+		console.log("callback called, data to be sent to client: "+data);
 		if(data)
 			response.write(JSON.stringify(data));
 		response.end();

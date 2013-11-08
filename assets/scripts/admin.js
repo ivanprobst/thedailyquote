@@ -18,12 +18,12 @@ function admin(){
 	
 	// add a quote
 	this.addQuote = function(data){
-		console.log("adding the quote...");
 		if (!data){console.error('!!! no data to add, returning...'); return;}
 		
+		console.log("connecting to db...");
 		mongo.connect(CONST.db_url, function(err, db) {
 			if (err){console.error('!!! no db found, returning...'); return;}
-			console.log("DB connected");
+			console.log("...db connected");
 			
 			var quotes = db.collection('quotes');
 			
@@ -34,23 +34,46 @@ function admin(){
 				date:			new Date(data.pubDate.substr(0,4), parseInt(data.pubDate.substr(5,2))-1, parseInt(data.pubDate.substr(8,2)))
 			};
 			
+			console.log("inserting new quote...");
 			quotes.insert(finalData, {w:1}, function(err, result) {});
+				if(!err) console.log('...quote inserted')
 		});
 	}
 	
 	// add an author
 	this.addAuthor = function(data){
-		console.log("adding the author...");
 		if (!data){console.error('!!! no data to add, returning...'); return;}
 		
+		console.log("connecting to db...");
 		mongo.connect(CONST.db_url, function(err, db) {
 			if (err){console.error('!!! no db found, returning...'); return;}
-			console.log("DB connected");
+			console.log("...db connected");
 			
 			var authors = db.collection('authors');
 			
-			authors.insert(data, {w:1}, function(err, result) {});
+			console.log("inserting new author...");
+			authors.insert(data, {w:1}, function(err, result) {
+				if(!err) console.log('...author inserted')
+			});
 		});
+	}
+
+	this.fetchAuthors = function(callback){
+		console.log("building the schedule...");
+		
+		mongo.connect(CONST.db_url, function(err, db) {
+			if (err){console.error('!!! no db found, returning...'); callback(testdata); return;}
+			console.log("DB connected");
+			
+			var authors = db.collection('authors');
+			quotes.find().toArray(function(err, items) {
+				if (err){console.error('!!! error fetching all items, returning...'); return;}
+				if (!items || items.length == 0){console.error('!!! no authors found, returning...'); return;}
+
+				callback(items);
+			});
+		});
+
 	}
 	
 	// fetch schedule
