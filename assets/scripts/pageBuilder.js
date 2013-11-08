@@ -57,7 +57,7 @@ function buildIndex(response){
 		parseTemplate('authorBarsColor', author.barsBackgroundColor ? '#'+author.barsBackgroundColor : CONST.default_barsBackgroundColor);
 		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : CONST.default_directionSlide);
 		parseTemplate('authorBlockFontColor', author.blockFontColor ? '#'+author.blockFontColor : CONST.default_blockFontColor);
-		parseTemplate('authorBlockFontSize', author.blockFontSize ? author.blockFontSize+'px' : CONST.default_blockFontSize);
+		parseTemplate('quoteBlockFontSize', quote.blockFontSize ? quote.blockFontSize+'px' : CONST.default_blockFontSize);
 		parseTemplate('authorBlockWidth', author.blockWidth ? author.blockWidth+'%' : CONST.default_blockWidth);
 		parseTemplate('authorBlockBackgroundColor', author.blockBackgroundColor ? '#'+author.blockBackgroundColor : CONST.default_blockBackgroundColor);
 		parseTemplate('authorPositionLeft', author.positionLeft ? author.positionLeft+'%' : CONST.default_positionLeft);

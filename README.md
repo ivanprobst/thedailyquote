@@ -3,10 +3,11 @@ thedailyquote
 
 tobd
 * check authorID validity
+* quote preview (in schedule + at creation)
 * time the quote request and social updates
 
 tobf
-* move fontsize in quote rather than author
+* CREATE A QUOTE + A DB MODULE
 * better sharing button
 * scrolling fallback when resolution too small
 * check that all classic resolutions are good
