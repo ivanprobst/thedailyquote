@@ -4,6 +4,7 @@ thedailyquote
 tobd
 * check authorID validity
 * quote preview (in schedule + at creation)
+* quote editing
 * time the quote request and social updates
 
 tobf
@@ -17,6 +18,7 @@ tobf
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found
+* final error page
 
 final
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right

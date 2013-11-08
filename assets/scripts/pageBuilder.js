@@ -87,7 +87,7 @@ function buildError(response){
 	file.on('end', function(err){
 	
 		// init quote content and photos
-		parseTemplate('quoteText', 'Something went wrong. We are mighty angry about it. We go have a look, you wait here.');
+		parseTemplate('quoteText', 'Something went wrong. We are mighty angry about it. We go have a look, and you stay back here.');
 		parseTemplate('authorName', '300 (+104) PAGE NOT FOUND');
 		parseTemplate('authorPhotoPath', 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/error.jpg');
 		parseTemplate('authorThumbPath', ('https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/error.jpg').replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
@@ -96,7 +96,7 @@ function buildError(response){
 		parseTemplate('authorBarsColor', CONST.default_barsBackgroundColor);
 		parseTemplate('authorDirectionSlide', CONST.default_directionSlide);
 		parseTemplate('authorBlockFontColor', '#fff');
-		parseTemplate('authorBlockFontSize', CONST.default_blockFontSize);
+		parseTemplate('quoteBlockFontSize', CONST.default_blockFontSize);
 		parseTemplate('authorBlockWidth', '30%');
 		parseTemplate('authorBlockBackgroundColor', 'none');
 		parseTemplate('authorPositionLeft', '2%');
