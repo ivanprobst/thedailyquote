@@ -2,6 +2,7 @@ thedailyquote
 =============
 
 tobd
+* input author
 * check authorID validity
 
 * time the quote request and social updates
@@ -22,7 +23,7 @@ final
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
-* FILL THAT DB
+* CLEAN AND REFILL THAT DB
 
 maybe
 * crashed admin shouldn't crash prod

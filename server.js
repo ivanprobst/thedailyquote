@@ -81,13 +81,24 @@ http.createServer(function (request, response) {
 	}
 	else if(request.url == '/admin-add-quote' && request.method == 'POST'){
 		var dbData = ''; 
-		console.log('...received posted data');
+		console.log('...received posted quote data');
 		request.on('data', function(data){
 			dbData += data;
 		});
 		request.on('end', function(data){
-			console.log("received a quote from: "+(JSON.parse(dbData)).author);
+			console.log("new quote from: "+(JSON.parse(dbData)).author);
 			adminPage.addQuote(JSON.parse(dbData));
+		});
+	}
+	else if(request.url == '/admin-add-author' && request.method == 'POST'){
+		var dbData = ''; 
+		console.log('...received posted author data');
+		request.on('data', function(data){
+			dbData += data;
+		});
+		request.on('end', function(data){
+			console.log("new author:: "+(JSON.parse(dbData)).name);
+			adminPage.addAuthor(JSON.parse(dbData));
 		});
 	}
 	response.end();

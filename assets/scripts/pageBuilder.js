@@ -54,7 +54,7 @@ function buildIndex(response){
 		parseTemplate('authorThumbPath', (author.photoPath).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
 
 		// init quote styling
-		parseTemplate('authorBarsColor', author.barsColor ? '#'+author.barsColor : CONST.default_barsColor);
+		parseTemplate('authorBarsColor', author.barsBackgroundColor ? '#'+author.barsBackgroundColor : CONST.default_barsBackgroundColor);
 		parseTemplate('authorDirectionSlide', author.directionSlide ? author.directionSlide : CONST.default_directionSlide);
 		parseTemplate('authorBlockFontColor', author.blockFontColor ? '#'+author.blockFontColor : CONST.default_blockFontColor);
 		parseTemplate('authorBlockFontSize', author.blockFontSize ? author.blockFontSize+'px' : CONST.default_blockFontSize);
@@ -88,12 +88,12 @@ function buildError(response){
 	
 		// init quote content and photos
 		parseTemplate('quoteText', 'Something went wrong. We are mighty angry about it. We go have a look, you wait here.');
-		parseTemplate('authorName', 'THE PAGE NOT FOUND 404');
+		parseTemplate('authorName', '300 (+104) PAGE NOT FOUND');
 		parseTemplate('authorPhotoPath', 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/error.jpg');
 		parseTemplate('authorThumbPath', ('https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/error.jpg').replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
 
 		// init quote styling
-		parseTemplate('authorBarsColor', CONST.default_barsColor);
+		parseTemplate('authorBarsColor', CONST.default_barsBackgroundColor);
 		parseTemplate('authorDirectionSlide', CONST.default_directionSlide);
 		parseTemplate('authorBlockFontColor', '#fff');
 		parseTemplate('authorBlockFontSize', CONST.default_blockFontSize);

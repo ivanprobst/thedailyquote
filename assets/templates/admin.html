@@ -25,17 +25,30 @@
 		font-size: 1.2em;
 	}
 
+	#quote-admin{
+		display: none;
+	}
+
 	section{
 		overflow: hidden;
 		padding: 20px 0;
 		border-bottom: 3px solid #555;
 	}
 	
-	form{
-		float: left;
-		width: 800px;
-		padding: 20px;u
-	}
+		#quote-input form{
+			float: left;
+			width: 600px;
+		}
+
+		#author-input form{
+			width: 100%;
+		}
+			#author-input form fieldset{
+				overflow: hidden;
+				float: left;
+				width: 600px;
+			}
+				#author-input #design input{float: left;}
 	
 	input, textarea{
 		display: block;
@@ -60,37 +73,77 @@
 
 	// INIT
 	$(document).ready(function(){
-		// fetch url form
+		// quotesomefetch link listener
 		$("form#fetch-url input[type='submit']").click(function(event){
-			console.log("fetching "+$("form input[type='url']").val()+"...");
 			fetchQuotesome($("form input[type='url']").val());
 		});
 		
-		// update db form
-		$("form#update-db").submit(function(event){
-			console.log("posting DB update...");
-			var data = {
-				author:		$('#author').val(),
-				authorID:	$('#author-id').val(),
-				quoteUrl:	$('#quote-url').val(),
-				quoteText:	$('#quote-text').val(),
-				pubDate:	$('#pubdate').val(),
-			};
-			
-			$.ajax({
-			  type: "POST",
-			  url: '/admin-add-quote',
-			  data: JSON.stringify(data),
-			  success: fetchSchedule
-			});
-		});
+		// add-quote db link listener
+		$("form#add-quote").submit(addQuote);
+
+		// update db link listener
+		$("form#add-author").submit(addAuthor);
 		
 		// fetch schedule link listener
 		$("a#fetch-schedule").click(fetchSchedule);
 
+		// admin menu toggling
+		$("a#admin-switch").click(function(event){
+			$('#container>div').toggle();
+		});
+
+
+		// get current schedule
 		fetchSchedule();
 
 	});
+
+	// add quote to DB
+	function addQuote(){
+		console.log("posting new quote to server...");
+		var data = {
+			author:		$('#author').val(),
+			authorID:	$('#author-id').val(),
+			quoteUrl:	$('#quote-url').val(),
+			quoteText:	$('#quote-text').val(),
+			pubDate:	$('#pubdate').val(),
+		};
+		
+		console.log(data);
+		
+		$.ajax({
+		  type: "POST",
+		  url: '/admin-add-quote',
+		  data: JSON.stringify(data),
+		  success: fetchSchedule
+		});
+	}
+
+	// add author to DB
+	function addAuthor(){
+		console.log("posting new author to server...");
+
+		var data = {};
+		$('#author-input fieldset input').each(function(index){
+			if($(this).val() && $(this).val() != ''){
+				data[$(this).attr('name')] = ''+$(this).val();
+			}
+		});
+
+		console.log(data);
+
+		$.ajax({
+		  type: "POST",
+		  url: '/admin-add-author',
+		  data: JSON.stringify(data),
+		  success: fetchAuthors
+		});
+	}
+
+	// fetch authors function
+	function fetchAuthors(){
+		console.log("fetching authors...");
+	}
 
 	// fetch schedule function
 	function fetchSchedule(){
@@ -131,8 +184,11 @@
 				
 				$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #d'+now.getDate()+'-'+now.getMonth()).addClass('today');
 			}
-	}	
+	}
+
+	// fetch quote detail from quotesome
 	function fetchQuotesome(url){
+		console.log("fetching "+$("form input[type='url']").val()+"...");
 		var ExternalURL = url; // This address must not contain any leading 'http://'
 		var freeDaySet = false;
 
@@ -185,34 +241,76 @@
 <body>
 	<div id="container">
 		<header>
-			<h1>QUOTES ADMIN (go to <a href="">authors admin</a>)</h1>
+			<h1>ADMIN (<a id="admin-switch" href="#">switch admin panel</a>)</h1>
 		</header>
 		
-		<section id="input">
-			<form id="fetch-url" onsubmit="return false;">
-				<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required value="http://quoteso.me/q/226937" />
-				
-				<input type="submit" value="fetch url" />
-			</form>
-		
-			<form id="update-db" onsubmit="return false;">
-				<input id="author" name="author" type="text" size="60" placeholder="author" />
-				<input id="author-id" name="author-id" type="text" size="60" placeholder="authorID" />
-				<input id="quote-url" name="quote-url" type="url" size="60" placeholder="quote url" />
-				<textarea id="quote-text" name="quote-text" rows="5" cols="60" placeholder="quote text"></textarea>
-				<input id="pubdate" name="pubdate" type="date"/>
-				
-				<input type="submit" value="update db" />
-			</form>
-		</section>
-		
-		<section id="output">
-			<a id="fetch-schedule" href="#" />FETCH SCHEDULE</a>
+		<div id="quote-admin">
+			<h2>Quote admin</h2>
+			<section id="quote-input">
+				<form id="fetch-url" onsubmit="return false;">
+					<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required value="http://quoteso.me/q/226937" />
+					
+					<input type="submit" value="fetch url" />
+				</form>
 			
-			<article id="schedule">
-			</article>
-		</section>
-		
+				<form id="add-quote" onsubmit="return false;">
+					<input id="author" name="author" type="text" size="60" placeholder="author" />
+					<input id="author-id" name="author-id" type="text" size="60" placeholder="authorID" />
+					<input id="quote-url" name="quote-url" type="url" size="60" placeholder="quote url" />
+					<textarea id="quote-text" name="quote-text" rows="5" cols="60" placeholder="quote text"></textarea>
+					<input id="pubdate" name="pubdate" type="date"/>
+					<input id="block-font-size" name="block-font-size" type="text" size="10" placeholder="block font size (48px)" />
+					
+					<input type="submit" value="add quote" />
+				</form>
+			</section>
+			
+			<section id="quote-output">
+				<a id="fetch-schedule" href="#" />FETCH SCHEDULE</a>
+				
+				<article id="schedule">
+				</article>
+			</section>
+		</div>
+
+		<div id="author-admin">
+			<h2>Author admin</h2>
+			<section id="author-input">
+				<form id="add-author" onsubmit="return false;">
+					<fieldset id="data">
+						<legend>Data</legend>
+						<input id="author-id" name="authorID" type="text" size="60" placeholder="authorID" required />
+						<input id="author-name" name="name" type="text" size="60" placeholder="author" />
+						<input id="author-wiki" name="wikipediaRef" type="text" size="60" placeholder="wikipediaID" />
+						<input id="author-quotesome" name="quotesomeUrl" type="url" size="100" placeholder="quotesome url" />
+					</fieldset>
+
+					<fieldset id="design">
+						<legend>Design</legend>
+						<input id="photo-url" name="photoPath" type="url" size="100" placeholder="photo url" />
+						<input id="photo-width" name="photoWidth" type="text" size="40" placeholder="photo width (0)" />
+						<input id="photo-height" name="photoHeight" type="text" size="40" placeholder="photo height (0)" />
+						<input id="position-left" name="positionLeft" type="text" size="40" placeholder="position left (auto, use %)" />
+						<input id="position-right" name="positionRight" type="text" size="40" placeholder="position right (auto, use %)" />
+						<input id="position-top" name="positionTop" type="text" size="40" placeholder="position top (auto, use %)" />
+						<input id="position-bottom" name="positionBottom" type="text" size="40" placeholder="position bottom (auto, use %)" />
+						<input id="block-width" name="blockWidth" type="text" size="40" placeholder="block width (35%)" />
+						<input id="block-font-color" name="blockFontColor" type="text" size="40" placeholder="block font color (#000)" />
+						<input id="block-background-color" name="blockBackgroundColor" type="text" size="40" placeholder="block background color (none)" />
+						<input id="bars-background-color" name="barsBackgroundColor" type="text" size="40" placeholder="bars background color (#fff)" />
+						<input id="direction-slide" name="directionSlide" type="text" size="40" placeholder="direction slide (center)" />
+					</fieldset>
+
+					<input type="submit" value="add author" />
+					
+				</form>
+			</section>
+
+			<section id="author-output">
+
+			</section>
+		</div>
+
 		<footer>
 		</footer>
 	</div>

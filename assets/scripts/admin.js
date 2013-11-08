@@ -16,7 +16,7 @@ function admin(){
 		});
     }
 	
-	// update the db
+	// add a quote
 	this.addQuote = function(data){
 		console.log("adding the quote...");
 		if (!data){console.error('!!! no data to add, returning...'); return;}
@@ -35,6 +35,21 @@ function admin(){
 			};
 			
 			quotes.insert(finalData, {w:1}, function(err, result) {});
+		});
+	}
+	
+	// add an author
+	this.addAuthor = function(data){
+		console.log("adding the author...");
+		if (!data){console.error('!!! no data to add, returning...'); return;}
+		
+		mongo.connect(CONST.db_url, function(err, db) {
+			if (err){console.error('!!! no db found, returning...'); return;}
+			console.log("DB connected");
+			
+			var authors = db.collection('authors');
+			
+			authors.insert(data, {w:1}, function(err, result) {});
 		});
 	}
 	
