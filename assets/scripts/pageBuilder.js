@@ -28,7 +28,7 @@ module.exports = {
 				if(err || !item){console.log("!!! no quote found"); buildError(response); return;}
 				quote = item;
 
-				authors.findOne({iid:quote.authorID}, function(err,item){
+				authors.findOne({authorID:quote.authorID}, function(err,item){
 					if(err || !item){console.log("!!! no author found"); buildError(response); return;}
 					author = item;
 					console.log("fetched quote from "+author.name+": "+quote.text);
