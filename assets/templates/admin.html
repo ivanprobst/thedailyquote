@@ -92,7 +92,7 @@
 		$("a#fetch-schedule").click(fetchSchedule);
 		
 		// fetch authors link listener
-		$("a#fetch-authors").click(fetchAuthors);
+		$("a#fetch-authors").click(function(event){fetchAuthors(null);});
 
 		// admin menu toggling
 		$("a#admin-switch").click(function(event){
@@ -109,7 +109,7 @@
 
 		// get current schedule and authors list
 		fetchSchedule();
-		fetchAuthors();
+		fetchAuthors(null);
 
 	});
 
@@ -175,7 +175,7 @@
 			$('#author-output table tbody').empty();
 			$.each($.parseJSON(data), function(index, value){
 				$('#author-output table tbody').append('<tr id="r'+index+'">'+rowTemplate+'</tr>');
-				$('#author-output table tbody tr#r'+index+' .edit').attr('id', value._id);
+				$('#author-output table tbody tr#r'+index+' .edit').attr('id', value.authorID);
 				$.each(value, function(key, prop){
 					$('#author-output table tbody tr#r'+index+' .'+key).html(prop);
 				});

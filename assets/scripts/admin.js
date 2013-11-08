@@ -58,7 +58,7 @@ function admin(){
 		});
 	}
 
-	this.fetchAuthors = function(_id, callback){
+	this.fetchAuthors = function(author_id, callback){
 		console.log("building the authors list...");
 
 		var testdata = [{"_id":"5277a329caf70e963527e677","iid":"marcus_aurelius","name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","photoWidth":3256,"photoHeight":1600,"positionLeft":2,"positionTop":5,"directionSlide":"left","blockWidth":35,"blockFontSize":48,"blockFontColor":"fff","barsColor":"fff"},{"_id":"5277a343caf70e963527e679","iid":"eleanor_roosevelt","name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665,"photoHeight":1203,"positionRight":3,"positionBottom":5,"directionSlide":"left","blockWidth":35,"blockFontSize":48,"blockFontColor":"000","blockBackgroundColor":"fff","barsColor":"fff"},{"authorID":"oscar_wilde","name":"Oscar Wilde","wikipediaRef":"Oscar_Wilde","quotesomeUrl":"https://www.quotesome.com/authors/oscar-wilde/quotes","_id":"527cc6672ed5bc476a000001"}];
@@ -69,8 +69,9 @@ function admin(){
 			
 			var authors = db.collection('authors');
 
-			if(_id && _id != ''){
-				authors.findOne({'_id':_id}, function(err, item){
+			if(author_id && author_id != ''){
+				authors.findOne({authorID:author_id}, function(err, item){
+					console.log('_id: '+author_id+', item: '+item);
 					if (err || !item){console.error('!!! error fetching one author, returning...'); return;}
 					console.log('item found:');
 					console.log(item);
