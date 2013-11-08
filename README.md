@@ -3,6 +3,7 @@ thedailyquote
 
 tobd
 * input author
+* sort by authorID
 * check authorID validity
 
 * time the quote request and social updates

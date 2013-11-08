@@ -16,5 +16,5 @@ db.authors.insert()
 
 db.quotes.insert()
 
-db.quotes.update({authorID:"eleanor_roosevelt"}, {$set:{date:new Date('Nov 07, 2013')}})
+db.authors.update({iid:"marcus_aurelius"}, {$set:{authorID:"marcus_aurelius"}})
 db.quotes.update({quotesomeUrl:"http://quoteso.me/q/226937"}, {$set:{authorID:"oscar_wilde"}})

@@ -87,31 +87,45 @@
 
 		// update db link listener
 		$("form#add-author").submit(addAuthor);
+
+		// clear author form
+		$("a#clear-author").click(function(event){
+			event.preventDefault();
+			clearAuthorForm();
+		});
 		
 		// fetch schedule link listener
 		$("a#fetch-schedule").click(fetchSchedule);
 		
 		// fetch authors link listener
-		$("a#fetch-authors").click(function(event){fetchAuthors(null);});
+		$("a#fetch-authors").click(function(event){
+			event.preventDefault();
+			fetchAuthors();
+		});
 
 		// admin menu toggling
 		$("a#admin-switch").click(function(event){
 			$('#container>div').toggle();
 		});
 
-		// admin menu toggling
+		// fetch one author
 		$('#authors-data').on('click', 'a.edit', function(event){
   			event.preventDefault();
 			console.log('id: '+$(this).attr('id'));
-			fetchAuthors($(this).attr('id'));
+			fetchAuthor($(this).attr('id'));
 		});
 
 
 		// get current schedule and authors list
 		fetchSchedule();
-		fetchAuthors(null);
+		fetchAuthors();
 
 	});
+
+	function clearAuthorForm(){
+		$('#add-author input').val('');
+		$('#add-author input[type="submit"]').val('add author');
+	}
 
 	// add quote to DB
 	function addQuote(){
@@ -156,13 +170,40 @@
 	}
 
 	// fetch authors function
-	function fetchAuthors(_id){
+	function fetchAuthor(_id){
 		console.log("fetching authors...");
 			
 		$.ajax({
 			type: "POST",
 			url: '/admin-fetch-authors',
 			data: _id,
+			success: setAuthorData
+		});
+
+		function setAuthorData(data){
+			console.log('got author data back from node:');
+			console.log(data);
+
+			$('#add-author input').empty();
+			$.each($.parseJSON(data), function(key, value){
+				console.log("set field "+key+" to "+value);
+				if($('#add-author input[name = "'+key+'"]'))
+					$('#add-author input[name = "'+key+'"]').val(value);
+				else
+					$('#dirt').append(key+" : "+value+" | ");
+			});
+			$('#add-author input[type="submit"]').val('update author');
+		}
+	}
+
+	// fetch authors function
+	function fetchAuthors(){
+		console.log("fetching authors...");
+			
+		$.ajax({
+			type: "POST",
+			url: '/admin-fetch-authors',
+			data: null,
 			success: listAuthors
 		});
 
@@ -323,6 +364,7 @@
 						<input id="author-wiki" name="wikipediaRef" type="text" size="60" placeholder="wikipediaID" />
 						<input id="author-quotesome" name="quotesomeUrl" type="url" size="100" placeholder="quotesome url" />
 						<input id="_id" name="_id" type="text" size="60" placeholder="_id"  disabled/>
+						<div id="dirt"></div>
 					</fieldset>
 
 					<fieldset id="design">
@@ -342,6 +384,7 @@
 					</fieldset>
 
 					<input type="submit" value="add author" />
+					<a id="clear-author" href="#">clear form</a>
 					
 				</form>
 			</section>
