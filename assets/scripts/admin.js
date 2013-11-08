@@ -56,13 +56,13 @@ function admin(){
 			// fetch the relevant quote
 			authors.findOne({authorID:data.authorID}, function(err, item){
 				if(err || !item){
-					console.log("does not exist, inserting new..."); buildError(response); return;
+					console.log("does not exist, inserting new...");
 					authors.insert(data, {w:1}, function(err, result) {
 						if(!err) console.log('...author inserted')
 					});
 				}
 				else{
-					console.log("already exists, updating..."); buildError(response); return;
+					console.log("already exists, updating...");
 					authors.update({authorID:data.authorID}, data, {w:1}, function(err, result) {
 						if(!err) console.log('...author updated')
 					});
