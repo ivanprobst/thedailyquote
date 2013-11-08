@@ -51,9 +51,22 @@ function admin(){
 			
 			var authors = db.collection('authors');
 			
-			console.log("inserting new author...");
-			authors.insert(data, {w:1}, function(err, result) {
-				if(!err) console.log('...author inserted')
+			console.log("check if "+data.authorID+" already exists...");
+
+			// fetch the relevant quote
+			authors.findOne({authorID:data.authorID}, function(err, item){
+				if(err || !item){
+					console.log("does not exist, inserting new..."); buildError(response); return;
+					authors.insert(data, {w:1}, function(err, result) {
+						if(!err) console.log('...author inserted')
+					});
+				}
+				else{
+					console.log("already exists, updating..."); buildError(response); return;
+					authors.update({authorID:data.authorID}, data, {w:1}, function(err, result) {
+						if(!err) console.log('...author updated')
+					});
+				}
 			});
 		});
 	}

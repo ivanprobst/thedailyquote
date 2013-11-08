@@ -184,7 +184,8 @@
 			console.log('got author data back from node:');
 			console.log(data);
 
-			$('#add-author input').empty();
+			$('#add-author input').val('');
+			$('#add-author input[type="submit"]').val('update author');
 			$.each($.parseJSON(data), function(key, value){
 				console.log("set field "+key+" to "+value);
 				if($('#add-author input[name = "'+key+'"]'))
@@ -192,7 +193,6 @@
 				else
 					$('#dirt').append(key+" : "+value+" | ");
 			});
-			$('#add-author input[type="submit"]').val('update author');
 		}
 	}
 
