@@ -157,8 +157,8 @@
 			console.log('got authors list back from node:');
 			console.log(data);
 
-			$.each(data, function(index, value){
-				$('#author-output').append('<p>'+value+'</p>');
+			$.each($.parseJSON(data), function(index, value){
+				$('#author-output').append('<p>'+value.name+'</p>');
 			});
 		}
 	}

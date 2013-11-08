@@ -66,7 +66,7 @@ function admin(){
 			console.log("DB connected");
 			
 			var authors = db.collection('authors');
-			quotes.find().toArray(function(err, items) {
+			authors.find().toArray(function(err, items) {
 				if (err){console.error('!!! error fetching all items, returning...'); return;}
 				if (!items || items.length == 0){console.error('!!! no authors found, returning...'); return;}
 
