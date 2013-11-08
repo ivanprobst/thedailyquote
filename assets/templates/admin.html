@@ -99,6 +99,13 @@
 			$('#container>div').toggle();
 		});
 
+		// admin menu toggling
+		$('#authors-data').on('click', 'a.edit', function(event){
+  			event.preventDefault();
+			console.log('id: '+$(this).attr('id'));
+			fetchAuthors($(this).attr('id'));
+		});
+
 
 		// get current schedule and authors list
 		fetchSchedule();
@@ -149,12 +156,13 @@
 	}
 
 	// fetch authors function
-	function fetchAuthors(){
+	function fetchAuthors(_id){
 		console.log("fetching authors...");
 			
 		$.ajax({
 			type: "POST",
 			url: '/admin-fetch-authors',
+			data: _id,
 			success: listAuthors
 		});
 
@@ -162,9 +170,12 @@
 			console.log('got authors list back from node:');
 			console.log(data);
 
-			var rowTemplate = '<td class="actions"></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaRef"></td><td class="quotesomeUrl"></td><td></td><td class="photoPath"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
+			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaRef"></td><td class="quotesomeUrl"></td><td></td><td class="photoPath"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
+			
+			$('#author-output table tbody').empty();
 			$.each($.parseJSON(data), function(index, value){
 				$('#author-output table tbody').append('<tr id="r'+index+'">'+rowTemplate+'</tr>');
+				$('#author-output table tbody tr#r'+index+' .edit').attr('id', value._id);
 				$.each(value, function(key, prop){
 					$('#author-output table tbody tr#r'+index+' .'+key).html(prop);
 				});
@@ -311,6 +322,7 @@
 						<input id="author-name" name="name" type="text" size="60" placeholder="author" />
 						<input id="author-wiki" name="wikipediaRef" type="text" size="60" placeholder="wikipediaID" />
 						<input id="author-quotesome" name="quotesomeUrl" type="url" size="100" placeholder="quotesome url" />
+						<input id="_id" name="_id" type="text" size="60" placeholder="_id"  disabled/>
 					</fieldset>
 
 					<fieldset id="design">

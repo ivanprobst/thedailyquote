@@ -81,7 +81,15 @@ http.createServer(function (request, response) {
 	}
 	else if(request.url == '/admin-fetch-authors'){
 		console.log('...received authors request');
-		adminPage.fetchAuthors(sendDataToClient);
+		var sentData = ''; 
+
+		request.on('data', function(data){
+			sentData += data;
+		});
+		request.on('end', function(data){
+			adminPage.fetchAuthors(sentData, sendDataToClient);
+		});
+		//adminPage.fetchAuthors(sendDataToClient);
 		return;
 	}
 	else if(request.url == '/admin-add-quote' && request.method == 'POST'){

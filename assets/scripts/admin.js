@@ -58,22 +58,33 @@ function admin(){
 		});
 	}
 
-	this.fetchAuthors = function(callback){
+	this.fetchAuthors = function(_id, callback){
 		console.log("building the authors list...");
 
 		var testdata = [{"_id":"5277a329caf70e963527e677","iid":"marcus_aurelius","name":"Marcus Aurelius","wikipediaRef":"Marcus_Aurelius","quotesomeUrl":"https://www.quotesome.com/authors/marcus-aurelius/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/marcus_aurelius.jpg","photoWidth":3256,"photoHeight":1600,"positionLeft":2,"positionTop":5,"directionSlide":"left","blockWidth":35,"blockFontSize":48,"blockFontColor":"fff","barsColor":"fff"},{"_id":"5277a343caf70e963527e679","iid":"eleanor_roosevelt","name":"Eleanor Roosevelt","wikipediaRef":"Eleanor_Roosevelt","quotesomeUrl":"https://www.quotesome.com/authors/eleanor-roosevelt/quotes","photoPath":"https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/eleanor_roosevelt.jpg","photoWidth":2665,"photoHeight":1203,"positionRight":3,"positionBottom":5,"directionSlide":"left","blockWidth":35,"blockFontSize":48,"blockFontColor":"000","blockBackgroundColor":"fff","barsColor":"fff"},{"authorID":"oscar_wilde","name":"Oscar Wilde","wikipediaRef":"Oscar_Wilde","quotesomeUrl":"https://www.quotesome.com/authors/oscar-wilde/quotes","_id":"527cc6672ed5bc476a000001"}];
-		
+
 		mongo.connect(CONST.db_url, function(err, db) {
 			if (err){console.error('!!! no db found, returning...'); callback(testdata); return;}
 			console.log("DB connected");
 			
 			var authors = db.collection('authors');
-			authors.find().toArray(function(err, items) {
-				if (err){console.error('!!! error fetching all items, returning...'); return;}
-				if (!items || items.length == 0){console.error('!!! no authors found, returning...'); return;}
 
-				callback(items);
-			});
+			if(_id && _id != ''){
+				authors.findOne({'_id':_id}, function(err, item){
+					if (err || !item){console.error('!!! error fetching one author, returning...'); return;}
+					console.log('item found:');
+					console.log(item);
+					callback(item);
+				});
+			}
+			else{
+				authors.find().toArray(function(err, items) {
+					if (err){console.error('!!! error fetching all authors, returning...'); return;}
+					if (!items || items.length == 0){console.error('!!! no authors found, returning...'); return;}
+
+					callback(items);
+				});
+			}
 		});
 
 	}
