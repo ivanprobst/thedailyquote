@@ -174,6 +174,7 @@
 		var formattedDate = $('#pubdate').val().substr(0,4) +'-'+ (parseInt($('#pubdate').val().substr(5,2))-1) +'-'+ parseInt($('#pubdate').val().substr(8,2));
 
 		var data = {
+			_id:		$('#quote-id').val(),
 			author:		$('#author').val(),
 			authorID:	$('#author-id').val(),
 			quoteUrl:	$('#quote-url').val(),
@@ -215,12 +216,10 @@
 				console.log("set field "+key+" to "+value);
 				if(key=='date'){
 					var dateObject = new Date(value);				
-					var datestring = dateObject.getFullYear()+'-'+('0'+(dateObject.getMonth()+1)).slice(-2)+'-'+('0'+dateObject.getDate()).slice(-2);
-					console.log('string: '+datestring);
-					$('#add-quote input[name = "date"]').val(datestring);
+					$('#add-quote input[name = "date"]').val(dateObject.getFullYear()+'-'+('0'+(dateObject.getMonth()+1)).slice(-2)+'-'+('0'+dateObject.getDate()).slice(-2));
 				}
 				else if(key=='text')
-					$('#add-quote textarea[name = "text"]').html(value);
+					$('#add-quote textarea[name = "text"]').val(value);
 				else if($('#add-quote input[name = "'+key+'"]'))
 					$('#add-quote input[name = "'+key+'"]').val(value);
 				else
@@ -452,8 +451,9 @@
 				</form>
 			
 				<form id="add-quote" onsubmit="return false;">
+					<input id="quote-id" name="_id" type="text" size="60" placeholder="_id" readonly />
 					<input id="author" name="author" type="text" size="60" placeholder="author (won't go in DB)" />
-					<input id="author-id" name="authorID" type="text" size="60" placeholder="authorID" />
+					<input id="author-id"  class="incorrect" name="authorID" type="text" size="60" placeholder="authorID" />
 					<input id="quote-url" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>

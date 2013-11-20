@@ -63,10 +63,23 @@ function admin(){
 				quotesomeUrl:	data.quoteUrl,
 				date:			new Date(data.pubDate.getYear(), data.pubDate.getMonth(), data.pubDate.getDate())
 			};
-			
-			console.log("inserting new quote...");
-			quotes.insert(finalData, {w:1}, function(err, result) {});
-				if(!err) console.log('...quote inserted')
+
+			// check if existing quote
+			if(data._id && data._id != ''){
+				console.log("already exists, updating quote... _id: "+data._id);
+				var objectid = new ObjectID(data._id);
+				quotes.update({_id:objectid}, finalData, {w:1}, function(err, result) {
+					if(!err) console.log('...quote updated')
+				});
+			}
+			else{
+				console.log("does not exist, inserting new quote...");
+				quotes.insert(finalData, {w:1}, function(err, result) {
+					if(!err) console.log('...quote inserted')
+				});
+			}
+			});
+
 		});
 	}
 	
