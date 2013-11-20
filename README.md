@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* quote editing
 * quote preview (in schedule + at creation)
 * time the quote request and social updates
 

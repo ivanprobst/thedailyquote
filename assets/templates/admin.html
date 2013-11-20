@@ -164,7 +164,7 @@
 	}
 
 	function clearQuoteForm(){
-		$('#add-quote input').val('');
+		$('#add-quote input, #add-quote textarea').val('');
 		$('#add-quote input[type="submit"]').val('add quote');
 	}
 
@@ -378,7 +378,7 @@
 				
 			}
 			
-			$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #d'+now.getDate()+'-'+now.getMonth()).addClass('today');
+			$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #'+now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate()).addClass('today');
 		}
 	}
 
@@ -399,7 +399,7 @@
 					$('#quote-text').val($('.quote-block-quote-text', data).html());
 					var now = new Date();
 					if(!freeDaySet)
-						$('#pubdate').val(now.getFullYear()+'-'+(now.getMonth()<9 ? '0'+(now.getMonth()+1) : now.getMonth()+1)+'-'+(now.getDate()<10 ? '0'+now.getDate() : now.getDate()));
+						$('#pubdate').val(now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+(now.getDate())).slice(-2));
 				}
 			}
 		});
@@ -412,6 +412,7 @@
 		});
 		
 		function updateDate(data){
+			clearQuoteForm();
 			console.log('got something back from node: '+data);
 				
 			var json = $.parseJSON(data);
@@ -419,7 +420,7 @@
 			var safety = 0;
 			while(true){
 				if(!((json[now.getFullYear()]) && ((json[now.getFullYear()])[now.getMonth()]) && (((json[now.getFullYear()])[now.getMonth()])[now.getDate()]))){
-					$('#pubdate').val(now.getFullYear()+'-'+(now.getMonth()<9 ? '0'+(now.getMonth()+1) : now.getMonth()+1)+'-'+(now.getDate()<10 ? '0'+now.getDate() : now.getDate()));
+					$('#pubdate').val(now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+(now.getDate())).slice(-2));
 					freeDaySet = true;
 					break;
 				}
