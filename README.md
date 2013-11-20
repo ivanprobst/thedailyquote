@@ -31,6 +31,9 @@ maybe
 * complete tz mapping
 * handle carriage return in quote txt
 
+admin enhanced
+* prevent adding author with existing author_id
+
 
 offset voodoo: max ratio of 0.45
 

@@ -166,22 +166,27 @@
 	function addAuthor(){
 		console.log("posting new author to server...");
 
-		var data = {};
-		$('#author-input fieldset input').each(function(index){
-			if($(this).val() && $(this).val() != '' && $(this).attr('name') != '_id'){
-				data[$(this).attr('name')] = ''+$(this).val();
-			}
-		});
+		if($('#author-input #author-id').val() && $('#author-input #author-id').val() != ''){
+			var data = {};
+			$('#author-input fieldset input').each(function(index){
+				if($(this).val() && $(this).val() != '' && $(this).attr('name') != '_id'){
+					data[$(this).attr('name')] = ''+$(this).val();
+				}
+			});
 
-		console.log('sending new author / update:');
-		console.log(data);
+			console.log('sending new author / update:');
+			console.log(data);
 
-		$.ajax({
-		  type: "POST",
-		  url: '/admin-add-author',
-		  data: JSON.stringify(data),
-		  success: fetchAuthors
-		});
+			$.ajax({
+			  type: "POST",
+			  url: '/admin-add-author',
+			  data: JSON.stringify(data),
+			  success: fetchAuthors
+			});
+		}
+		else{
+			console.log('no author_id indicated, aborting...');
+		}
 	}
 
 		// fetch authors function
