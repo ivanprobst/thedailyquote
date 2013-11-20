@@ -85,6 +85,8 @@ http.createServer(function (request, response) {
 
 		request.on('data', function(data){
 			sentData += data;
+
+			console.log("data received: "+data);
 		});
 		request.on('end', function(data){
 			adminPage.fetchQuotes(sentData, sendDataToClient);
