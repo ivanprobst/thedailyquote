@@ -72,7 +72,7 @@ function admin(){
 	}
 
 	// delete an author
-	this.deleteAuthors = function(author_id, callback){
+	this.deleteAuthor = function(author_id, callback){
 		console.log("preparing to delete author...");
 		console.log("author: "+author_id);
 
@@ -84,9 +84,9 @@ function admin(){
 
 			if(author_id && author_id != ''){
 				authors.remove({authorID:author_id}, function(err, result){
-					console.log('_id: '+author_id+', item: '+item);
+					console.log('_id: '+author_id+', result: '+result);
 					if (err || !result){console.error('!!! error deleting one author, returning...'); return;}
-					console.log('item delete:');
+					console.log('item deleted:');
 					console.log(result);
 					callback(result);
 				});
