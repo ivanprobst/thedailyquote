@@ -15,6 +15,36 @@ function admin(){
 			response.end();
 		});
     }
+
+    this.fetchQuotes = function(response){
+		// query the db
+		mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
+			if (err){console.error('!!! no db found, returning error page...'); buildError(response); return;}
+			console.log("DB connected");
+			
+			// couple of vars
+			var quotes = db.collection('quotes');
+			var authors = db.collection('authors');
+
+			// figure out the date
+			var now = new Date();
+			var dateToFetch = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // replace with relevant!!!
+			console.log("fetching quote from date: "+dateToFetch);
+
+			// fetch the relevant quote
+			quotes.findOne({date:dateToFetch}, function(err, item){
+				if(err || !item){console.log("!!! no quote found"); buildError(response); return;}
+				quote = item;
+
+				authors.findOne({authorID:quote.authorID}, function(err,item){
+					if(err || !item){console.log("!!! no author found"); buildError(response); return;}
+					author = item;
+					console.log("fetched quote from "+author.name+": "+quote.text);
+					buildIndex(response);
+				});
+			});
+		});
+	}
 	
 	// add a quote
 	this.addQuote = function(data){
@@ -31,7 +61,7 @@ function admin(){
 				authorID:		data.authorID,
 				text:			data.quoteText,
 				quotesomeUrl:	data.quoteUrl,
-				date:			new Date(data.pubDate.substr(0,4), parseInt(data.pubDate.substr(5,2))-1, parseInt(data.pubDate.substr(8,2)))
+				date:			new Date(data.pubDate.getYear(), data.pubDate.getMonth(), data.pubDate.getDate())
 			};
 			
 			console.log("inserting new quote...");
@@ -53,7 +83,7 @@ function admin(){
 			
 			console.log("check if "+data.authorID+" already exists...");
 
-			// fetch the relevant quote
+			// fetch the relevant author
 			authors.findOne({authorID:data.authorID}, function(err, item){
 				if(err || !item){
 					console.log("does not exist, inserting new...");
@@ -93,6 +123,38 @@ function admin(){
 			}
 			else{
 				console.error('!!! error, no author_id specified...');
+			}
+		});
+	}
+
+	this.fetchQuotes = function(pubdate, callback){
+		console.log("building the quotes list...");
+		console.log("quote: "+pubdate);
+
+		mongo.connect(CONST.db_url, function(err, db) {
+			if (err){console.error('!!! no db found, returning...'); return;}
+			console.log("DB connected");
+			
+			var quotes = db.collection('quotes');
+
+			if(pubdate && pubdate != ''){
+				var pubdateFormatted = new Date(data.pubDate.getYear(), data.pubDate.getMonth(), data.pubDate.getDate());
+				console.log('fetching formatted date: '+pubdateFormatted);
+				quotes.findOne({date:pubdateFormatted}, function(err, item){
+					console.log('date: '+pubdateFormatted+', item: '+item);
+					if (err || !item){console.error('!!! error fetching one quote, returning...'); return;}
+					console.log('quote found:');
+					console.log(item);
+					callback(item);
+				});
+			}
+			else{
+				quotes.find().sort({date:1}).toArray(function(err, items) {
+					if (err){console.error('!!! error fetching all quotes, returning...'); return;}
+					if (!items || items.length == 0){console.error('!!! no quotes found, returning...'); return;}
+
+					callback(items);
+				});
 			}
 		});
 	}

@@ -69,8 +69,9 @@
 		#schedule .month{overflow: hidden; display: block; float: left; width: 300px; height: 200px; margin-right: 40px;}
 		#schedule p{display: block; float: left; padding: 10px; width: 20px; height: 20px; text-align: center;}
 		
-		#schedule .no-quote{color: #ff0000;}
-		#schedule .quote{color: #00ff00;}
+		#schedule .no-quote{color: #c06363;}
+		#schedule .quote{color: #17A768; cursor: pointer; font-weight: bold;}
+			#schedule .quote:hover{background: #ccc;}
 		#schedule .today{background: #aaa;}
 	
 </style>
@@ -95,6 +96,12 @@
 		$("form#add-author").submit(addAuthor);
 
 		// clear author form
+		$("a#clear-quote").click(function(event){
+			event.preventDefault();
+			clearQuoteForm();
+		});
+
+		// clear author form
 		$("a#clear-author").click(function(event){
 			event.preventDefault();
 			clearAuthorForm();
@@ -107,6 +114,12 @@
 		
 		// fetch schedule link listener
 		$("a#fetch-schedule").click(fetchSchedule);
+		
+		// fetch quote link listener
+		$('#schedule').on('click', 'p.quote', function(event){
+  			event.preventDefault();
+			fetchQuote($(this).attr('id'));
+		});
 		
 		// fetch authors link listener
 		$("a#fetch-authors").click(function(event){
@@ -150,15 +163,23 @@
 		$('#add-author input[type="submit"]').val('add author');
 	}
 
+	function clearQuoteForm(){
+		$('#add-quote input').val('');
+		$('#add-quote input[type="submit"]').val('add quote');
+	}
+
 	// add quote to DB
 	function addQuote(){
 		console.log("posting new quote to server...");
+		var formattedDate = new Date($('#pubdate').val().substr(0,4), (parseInt($('#pubdate').val().substr(5,2))-1), parseInt($('#pubdate').val().substr(8,2)));
+		console.log("date: "+formattedDate);
+
 		var data = {
 			author:		$('#author').val(),
 			authorID:	$('#author-id').val(),
 			quoteUrl:	$('#quote-url').val(),
 			quoteText:	$('#quote-text').val(),
-			pubDate:	$('#pubdate').val(),
+			pubDate:	formattedDate
 		};
 		
 		console.log(data);
@@ -169,6 +190,36 @@
 		  data: JSON.stringify(data),
 		  success: fetchSchedule
 		});
+	}
+
+
+	// fetch quotes function
+	function fetchQuote(pubdate){
+		console.log('fetching quote... '+pubdate);
+		var formattedDate = new Date($('#'+pubdate).parent().parent().attr('id').substring(1), $('#'+pubdate).parent().attr('id').substring(1), $('#'+pubdate).html());
+		console.log('final pubdate... '+formattedDate);
+			
+		$.ajax({
+			type: "POST",
+			url: '/admin-fetch-quotes',
+			data: formattedDate,
+			success: setQuoteData
+		});
+
+		function setQuoteData(data){
+			console.log('got quote data back from node:');
+			console.log(data);
+
+			$('#add-quote input').val('');
+			$('#add-quote input[type="submit"]').val('update quote');
+			$.each($.parseJSON(data), function(key, value){
+				console.log("set field "+key+" to "+value);
+				if($('#add-quote input[name = "'+key+'"]'))
+					$('#add-quote input[name = "'+key+'"]').val(value);
+				else
+					$('#quote-dirt').append(key+" : "+value+" | ");
+			});
+		}
 	}
 
 	// check authorID existence
@@ -246,7 +297,7 @@
 				if($('#add-author input[name = "'+key+'"]'))
 					$('#add-author input[name = "'+key+'"]').val(value);
 				else
-					$('#dirt').append(key+" : "+value+" | ");
+					$('#author-dirt').append(key+" : "+value+" | ");
 			});
 		}
 	}
@@ -314,9 +365,9 @@
 					$('#schedule #y'+year).append('<div class="month" id="m'+month+'"><h4>'+monthNames[month]+'<h4></div>');
 				
 				if(json[year] && (json[year])[month] && ((json[year])[month])[day])
-					$('#schedule #y'+year+' #m'+month).append('<p class="quote" id="d'+day+'-'+month+'">'+day+'</p>');
+					$('#schedule #y'+year+' #m'+month).append('<p class="quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p>');
 				else
-					$('#schedule #y'+year+' #m'+month).append('<p class="no-quote" id="d'+day+'-'+month+'">'+day+'</p>');
+					$('#schedule #y'+year+' #m'+month).append('<p class="no-quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p>');
 				
 			}
 			
@@ -387,19 +438,21 @@
 			<section id="quote-input">
 				<form id="fetch-url" onsubmit="return false;">
 					<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required value="http://quoteso.me/q/226937" />
+					<div id="quote-dirt"></div>
 					
 					<input type="submit" value="fetch url" />
 				</form>
 			
 				<form id="add-quote" onsubmit="return false;">
 					<input id="author" name="author" type="text" size="60" placeholder="author (won't go in DB)" />
-					<input id="author-id" name="author-id" type="text" size="60" placeholder="authorID" />
-					<input id="quote-url" name="quote-url" type="url" size="60" placeholder="quote url" />
-					<textarea id="quote-text" name="quote-text" rows="5" cols="60" placeholder="quote text"></textarea>
-					<input id="pubdate" name="pubdate" type="date"/>
+					<input id="author-id" name="authorID" type="text" size="60" placeholder="authorID" />
+					<input id="quote-url" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
+					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
+					<input id="pubdate" name="date" type="date"/>
 					<input id="block-font-size" name="block-font-size" type="text" size="40" placeholder="block font size (48px)" />
 					
 					<input type="submit" value="add quote" />
+					<a id="clear-quote" href="#">clear form</a>
 				</form>
 			</section>
 			
@@ -429,7 +482,7 @@
 						<input id="author-wiki" name="wikipediaRef" type="text" size="60" placeholder="wikipediaID" />
 						<input id="author-quotesome" name="quotesomeUrl" type="url" size="100" placeholder="quotesome url" />
 						<input id="_id" name="_id" type="text" size="60" placeholder="_id"  disabled/>
-						<div id="dirt"></div>
+						<div id="author-dirt"></div>
 					</fieldset>
 
 					<fieldset id="design">

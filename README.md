@@ -2,8 +2,8 @@ thequotetribune
 ===============
 
 tobd
-* quote preview (in schedule + at creation)
 * quote editing
+* quote preview (in schedule + at creation)
 * time the quote request and social updates
 
 tobf
@@ -18,6 +18,7 @@ tobf
 * fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found
 * final error page
+* quote font size support
 
 final
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right

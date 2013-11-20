@@ -79,6 +79,18 @@ http.createServer(function (request, response) {
 		adminPage.fetchSchedule(sendDataToClient);
 		return;
 	}
+	else if(request.url == '/admin-fetch-quotes'){
+		console.log('...received quotes request');
+		var sentData = ''; 
+
+		request.on('data', function(data){
+			sentData += data;
+		});
+		request.on('end', function(data){
+			adminPage.fetchQuotes(sentData, sendDataToClient);
+		});
+		return;
+	}
 	else if(request.url == '/admin-fetch-authors'){
 		console.log('...received authors request');
 		var sentData = ''; 
@@ -102,7 +114,6 @@ http.createServer(function (request, response) {
 		request.on('end', function(data){
 			adminPage.deleteAuthor(sentData, sendDataToClient);
 		});
-		//adminPage.fetchAuthors(sendDataToClient);
 		return;
 	}
 	else if(request.url == '/admin-add-quote' && request.method == 'POST'){
