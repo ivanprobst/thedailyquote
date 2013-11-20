@@ -1,4 +1,5 @@
 var	mongo = require('mongodb').MongoClient,
+	ObjectID = require('mongodb').ObjectID,
 	fs = require('fs'),
 	CONST = require('./CONST.js');
 
@@ -61,7 +62,7 @@ function admin(){
 				authorID:		data.authorID,
 				text:			data.quoteText,
 				quotesomeUrl:	data.quoteUrl,
-				date:			new Date(data.pubDate.getYear(), data.pubDate.getMonth(), data.pubDate.getDate())
+				date:			CONST.cleanDate(data.pubDate)
 			};
 
 			// check if existing quote
@@ -78,8 +79,6 @@ function admin(){
 					if(!err) console.log('...quote inserted')
 				});
 			}
-			});
-
 		});
 	}
 	
