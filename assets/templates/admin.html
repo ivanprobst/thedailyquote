@@ -171,8 +171,7 @@
 	// add quote to DB
 	function addQuote(){
 		console.log("posting new quote to server...");
-		var formattedDate = new Date($('#pubdate').val().substr(0,4), (parseInt($('#pubdate').val().substr(5,2))-1), parseInt($('#pubdate').val().substr(8,2)));
-		console.log("date: "+formattedDate);
+		var formattedDate = $('#pubdate').val().substr(0,4) +'-'+ (parseInt($('#pubdate').val().substr(5,2))-1) +'-'+ parseInt($('#pubdate').val().substr(8,2));
 
 		var data = {
 			author:		$('#author').val(),
@@ -196,7 +195,7 @@
 	// fetch quotes function
 	function fetchQuote(pubdate){
 		console.log('fetching quote... '+pubdate);
-		var formattedDate = new Date($('#'+pubdate).parent().parent().attr('id').substring(1), $('#'+pubdate).parent().attr('id').substring(1), $('#'+pubdate).html());
+		var formattedDate = $('#'+pubdate).parent().parent().attr('id').substring(1) +'-'+ $('#'+pubdate).parent().attr('id').substring(1) +'-'+ $('#'+pubdate).html();
 		console.log('final pubdate... '+formattedDate);
 			
 		$.ajax({

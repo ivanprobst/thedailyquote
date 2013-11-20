@@ -29,6 +29,13 @@ module.exports = {
 	daily_transition_hour : 6, // 6am UTC
 	
 	// other
-	db_url : 'mongodb://localhost:27017/thequotetribune'
+	db_url : 'mongodb://localhost:27017/thequotetribune',
+
+	cleanDate : function(stringDate){
+		var year = stringDate.substr(0,4);
+		var month = (''+stringDate.match(/-[0-9]+-/)).replace(/-/g,'');
+		var day = (''+stringDate.slice(-2)).replace(/-/g,'');
+		return new Date(year, month, day);
+	}
 };
 
