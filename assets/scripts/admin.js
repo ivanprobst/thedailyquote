@@ -71,6 +71,32 @@ function admin(){
 		});
 	}
 
+	// delete an author
+	this.deleteAuthors = function(author_id, callback){
+		console.log("preparing to delete author...");
+		console.log("author: "+author_id);
+
+		mongo.connect(CONST.db_url, function(err, db) {
+			if (err){console.error('!!! no db found, returning...'); callback(testdata); return;}
+			console.log("DB connected");
+			
+			var authors = db.collection('authors');
+
+			if(author_id && author_id != ''){
+				authors.remove({authorID:author_id}, function(err, result){
+					console.log('_id: '+author_id+', item: '+item);
+					if (err || !result){console.error('!!! error deleting one author, returning...'); return;}
+					console.log('item delete:');
+					console.log(result);
+					callback(result);
+				});
+			}
+			else{
+				console.error('!!! error, no author_id specified...');
+			}
+		});
+	}
+
 	this.fetchAuthors = function(author_id, callback){
 		console.log("building the authors list...");
 		console.log("author: "+author_id);
@@ -122,7 +148,6 @@ function admin(){
 				});
 			}
 		});
-
 	}
 	
 	// fetch schedule

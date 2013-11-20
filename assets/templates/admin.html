@@ -10,7 +10,7 @@
 	body{
 		color: #242323;
 	}
-	a{}
+	a{color: #8C3130;}
 		a:hover{}
 	ul{list-style-type: none;}
 	
@@ -49,6 +49,8 @@
 				width: 600px;
 			}
 				#author-input #design input{float: left;}
+
+				#author-input input[type='submit']{margin-bottom: 30px !important;}
 	
 	input, textarea{
 		display: block;
@@ -106,13 +108,25 @@
 		// admin menu toggling
 		$("a#admin-switch").click(function(event){
 			$('#container>div').toggle();
+			fetchSchedule();
+			fetchAuthors();
 		});
 
-		// fetch one author
+		// fetch one author for edition
 		$('#authors-data').on('click', 'a.edit', function(event){
   			event.preventDefault();
 			console.log('id: '+$(this).attr('id'));
 			fetchAuthor($(this).attr('id'));
+		});
+
+		// delete one author
+		$('#authors-data').on('click', 'a.delete', function(event){
+  			event.preventDefault();
+  			if(confirm("are you sure you want to delete this guy?")){
+				console.log('sending delete id: '+$(this).attr('id'));
+				deleteAuthor($(this).attr('id'));
+			}
+			else{}
 		});
 
 
@@ -170,6 +184,18 @@
 		});
 	}
 
+		// fetch authors function
+	function deleteAuthor(_id){
+		console.log("deleting one authors...");
+			
+		$.ajax({
+			type: "POST",
+			url: '/admin-delete-authors',
+			data: _id,
+			success: fetchAuthors
+		});
+	}
+
 	// fetch authors function
 	function fetchAuthor(_id){
 		console.log("fetching authors...");
@@ -212,12 +238,13 @@
 			console.log('got authors list back from node:');
 			console.log(data);
 
-			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaRef"></td><td class="quotesomeUrl"></td><td></td><td class="photoPath"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
+			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaRef"></td><td class="quotesomeUrl"></td><td></td><td class="photoPath"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
 			
 			$('#author-output table tbody').empty();
 			$.each($.parseJSON(data), function(index, value){
 				$('#author-output table tbody').append('<tr id="r'+index+'">'+rowTemplate+'</tr>');
 				$('#author-output table tbody tr#r'+index+' .edit').attr('id', value.authorID);
+				$('#author-output table tbody tr#r'+index+' .delete').attr('id', value.authorID);
 				$.each(value, function(key, prop){
 					$('#author-output table tbody tr#r'+index+' .'+key).html(prop);
 				});

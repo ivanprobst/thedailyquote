@@ -1,5 +1,5 @@
-thedailyquote
-=============
+thequotetribune
+===============
 
 tobd
 * check authorID validity

@@ -92,6 +92,19 @@ http.createServer(function (request, response) {
 		//adminPage.fetchAuthors(sendDataToClient);
 		return;
 	}
+	else if(request.url == '/admin-delete-author'){
+		console.log('...received authors deletion request');
+		var sentData = ''; 
+
+		request.on('data', function(data){
+			sentData += data;
+		});
+		request.on('end', function(data){
+			adminPage.deleteAuthor(sentData, sendDataToClient);
+		});
+		//adminPage.fetchAuthors(sendDataToClient);
+		return;
+	}
 	else if(request.url == '/admin-add-quote' && request.method == 'POST'){
 		var dbData = ''; 
 		console.log('...received posted quote data');
