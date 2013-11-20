@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* check authorID validity
 * quote preview (in schedule + at creation)
 * quote editing
 * time the quote request and social updates
