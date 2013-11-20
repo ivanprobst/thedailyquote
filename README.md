@@ -2,12 +2,11 @@ thequotetribune
 ===============
 
 tobd
+* CREATE A QUOTE + A DB MODULE
 * quote preview (in schedule + at creation)
 * time the quote request and social updates
 
 tobf
-* CREATE A QUOTE + A DB MODULE
-* better sharing button
 * scrolling fallback when resolution too small
 * check that all classic resolutions are good
 * simplify scaling, too much js
@@ -20,13 +19,14 @@ tobf
 * quote font size support
 
 final
+* separate admin from index server
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
 * CLEAN AND REFILL THAT DB
 
 maybe
-* crashed admin shouldn't crash prod
+* quote/author update/creation feedback on browser
 * complete tz mapping
 * handle carriage return in quote txt
 
