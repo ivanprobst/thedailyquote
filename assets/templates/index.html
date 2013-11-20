@@ -130,6 +130,7 @@
 			background: #fff;
 			text-align: justify;
 			line-height: 1.4em;
+			max-height: 400px;
 		}
 			footer section article{margin: 0 auto 15px auto; width: 650px;}
 			footer section h3{text-align: center; font-size: 2em; margin-bottom: 20px;}
@@ -235,6 +236,8 @@
 	function updateScaling(){
 		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+		$('#resolution').html(windowWidth + 'x' +windowHeight);
 		
 		// set the current photo size
 		if(originalAuthorPhotoHeight >= windowHeight){
@@ -293,7 +296,7 @@
 
 	<div id="container">
 		<header class="bar">
-			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a></h1>
+			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a> (<span id="resolution"></span>)</h1>
 			<h2>your daily inspirational fix</h2>
 		</header>
 		
@@ -362,8 +365,7 @@
 					<h4>Everyday we give you a new awesome quote with that crazy one's handsome photo.</h4>
 					<p>Some Latin chap once said <q>"Acta Non Verba"</q>, meaning <q>"Actions, not words"</q>. Thoughtful and true.</p>
 					<p>But the thing is, words are powerful, and have always been inspirational for the most beautiful minds history has seen.</p>
-					<p>So we believe quotes of the greatest must be heard and shared. These are packaged life lessons, they make you reconsider what you do and think, they encourage your ego to grow more daring, they make you laugh.</p>
-					<p>And for us, attaching the author's photo to the words makes it even more powerful. It's a visual gong inside your brain.</p>
+					<p>So we believe quotes of the greatest must be heard and shared. And for us, attaching the author's photo to the words makes it even more powerful. It's a visual gong inside your brain.</p>
 					<p>So that's what we do. Simply.</p>
 				</article>
 				<article>

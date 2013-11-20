@@ -7,8 +7,6 @@ tobd
 * time the quote request and social updates
 
 tobf
-* scrolling fallback when resolution too small
-* check that all classic resolutions are good
 * simplify scaling, too much js
 * ie7+
 * fb sharing caching
