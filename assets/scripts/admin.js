@@ -138,7 +138,7 @@ function admin(){
 			var quotes = db.collection('quotes');
 
 			if(pubdate && pubdate != ''){
-				var pubdateFormatted = CONST.cleanDate(pubDate);
+				var pubdateFormatted = CONST.cleanDate(pubdate);
 				console.log('fetching formatted date: '+pubdateFormatted);
 				quotes.findOne({date:pubdateFormatted}, function(err, item){
 					console.log('date: '+pubdateFormatted+', item: '+item);

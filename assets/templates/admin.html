@@ -201,7 +201,7 @@
 		$.ajax({
 			type: "POST",
 			url: '/admin-fetch-quotes',
-			data: 'testing',
+			data: formattedDate,
 			success: setQuoteData
 		});
 
@@ -213,11 +213,20 @@
 			$('#add-quote input[type="submit"]').val('update quote');
 			$.each($.parseJSON(data), function(key, value){
 				console.log("set field "+key+" to "+value);
-				if($('#add-quote input[name = "'+key+'"]'))
+				if(key=='date'){
+					var dateObject = new Date(value);				
+					var datestring = dateObject.getFullYear()+'-'+('0'+(dateObject.getMonth()+1)).slice(-2)+'-'+('0'+dateObject.getDate()).slice(-2);
+					console.log('string: '+datestring);
+					$('#add-quote input[name = "date"]').val(datestring);
+				}
+				else if(key=='text')
+					$('#add-quote textarea[name = "text"]').html(value);
+				else if($('#add-quote input[name = "'+key+'"]'))
 					$('#add-quote input[name = "'+key+'"]').val(value);
 				else
 					$('#quote-dirt').append(key+" : "+value+" | ");
 			});
+			checkAuthorID($('#add-quote input[name = "authorID"]').val());
 		}
 	}
 
