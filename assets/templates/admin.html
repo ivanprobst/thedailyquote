@@ -329,7 +329,7 @@
 
 			currentAuthors = $.parseJSON(data);
 
-			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaRef"></td><td class="quotesomeUrl"></td><td></td><td class="photoPath"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
+			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaRef"></td><td class="quotesomeUrl"></td><td></td><td class="photoUrl"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
 			
 			$('#author-output table tbody').empty();
 			$.each($.parseJSON(data), function(index, value){
@@ -514,7 +514,7 @@
 
 					<fieldset id="design">
 						<legend>Design</legend>
-						<input id="photo-url" name="photoPath" type="url" size="100" placeholder="photo url" />
+						<input id="photo-url" name="photoUrl" type="url" size="100" placeholder="photo url" />
 						<input id="photo-width" name="photoWidth" type="text" size="40" placeholder="photo width (0)" />
 						<input id="photo-height" name="photoHeight" type="text" size="40" placeholder="photo height (0)" />
 						<input id="position-left" name="positionLeft" type="text" size="40" placeholder="position left (auto, use %)" />

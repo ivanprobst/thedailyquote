@@ -1,7 +1,7 @@
 var Quote = require('./quote.js'),
 	Author = require('./author.js'),
 	fs = require('fs'),
-	DB = require('./DB.js');
+	DB = require('./db.js');
 
 var quote = null;
 var author = null;
@@ -25,8 +25,6 @@ module.exports = {
 
 // building index page
 function buildQuotePage(callback){
-	console.log("quote:");
-	console.log(quote.getObjectData());
 
 	htmlPage = '';
 	var file = fs.createReadStream('assets/templates/index.html');

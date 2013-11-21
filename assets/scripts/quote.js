@@ -7,7 +7,7 @@ function Quote (options){
     this.text			= options.text || ''; // fallback text?
     this.quotesomeUrl	= options.quotesomeUrl || '';
     this.pubDate		= options.pubDate || null;
-    this.fontSize 		= options.fontSize || '';
+    this.fontSize 		= options.fontSize || '48px';
 
     // return data on object form
     this.getObjectData = function(){
@@ -32,7 +32,7 @@ function Quote (options){
     this.setErrorQuote = function(){
 	    this.authorID		= '_err_404';
 	    this.text			= 'Something went wrong. We are mighty angry about it. We go have a look, and you stay back here.';
-	    this.fontSize = '';
+	    this.fontSize = '48px';
 
   		this._id			= '';
    		this.quotesomeUrl	= '';
@@ -41,7 +41,7 @@ function Quote (options){
     this.setUnpublishedQuote = function(){
 	    this.authorID		= '_err_404';
 	    this.text			= 'You sneaky person, it\'s not yet time!';
-	    this.fontSize = '';
+	    this.fontSize = '48px';
 
   		this._id			= '';
    		this.quotesomeUrl	= '';
@@ -51,7 +51,7 @@ function Quote (options){
     this.setNoQuoteToday = function(){
 	    this.authorID		= '_err_404';
 	    this.text			= 'hey, nothing is up today, shame!';
-	    this.fontSize = '';
+	    this.fontSize = '48px';
 
   		this._id			= '';
    		this.quotesomeUrl	= '';
