@@ -5,34 +5,31 @@ tobd
 * CREATE A QUOTE + A DB MODULE
 * quote preview (in schedule + at creation)
 * time the quote request and social updates
+* separate admin from index server
 
 tobf
+* map author with _id rather than authorID
 * simplify scaling, too much js
 * ie7+
 * fb sharing caching
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found
-* final error page
+* final error page (clear menu, link to go back home)
 * quote font size support
+* handle carriage return and links in quote txt
 
 final
-* separate admin from index server
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
 * CLEAN AND REFILL THAT DB
 
-maybe
-* quote/author update/creation feedback on browser
-* complete tz mapping
-* handle carriage return in quote txt
-
 admin enhanced
 * prevent adding author with existing author_id
+* quote/author update/creation feedback on browser
+* authorID and pubDate duplicate check
 
-
-offset voodoo: max ratio of 0.45
 
 modules
 * Twitter API: https://github.com/ttezel/twit

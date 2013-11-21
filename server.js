@@ -1,16 +1,31 @@
 // external modules
-var http = require('http');
-var fs = require('fs');
-var geoip = require('geoip-lite');
+var http = require('http'),
+	fs = require('fs'),
+	geoip = require('geoip-lite');
 
 // internal modules
-var social = require('./assets/scripts/social.js');
-var pageBuilder = require('./assets/scripts/pageBuilder.js');
-var admin = require('./assets/scripts/admin.js');
-var CONST = require('./assets/scripts/CONST.js');
+var social = require('./assets/scripts/social.js'),
+	pageBuilder = require('./assets/scripts/pageBuilder.js'),
+	admin = require('./assets/scripts/admin.js'),
+	CONST = require('./assets/scripts/CONST.js'),
+	Quote = require('./assets/scripts/quote.js');
 
 // varz
 var timmy = null;
+
+// test shit
+var myQuote = new Quote({'authorID':'oscar_wilde', 'text':'If you want to tell people the truth, make them laugh; otherwise they\'ll kill you.', 'quotesomeUrl':'http://quoteso.me/q/226937'});
+
+console.log('quote created, authorID: '+myQuote.authorID);
+
+console.log('and an object: ');
+console.log(myQuote.getObjectData());
+
+myQuote._id = '2312312312';
+console.log('quote created, authorID: '+myQuote._id);
+
+
+
 
 http.createServer(function (request, response) {
 	console.log('# classic srv asked for: '+request.url);

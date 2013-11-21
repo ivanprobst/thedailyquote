@@ -236,8 +236,7 @@
 	function updateScaling(){
 		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-		$('#resolution').html(windowWidth + 'x' +windowHeight);
+		//$('#resolution').html('(' + windowWidth + 'x' +windowHeight + ')');
 		
 		// set the current photo size
 		if(originalAuthorPhotoHeight >= windowHeight){
@@ -296,7 +295,7 @@
 
 	<div id="container">
 		<header class="bar">
-			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a> (<span id="resolution"></span>)</h1>
+			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a><span id="resolution"></span></h1>
 			<h2>your daily inspirational fix</h2>
 		</header>
 		
