@@ -1,7 +1,8 @@
 var	mongo = require('mongodb').MongoClient,
 	ObjectID = require('mongodb').ObjectID,
 	fs = require('fs'),
-	CONST = require('./CONST.js');
+	CONST = require('./CONST.js'),
+	DB = require('./db.js');
 
 function admin(){
 	// init...
@@ -288,6 +289,19 @@ function admin(){
 				console.log("final: "+Object.keys((schedule[2013])[11]));
 				callback(schedule);
 
+			});
+		});
+	}
+
+	function dbAction(){
+		mongo.connect(CONST.db_url, function(err, db) {
+			
+			var quotes = db.collection('quotes');
+			quotes.find().toArray(function(err, items) {
+				items.forEach(function(item){
+					var date = item.date;
+					quotes.update({_id:data.item._id}, {pubDate: date}, {w:1}, function(err, result) {});
+				});
 			});
 		});
 	}

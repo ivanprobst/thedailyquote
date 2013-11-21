@@ -115,6 +115,9 @@
 		// fetch schedule link listener
 		$("a#fetch-schedule").click(fetchSchedule);
 		
+		// fetch schedule link listener
+		$("a#db-action").click(dbAction);
+		
 		// fetch quote link listener
 		$('#schedule').on('click', 'p.quote', function(event){
   			event.preventDefault();
@@ -430,6 +433,17 @@
 			}
 		}
 	}
+
+		// fetch schedule function
+	function dbAction(){
+		console.log("executing db action...");
+		
+		$.ajax({
+			type: "POST",
+			url: '/admin-db-action',
+			success: null
+		});
+	}
 	
 </script>
 
@@ -477,6 +491,10 @@
 				
 				<article id="unscheduled">
 				</article>
+			</section>
+			
+			<section id="db-action">
+				<h3><a href="#">CUSTOM DB ACTION</a></h3>
 			</section>
 		</div>
 

@@ -169,8 +169,13 @@ http.createServer(function (request, response) {
 			adminPage.addAuthor(JSON.parse(dbData));
 		});
 	}
+	else if(request.url == '/admin-db-action'){
+		console.log('...received db action request');
+		adminPage.dbAction();
+		return;
+	}
+
 	response.end();
-	
 	
 	function sendDataToClient(data){
 		console.log("callback called, data to be sent to client: "+data);
