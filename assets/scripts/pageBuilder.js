@@ -24,7 +24,7 @@ module.exports = {
 			console.log("fetching quote from date: "+dateToFetch);
 
 			// fetch the relevant quote
-			quotes.findOne({date:dateToFetch}, function(err, item){
+			quotes.findOne({pubDate:dateToFetch}, function(err, item){
 				if(err || !item){console.log("!!! no quote found"); buildError(response); return;}
 				quote = item;
 
