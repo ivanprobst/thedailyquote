@@ -80,7 +80,7 @@ function updateTodayQuote(){
 	});
 
 
-	DB.getItem('quotes', {authorID:'albert_einstein'}, function(item){
+	DB.getItem('quotes', {}, function(item){
 		if(item){
 			console.log('my single quote:');
 			console.log(item);
