@@ -16,7 +16,7 @@ var timmy = null;
 var todayQuote = new Quote();
 
 
-console.log('...running server on http://127.0.0.1:8124/');
+console.log('# running server on http://127.0.0.1:8124/');
 http.createServer(function (request, response) {
 	console.log('# classic srv asked for: '+request.url);
 
@@ -71,10 +71,17 @@ function tick(){
 function updateTodayQuote(){
 	// fetch quote from DB
 	DB.connect(function(db){
-		if(db)
+		if(db){
 			console.log('success');
-		else
-			console.log('really failed');
+			getCollectionArray(db, 'quote', function(items){
+				if(items){
+					console.log('my quotes:');
+					console.log(items);
+				}
+				else
+					console.log('no quotes found...');
+			});
+		}
 	});
 
 	// update todayQuote
@@ -83,7 +90,7 @@ function updateTodayQuote(){
 
 // admin srv
 var adminPage = new admin();
-console.log('...running admin on http://127.0.0.1:8125/');
+console.log('# running admin on http://127.0.0.1:8125/');
 http.createServer(function (request, response) {
 	console.log('# admin srv asked for: '+request.url);
 

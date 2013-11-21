@@ -13,6 +13,34 @@ module.exports = {
 			console.log("...DB connected");
 			callback(db);
 		});
+	},
+
+	getCollectionArray : function(db, collectionName, callback){
+		if(!collectionName || !db){
+			console.error('!!! no db or collection name indicated');
+			callback(null);
+			return;
+		}
+		
+		var collection = db.collection(collectionName);
+
+		if(collection){
+			collection.find().toArray(function(err, items) {
+				if (err){
+					console.error('!!! error getting the collection "'+collectionName+'"');
+					callback(null);
+					return;
+				}				
+				
+				if (!items || items.length == 0){
+					console.error('!!! no items found for collection "'+collectionName+'"');
+					callback(null);
+					return;
+				}
+
+				callback(items);
+			});
+		}
 	}
 };
 

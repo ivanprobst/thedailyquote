@@ -7,7 +7,7 @@ var nb = 1; // replace by real content, title, author
 var date = new Date(); // replace by quote published time
 var feed = new RSS({"title":CONST.rssTitle,"description":"Your daily inspirational fix","feed_url":"http://thequotetribune.com/rss.xml","site_url":"http://thequotetribune.com"});
 feed.item({"title":"Post nb "+nb,"description":"awesome content nb "+nb,"url":"http://thequotetribune.com?id="+nb,"guid":"id"+nb,"date":date.toDateString()+", "+date.getHours()+":"+date.getMinutes(),"categories":["cat1"],"author":"Marcus Aurelius"});
-console.log('...rss feed set up');
+console.log('# rss feed set up');
 
 
 module.exports = {	
