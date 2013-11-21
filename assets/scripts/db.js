@@ -2,47 +2,51 @@ var	mongo = require('mongodb').MongoClient,
 	ObjectID = require('mongodb').ObjectID;
 
 module.exports = {
-	connect : function(callback){
-		console.log('connecting to db...')
-		mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
-			if (err){
-				console.error('!!! no db found...');
+
+	getCollectionArray : function(collectionName, callback){
+		connect(function(db){
+			if(!collectionName || !db){
+				console.error('!!! no db or collection name indicated');
 				callback(null);
 				return;
 			}
-			console.log("...DB connected");
-			callback(db);
-		});
-	},
+			
+			var collection = db.collection(collectionName);
 
-	getCollectionArray : function(db, collectionName, callback){
-		if(!collectionName || !db){
-			console.error('!!! no db or collection name indicated');
+			if(collection){
+				collection.find().toArray(function(err, items) {
+					if (err){
+						console.error('!!! error getting the collection "'+collectionName+'"');
+						callback(null);
+						return;
+					}				
+					
+					if (!items || items.length == 0){
+						console.error('!!! no items found for collection "'+collectionName+'"');
+						callback(null);
+						return;
+					}
+
+					callback(items);
+				});
+			}
+		});
+	}
+};
+
+
+function connect(callback){
+	console.log('connecting to db...')
+	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
+		if (err){
+			console.error('!!! no db found...');
 			callback(null);
 			return;
 		}
-		
-		var collection = db.collection(collectionName);
-
-		if(collection){
-			collection.find().toArray(function(err, items) {
-				if (err){
-					console.error('!!! error getting the collection "'+collectionName+'"');
-					callback(null);
-					return;
-				}				
-				
-				if (!items || items.length == 0){
-					console.error('!!! no items found for collection "'+collectionName+'"');
-					callback(null);
-					return;
-				}
-
-				callback(items);
-			});
-		}
-	}
-};
+		console.log("...DB connected");
+		callback(db);
+	});
+}
 
 /*
 	

@@ -69,19 +69,14 @@ function tick(){
 }
 
 function updateTodayQuote(){
-	// fetch quote from DB
-	DB.connect(function(db){
-		if(db){
-			console.log('success');
-			getCollectionArray(db, 'quote', function(items){
-				if(items){
-					console.log('my quotes:');
-					console.log(items);
-				}
-				else
-					console.log('no quotes found...');
-			});
+	// fetch all quotes from DB
+	DB.getCollectionArray('quotes', function(items){
+		if(items){
+			console.log('my quotes:');
+			console.log(items);
 		}
+		else
+			console.log('no quotes or DB found...');
 	});
 
 	// update todayQuote
