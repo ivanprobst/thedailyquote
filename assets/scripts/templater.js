@@ -25,8 +25,6 @@ module.exports = {
 
 // building index page
 function buildQuotePage(callback){
-	console.log("quote:");
-	console.log(quote.getObjectData());
 
 	htmlPage = '';
 	var file = fs.createReadStream('assets/templates/index.html');
