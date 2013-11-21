@@ -19,7 +19,7 @@ module.exports = {
 			var collection = db.collection(collectionName);
 
 			if(collection){
-				collection.find().toArray(function(err, items) {
+				collection.find().toArray(function(err, items) { // warning with big collections (quotes)
 					if (err){
 						console.error('!!! error getting the collection "'+collectionName+'"');
 						callback(null);
