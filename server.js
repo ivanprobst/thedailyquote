@@ -79,6 +79,16 @@ function updateTodayQuote(){
 			console.log('no quotes or DB found...');
 	});
 
+
+	DB.getItem('quotes', {authorID:'albert_einstein'}, function(item){
+		if(item){
+			console.log('my single quote:');
+			console.log(item);
+		}
+		else
+			console.log('no quotes or DB found...');
+	});
+
 	// update todayQuote
 	return;
 }

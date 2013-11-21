@@ -4,9 +4,14 @@ var	mongo = require('mongodb').MongoClient,
 module.exports = {
 
 	getCollectionArray : function(collectionName, callback){
+		if(!collectionName){
+			console.error('!!! no collection name indicated');
+			callback(null);
+			return;
+		}
+
 		connect(function(db){
-			if(!collectionName || !db){
-				console.error('!!! no db or collection name indicated');
+			if(!db){
 				callback(null);
 				return;
 			}
@@ -28,6 +33,41 @@ module.exports = {
 					}
 
 					callback(items);
+				});
+			}
+		});
+	},
+
+	getItem : function(collectionName, condition, callback){
+		if(!collectionName){
+			console.error('!!! no collection name indicated');
+			callback(null);
+			return;
+		}
+
+		connect(function(db){
+			if(!db){
+				callback(null);
+				return;
+			}
+			
+			var collection = db.collection(collectionName);
+			condition = condition || {};
+
+			if(collection){
+				authors.findOne(condition, function(err, item){
+					if (err){
+						console.error('!!! error finding item with condition "'+condition+'" in collection "'+collectionName+'"');
+						callback(null);
+						return;
+					}	
+					if (!items || items.length == 0){
+						console.error('!!! no item found with condition "'+condition+'" in collection "'+collectionName+'"');
+						callback(null);
+						return;
+					}
+
+					callback(item);
 				});
 			}
 		});
