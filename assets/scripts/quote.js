@@ -39,7 +39,7 @@ function Quote (options){
     	this.pubDate		= null;
     }
     this.setUnpublishedQuote = function(){
-	    this.authorID		= '_err_404';
+	    this.authorID		= '_err_unpublished';
 	    this.text			= 'You sneaky person, it\'s not yet time!';
 	    this.fontSize = '';
 
@@ -49,7 +49,7 @@ function Quote (options){
     }
     // NO QUOTE FOUND FOR THE DAY ???
     this.setNoQuoteToday = function(){
-	    this.authorID		= '_err_404';
+	    this.authorID		= '_err_noquote';
 	    this.text			= 'hey, nothing is up today, shame!';
 	    this.fontSize = '';
 

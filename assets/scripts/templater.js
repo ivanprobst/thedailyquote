@@ -1,7 +1,7 @@
 var Quote = require('./quote.js'),
 	Author = require('./author.js'),
 	fs = require('fs'),
-	DB = require('./DB.js');
+	DB = require('./db.js');
 
 var quote = null;
 var author = null;
