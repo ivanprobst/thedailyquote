@@ -30,7 +30,7 @@ function Quote (options){
 
     // pre-built quote templates
     this.setErrorQuote = function(){
-	    this.authorID		= 'err_404';
+	    this.authorID		= '_err_404';
 	    this.text			= 'Something went wrong. We are mighty angry about it. We go have a look, and you stay back here.';
 	    this.fontSize = '';
 
@@ -39,7 +39,7 @@ function Quote (options){
     	this.pubDate		= null;
     }
     this.setUnpublishedQuote = function(){
-	    this.authorID		= 'err_tooearly';
+	    this.authorID		= '_err_404';
 	    this.text			= 'You sneaky person, it\'s not yet time!';
 	    this.fontSize = '';
 
@@ -49,7 +49,7 @@ function Quote (options){
     }
     // NO QUOTE FOUND FOR THE DAY ???
     this.setNoQuoteToday = function(){
-	    this.authorID		= 'err_noquotetoday';
+	    this.authorID		= '_err_404';
 	    this.text			= 'hey, nothing is up today, shame!';
 	    this.fontSize = '';
 

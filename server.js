@@ -5,7 +5,7 @@ var http = require('http'),
 
 // internal modules
 var social = require('./assets/scripts/social.js'),
-	pageBuilder = require('./assets/scripts/pageBuilder.js'),
+	templater = require('./assets/scripts/templater.js'),
 	admin = require('./assets/scripts/admin.js'),
 	CONST = require('./assets/scripts/CONST.js'),
 	DB = require('./assets/scripts/db.js'),
@@ -22,7 +22,11 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		pageBuilder.publishIndex(response);
+		templater.getQuotePage(todayQuote, function(htmlpage){
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.write(htmlpage);
+			response.end();
+		});
 		return;
 	}
 	

@@ -45,6 +45,7 @@ module.exports = {
 			return;
 		}
 
+		console.log('connecting to db to get a "'+collectionName+'"...')
 		connect(function(db){
 			if(!db){
 				callback(null);
@@ -76,7 +77,6 @@ module.exports = {
 
 
 function connect(callback){
-	console.log('connecting to db...')
 	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
 		if (err){
 			console.error('!!! no db found...');

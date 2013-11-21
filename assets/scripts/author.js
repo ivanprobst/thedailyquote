@@ -1,4 +1,5 @@
 function Author (options){
+	options = options || {};
 
 	// data var init
     this._id			= options._id || ''; // ???
