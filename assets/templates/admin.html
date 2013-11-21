@@ -116,7 +116,7 @@
 		$("a#fetch-schedule").click(fetchSchedule);
 		
 		// fetch schedule link listener
-		$("a#db-action").click(dbAction);
+		$("#db-action a").click(dbAction);
 		
 		// fetch quote link listener
 		$('#schedule').on('click', 'p.quote', function(event){
@@ -213,11 +213,11 @@
 			console.log('got quote data back from node:');
 			console.log(data);
 
-			$('#add-quote input').val('');
+			$('#add-quote input, #add-quote textarea').val('');
 			$('#add-quote input[type="submit"]').val('update quote');
 			$.each($.parseJSON(data), function(key, value){
 				console.log("set field "+key+" to "+value);
-				if(key=='date'){
+				if(key=='pubDate'){
 					var dateObject = new Date(value);				
 					$('#add-quote input[name = "date"]').val(dateObject.getFullYear()+'-'+('0'+(dateObject.getMonth()+1)).slice(-2)+'-'+('0'+dateObject.getDate()).slice(-2));
 				}

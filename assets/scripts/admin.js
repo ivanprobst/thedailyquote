@@ -63,7 +63,7 @@ function admin(){
 				authorID:		data.authorID,
 				text:			data.quoteText,
 				quotesomeUrl:	data.quoteUrl,
-				date:			CONST.cleanDate(data.pubDate)
+				pubDate:			CONST.cleanDate(data.pubDate)
 			};
 
 			// check if existing quote
@@ -153,7 +153,7 @@ function admin(){
 			if(pubdate && pubdate != ''){
 				var pubdateFormatted = CONST.cleanDate(pubdate);
 				console.log('fetching formatted date: '+pubdateFormatted);
-				quotes.findOne({date:pubdateFormatted}, function(err, item){
+				quotes.findOne({pubDate:pubdateFormatted}, function(err, item){
 					console.log('date: '+pubdateFormatted+', item: '+item);
 					if (err || !item){console.error('!!! error fetching one quote, returning...'); return;}
 					console.log('quote found:');
@@ -162,7 +162,7 @@ function admin(){
 				});
 			}
 			else{
-				quotes.find().sort({date:1}).toArray(function(err, items) {
+				quotes.find().sort({pubDate:1}).toArray(function(err, items) {
 					if (err){console.error('!!! error fetching all quotes, returning...'); return;}
 					if (!items || items.length == 0){console.error('!!! no quotes found, returning...'); return;}
 
@@ -256,10 +256,10 @@ function admin(){
 				
 				var schedule = {};
 				items.forEach(function(item){
-					console.log('adding: '+item.date.getFullYear()+'->'+(item.date).getMonth()+'->'+(item.date).getDate());
-					var year = item.date.getFullYear();
-					var month = item.date.getMonth();
-					var day = item.date.getDate();
+					console.log('adding: '+item.pubDate.getFullYear()+'->'+(item.pubDate).getMonth()+'->'+(item.pubDate).getDate());
+					var year = item.pubDate.getFullYear();
+					var month = item.pubDate.getMonth();
+					var day = item.pubDate.getDate();
 					var nested = {};
 					var tmpjson1 = {};
 					var tmpjson2 = {};
@@ -293,14 +293,14 @@ function admin(){
 		});
 	}
 
-	function dbAction(){
+	this.dbAction = function(){
 		mongo.connect(CONST.db_url, function(err, db) {
 			
 			var quotes = db.collection('quotes');
 			quotes.find().toArray(function(err, items) {
 				items.forEach(function(item){
 					var date = item.date;
-					quotes.update({_id:data.item._id}, {pubDate: date}, {w:1}, function(err, result) {});
+					quotes.update({_id:item._id}, {pubDate: date}, {w:1}, function(err, result) {});
 				});
 			});
 		});
