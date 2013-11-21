@@ -2,14 +2,11 @@ thequotetribune
 ===============
 
 tobd
-* update templater
-* time the quote request and social updates
-...
 * quote preview (in schedule + at creation)
-* separate admin from index server
 * move all db request to db module
 * clean server.js
 * direct link
+* new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
 
 tobf
 * map author with _id rather than authorID
