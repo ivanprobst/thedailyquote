@@ -1,6 +1,6 @@
 function Quote (options){
 	options = options || {};
-	
+
 	// var init
     this._id			= options._id || ''; // ???
     this.authorID		= options.authorID || '';
@@ -41,6 +41,16 @@ function Quote (options){
     this.setUnpublishedQuote = function(){
 	    this.authorID		= 'err_tooearly';
 	    this.text			= 'You sneaky person, it\'s not yet time!';
+	    this.fontSize = '';
+
+  		this._id			= '';
+   		this.quotesomeUrl	= '';
+    	this.pubDate		= null;
+    }
+    // NO QUOTE FOUND FOR THE DAY ???
+    this.setNoQuoteToday = function(){
+	    this.authorID		= 'err_noquotetoday';
+	    this.text			= 'hey, nothing is up today, shame!';
 	    this.fontSize = '';
 
   		this._id			= '';

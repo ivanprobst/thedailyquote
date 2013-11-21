@@ -70,23 +70,21 @@ function tick(){
 
 function updateTodayQuote(){
 	// fetch all quotes from DB
-	DB.getCollectionArray('quotes', function(items){
-		if(items){
-			console.log('my quotes:');
-			console.log(items);
-		}
-		else
-			console.log('no quotes or DB found...');
-	});
+	var now = new Date();
+	var todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-
-	DB.getItem('quotes', {}, function(item){
+	DB.getItem('quotes', {pubDate: todayDate}, function(item){
 		if(item){
-			console.log('my single quote:');
-			console.log(item);
+			todayQuote = new Quote(item);
+			console.log('creating a nice quote');
 		}
-		else
-			console.log('no quotes or DB found...');
+		else{
+			todayQuote.setNoQuoteToday();
+			console.log('creating fallback quote');
+		}
+
+		console.log("the quote today is: ");
+		console.log(todayQuote.authorID);
 	});
 
 	// update todayQuote
