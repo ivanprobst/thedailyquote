@@ -55,13 +55,13 @@ module.exports = {
 			condition = condition || {};
 
 			if(collection){
-				authors.findOne(condition, function(err, item){
+				collection.findOne(condition, function(err, item){
 					if (err){
 						console.error('!!! error finding item with condition "'+condition+'" in collection "'+collectionName+'"');
 						callback(null);
 						return;
 					}	
-					if (!items || items.length == 0){
+					if (!item){
 						console.error('!!! no item found with condition "'+condition+'" in collection "'+collectionName+'"');
 						callback(null);
 						return;
