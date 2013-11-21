@@ -24,6 +24,7 @@ final
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
 * CLEAN AND REFILL THAT DB
+* comment most of logs
 
 admin enhanced
 * prevent adding author with existing author_id

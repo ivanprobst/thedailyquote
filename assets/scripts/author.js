@@ -1,19 +1,25 @@
-var mongo = require('mongodb').MongoClient,
-	fs = require('fs'),
-	CONST = require('./CONST.js');
-
-function Quote (options){
+function Author (options){
 
 	// data var init
     this._id			= options._id || ''; // ???
     this.authorID		= options.authorID || '';
     this.name			= options.name || '';
-    this.wikipediaID	= options.wikipediaID || '';
     this.quotesomeUrl	= options.quotesomeUrl || '';
+    this.wikipediaID	= options.wikipediaID || '';
 
 	// design var init
-    this.pubDate		= options.pubDate || null;
-    this.quoteBlockFontSize = options.quoteBlockFontSize || '';
+    this.photoUrl				= options.photoUrl || ''; // fallback photo???
+    this.photoWidth				= options.photoWidth || 0;
+    this.photoHeight			= options.photoHeight || 0;
+    this.photoSlideDirection	= options.photoSlideDirection || 'center';
+    this.barsBackgroundColor	= options.barsBackgroundColor || '#fff';
+    this.quoteFontColor			= options.quoteFontColor || '#000';
+    this.quoteWidth				= options.quoteWidth || '35%';
+    this.quoteBackgroundColor	= options.quoteBackgroundColor || 'none';
+    this.quotePositionLeft		= options.quotePositionLeft || 'auto';
+    this.quotePositionRight		= options.quotePositionRight || 'auto';
+    this.quotePositionTop		= options.quotePositionTop || 'auto';
+    this.quotePositionBottom	= options.quotePositionBottom || 'auto';
 
     // return data on object form
     this.getObjectData = function(){
@@ -22,40 +28,42 @@ function Quote (options){
     		jsonized._id = this._id;
     	if(this.authorID && this.authorID != '')
     		jsonized.authorID = this.authorID;
-    	if(this.text && this.text != '')
-    		jsonized.text = this.text;
+    	if(this.name && this.name != '')
+    		jsonized.name = this.name;
     	if(this.quotesomeUrl && this.quotesomeUrl != '')
     		jsonized.quotesomeUrl = this.quotesomeUrl;
-    	if(this.pubDate && this.pubDate != '')
-    		jsonized.pubDate = this.pubDate;
-    	if(this.quoteBlockFontSize && this.quoteBlockFontSize != '')
-    		jsonized.quoteBlockFontSize = this.quoteBlockFontSize;
+    	if(this.wikipediaID && this.wikipediaID != '')
+    		jsonized.wikipediaID = this.wikipediaID;
+    	if(this.photoUrl && this.photoUrl != '')
+    		jsonized.photoUrl = this.photoUrl;
+    	if(this.photoWidth && this.photoWidth != '')
+    		jsonized.photoWidth = this.photoWidth;
+    	if(this.photoHeight && this.photoHeight != '')
+    		jsonized.photoHeight = this.photoHeight;
+    	if(this.photoSlideDirection && this.photoSlideDirection != '')
+    		jsonized.photoSlideDirection = this.photoSlideDirection;
+    	if(this.barsBackgroundColor && this.barsBackgroundColor != '')
+    		jsonized.barsBackgroundColor = this.barsBackgroundColor;
+    	if(this.quoteFontColor && this.quoteFontColor != '')
+    		jsonized.quoteFontColor = this.quoteFontColor;
+    	if(this.quoteWidth && this.quoteWidth != '')
+    		jsonized.quoteWidth = this.quoteWidth;
+    	if(this.quoteBackgroundColor && this.quoteBackgroundColor != '')
+    		jsonized.quoteBackgroundColor = this.quoteBackgroundColor;
+    	if(this.quotePositionLeft && this.quotePositionLeft != '')
+    		jsonized.quotePositionLeft = this.quotePositionLeft;
+    	if(this.quotePositionRight && this.quotePositionRight != '')
+    		jsonized.quotePositionRight = this.quotePositionRight;
+    	if(this.quotePositionTop && this.quotePositionTop != '')
+    		jsonized.quotePositionTop = this.quotePositionTop;
+    	if(this.quotePositionBottom && this.quotePositionBottom != '')
+    		jsonized.quotePositionBottom = this.quotePositionBottom;
 
     	return jsonized;
     }
-
-    // pre-built quote templates
-    this.setErrorQuote = function(){
-	    this.authorID		= 'err_404';
-	    this.text			= 'Something went wrong. We are mighty angry about it. We go have a look, and you stay back here.';
-	    this.quoteBlockFontSize = '';
-
-  		this._id			= '';
-   		this.quotesomeUrl	= '';
-    	this.pubDate		= null;
-    }
-    this.setUnpublishedQuote = function(){
-	    this.authorID		= 'err_tooearly';
-	    this.text			= 'You sneaky person, it\'s not yet time!';
-	    this.quoteBlockFontSize = '';
-
-  		this._id			= '';
-   		this.quotesomeUrl	= '';
-    	this.pubDate		= null;
-    }
 }
 
-module.exports = Quote;
+module.exports = Author;
 /*
 // building index page
 function buildIndex(response){

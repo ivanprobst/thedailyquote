@@ -1,16 +1,13 @@
-var mongo = require('mongodb').MongoClient,
-	fs = require('fs'),
-	CONST = require('./CONST.js');
-
 function Quote (options){
-
+	options = options || {};
+	
 	// var init
     this._id			= options._id || ''; // ???
     this.authorID		= options.authorID || '';
-    this.text			= options.text || '';
+    this.text			= options.text || ''; // fallback text?
     this.quotesomeUrl	= options.quotesomeUrl || '';
     this.pubDate		= options.pubDate || null;
-    this.quoteBlockFontSize = options.quoteBlockFontSize || '';
+    this.fontSize 		= options.fontSize || '';
 
     // return data on object form
     this.getObjectData = function(){
@@ -25,8 +22,8 @@ function Quote (options){
     		jsonized.quotesomeUrl = this.quotesomeUrl;
     	if(this.pubDate && this.pubDate != '')
     		jsonized.pubDate = this.pubDate;
-    	if(this.quoteBlockFontSize && this.quoteBlockFontSize != '')
-    		jsonized.quoteBlockFontSize = this.quoteBlockFontSize;
+    	if(this.fontSize && this.fontSize != '')
+    		jsonized.fontSize = this.fontSize;
 
     	return jsonized;
     }
@@ -35,7 +32,7 @@ function Quote (options){
     this.setErrorQuote = function(){
 	    this.authorID		= 'err_404';
 	    this.text			= 'Something went wrong. We are mighty angry about it. We go have a look, and you stay back here.';
-	    this.quoteBlockFontSize = '';
+	    this.fontSize = '';
 
   		this._id			= '';
    		this.quotesomeUrl	= '';
@@ -44,7 +41,7 @@ function Quote (options){
     this.setUnpublishedQuote = function(){
 	    this.authorID		= 'err_tooearly';
 	    this.text			= 'You sneaky person, it\'s not yet time!';
-	    this.quoteBlockFontSize = '';
+	    this.fontSize = '';
 
   		this._id			= '';
    		this.quotesomeUrl	= '';

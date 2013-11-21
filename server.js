@@ -8,25 +8,15 @@ var social = require('./assets/scripts/social.js'),
 	pageBuilder = require('./assets/scripts/pageBuilder.js'),
 	admin = require('./assets/scripts/admin.js'),
 	CONST = require('./assets/scripts/CONST.js'),
+	DB = require('./assets/scripts/db.js'),
 	Quote = require('./assets/scripts/quote.js');
 
 // varz
 var timmy = null;
-
-// test shit
-var myQuote = new Quote({'authorID':'oscar_wilde', 'text':'If you want to tell people the truth, make them laugh; otherwise they\'ll kill you.', 'quotesomeUrl':'http://quoteso.me/q/226937'});
-
-console.log('quote created, authorID: '+myQuote.authorID);
-
-console.log('and an object: ');
-console.log(myQuote.getObjectData());
-
-myQuote._id = '2312312312';
-console.log('quote created, authorID: '+myQuote._id);
+var todayQuote = new Quote();
 
 
-
-
+console.log('...running server on http://127.0.0.1:8124/');
 http.createServer(function (request, response) {
 	console.log('# classic srv asked for: '+request.url);
 
@@ -60,7 +50,7 @@ http.createServer(function (request, response) {
 }).listen(8124);
 
 // Launch init
-console.log('...running server on http://127.0.0.1:8124/');
+updateTodayQuote();
 
 // timer stuff
 var timmyNow = new Date();
@@ -78,8 +68,22 @@ function tick(){
 	timmy = setTimeout(tick,delay);
 }
 
+function updateTodayQuote(){
+	// fetch quote from DB
+	DB.connect(function(db){
+		if(db)
+			console.log('success');
+		else
+			console.log('really failed');
+	});
+
+	// update todayQuote
+	return;
+}
+
 // admin srv
 var adminPage = new admin();
+console.log('...running admin on http://127.0.0.1:8125/');
 http.createServer(function (request, response) {
 	console.log('# admin srv asked for: '+request.url);
 
