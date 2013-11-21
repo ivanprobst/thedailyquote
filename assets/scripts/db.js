@@ -89,7 +89,6 @@ function connect(callback){
 }
 
 /*
-	
 	// add a quote
 	this.addQuote = function(data){
 		if (!data){console.error('!!! no data to add, returning...'); return;}
