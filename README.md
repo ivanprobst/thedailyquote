@@ -2,9 +2,12 @@ thequotetribune
 ===============
 
 tobd
+* install mongodb locally
+* author fallback
 * quote preview (in schedule + at creation)
 * move all db request to db module
-* clean server.js
+* clean adminsrv.js
+...
 * direct link
 * new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
 
