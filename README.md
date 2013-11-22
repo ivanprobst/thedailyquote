@@ -2,8 +2,7 @@ thequotetribune
 ===============
 
 tobd
-* author fallback
-* quote preview (in schedule + at creation)
+* add preview link in admin
 * move all db request to db module
 * clean adminsrv.js
 * test this night switching
@@ -12,6 +11,7 @@ tobd
 * new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
 
 tobf
+* add preview control (users can't see after today)
 * map author with _id rather than authorID
 * ie7+
 * fb sharing caching
@@ -22,6 +22,7 @@ tobf
 * simplify scaling, too much js
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * handle carriage return and links in quote txt
+* when unexisting url, redirect to home
 
 final
 * run through ok if DB fails? where to keep error authors, in DB or author class? Use cases when quote/author missing

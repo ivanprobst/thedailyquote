@@ -182,7 +182,8 @@
 			authorID:	$('#author-id').val(),
 			quoteUrl:	$('#quote-url').val(),
 			quoteText:	$('#quote-text').val(),
-			pubDate:	formattedDate
+			pubDate:	formattedDate,
+			fontSize:	$('#font-size').val()
 		};
 		
 		console.log(data);
@@ -459,7 +460,7 @@
 			<h2>Quote admin</h2>
 			<section id="quote-input">
 				<form id="fetch-url" onsubmit="return false;">
-					<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required value="http://quoteso.me/q/226937" />
+					<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required />
 					<div id="quote-dirt"></div>
 					
 					<input type="submit" value="fetch url" />
@@ -472,7 +473,7 @@
 					<input id="quote-url" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>
-					<input id="block-font-size" name="block-font-size" type="text" size="40" placeholder="block font size (48px)" />
+					<input id="font-size" name="fontSize" type="text" size="40" placeholder="block font size (48px)" />
 					
 					<input type="submit" value="add quote" />
 					<a id="clear-quote" href="#">clear form</a>
@@ -517,15 +518,15 @@
 						<input id="photo-url" name="photoUrl" type="url" size="100" placeholder="photo url" />
 						<input id="photo-width" name="photoWidth" type="text" size="40" placeholder="photo width (0)" />
 						<input id="photo-height" name="photoHeight" type="text" size="40" placeholder="photo height (0)" />
-						<input id="position-left" name="positionLeft" type="text" size="40" placeholder="position left (auto, use %)" />
-						<input id="position-right" name="positionRight" type="text" size="40" placeholder="position right (auto, use %)" />
-						<input id="position-top" name="positionTop" type="text" size="40" placeholder="position top (auto, use %)" />
-						<input id="position-bottom" name="positionBottom" type="text" size="40" placeholder="position bottom (auto, use %)" />
-						<input id="block-width" name="blockWidth" type="text" size="40" placeholder="block width (35%)" />
-						<input id="block-font-color" name="blockFontColor" type="text" size="40" placeholder="block font color (#000)" />
-						<input id="block-background-color" name="blockBackgroundColor" type="text" size="40" placeholder="block background color (none)" />
+						<input id="position-left" name="quotePositionLeft" type="text" size="40" placeholder="position left (auto, use %)" />
+						<input id="position-right" name="quotePositionRight" type="text" size="40" placeholder="position right (auto, use %)" />
+						<input id="position-top" name="quotePositionTop" type="text" size="40" placeholder="position top (auto, use %)" />
+						<input id="position-bottom" name="quotePositionBottom" type="text" size="40" placeholder="position bottom (auto, use %)" />
+						<input id="block-width" name="quoteWidth" type="text" size="40" placeholder="block width (35%)" />
+						<input id="block-font-color" name="quoteFontColor" type="text" size="40" placeholder="block font color (#000)" />
+						<input id="block-background-color" name="quoteBackgroundColor" type="text" size="40" placeholder="block background color (none)" />
 						<input id="bars-background-color" name="barsBackgroundColor" type="text" size="40" placeholder="bars background color (#fff)" />
-						<input id="direction-slide" name="directionSlide" type="text" size="40" placeholder="direction slide (center)" />
+						<input id="direction-slide" name="quoteDirectionSlide" type="text" size="40" placeholder="direction slide (center)" />
 					</fieldset>
 
 					<input type="submit" value="add author" />

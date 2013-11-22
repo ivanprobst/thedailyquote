@@ -63,7 +63,8 @@ function admin(){
 				authorID:		data.authorID,
 				text:			data.quoteText,
 				quotesomeUrl:	data.quoteUrl,
-				pubDate:			CONST.cleanDate(data.pubDate)
+				pubDate:		CONST.cleanDate(data.pubDate),
+				fontSize:		data.fontSize
 			};
 
 			// check if existing quote
@@ -286,7 +287,6 @@ function admin(){
 						schedule[year] = tmpjson2;
 					}
 				});
-				console.log("final: "+Object.keys((schedule[2013])[11]));
 				callback(schedule);
 
 			});

@@ -1,7 +1,6 @@
 // external modules
 var http = require('http'),
 	fs = require('fs');
-
 // internal modules
 var social = require('./assets/scripts/social.js'),
 	templater = require('./assets/scripts/templater.js'),
@@ -24,6 +23,38 @@ http.createServer(function (request, response) {
 			response.writeHead(200, {'Content-Type': 'text/html'});
 			response.write(htmlpage);
 			response.end();
+		});
+		return;
+	}
+
+	// if asked, serve quote page
+	if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
+
+		// ??? add some control!!!
+		var dateStr = (''+(request.url).match(/\/[-0-9]+/)).substring(1);
+		var day = request.url.match(/\/([0-9][0-9])-/)[1];
+		var month = request.url.match(/-([0-9][0-9])-/)[1];
+		var year = request.url.match(/-([0-9][0-9][0-9][0-9])/)[1];
+
+		var previewDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
+		console.log("that day: "+previewDate);
+
+		// update today's quote
+		DB.getItem('quotes', {pubDate: previewDate}, function(item){
+			var quotePreview = new Quote();
+			if(item)
+				quotePreview = new Quote(item); // ??? replace with set data!!!
+			else
+				quotePreview.setNoQuoteToday();
+
+			console.log("the quote preview is from: ");
+			console.log(todayQuote.authorID);
+
+			templater.getQuotePage(quotePreview, function(htmlpage){
+				response.writeHead(200, {'Content-Type': 'text/html'});
+				response.write(htmlpage);
+				response.end();
+			});
 		});
 		return;
 	}

@@ -32,11 +32,20 @@ function Quote (options){
     this.setErrorQuote = function(){
 	    this.authorID		= '_err_404';
 	    this.text			= 'Something went wrong. We are mighty angry about it. We go have a look, and you stay back here.';
-	    this.fontSize = '48px';
+	    this.fontSize      = '48px';
 
   		this._id			= '';
    		this.quotesomeUrl	= '';
     	this.pubDate		= null;
+    }
+    this.setNoAuthor = function(){
+        this.authorID       = '_err_noauthor';
+        this.text           = 'That guy, he actually doesn\'t exist, does he?';
+        this.fontSize = '48px';
+
+        this._id            = '';
+        this.quotesomeUrl   = '';
+        this.pubDate        = null;
     }
     this.setUnpublishedQuote = function(){
 	    this.authorID		= '_err_unpublished';

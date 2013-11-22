@@ -25,6 +25,9 @@ module.exports = {
 				author.setErrorAuthor();
 			}
 
+console.log(quote);
+console.log(author);
+
 			buildQuotePage(callback);
 		});
 	}

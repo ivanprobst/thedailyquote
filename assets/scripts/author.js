@@ -83,18 +83,18 @@ function Author (options){
 	    this.wikipediaID	= '';
 
 		// design var init
-	    this.photoUrl				= options.photoUrl || 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/error.jpg';
-	    this.photoWidth				= options.photoWidth || 3100;
-	    this.photoHeight			= options.photoHeight || 1408;
-	    this.photoSlideDirection	= options.photoSlideDirection || 'center';
-	    this.barsBackgroundColor	= options.barsBackgroundColor || '#fff';
-	    this.quoteFontColor			= options.quoteFontColor || '#fff';
-	    this.quoteWidth				= options.quoteWidth || '30%';
-	    this.quoteBackgroundColor	= options.quoteBackgroundColor || 'none';
-	    this.quotePositionLeft		= options.quotePositionLeft || '2%';
-	    this.quotePositionRight		= options.quotePositionRight || 'auto';
-	    this.quotePositionTop		= options.quotePositionTop || '3%';
-	    this.quotePositionBottom	= options.quotePositionBottom || 'auto';
+	    this.photoUrl				= 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/error.jpg';
+	    this.photoWidth				= 3100;
+	    this.photoHeight			= 1408;
+	    this.photoSlideDirection	= 'center';
+	    this.barsBackgroundColor	= '#fff';
+	    this.quoteFontColor			= '#fff';
+	    this.quoteWidth				= '30%';
+	    this.quoteBackgroundColor	= 'none';
+	    this.quotePositionLeft		= '2%';
+	    this.quotePositionRight		= 'auto';
+	    this.quotePositionTop		= '3%';
+	    this.quotePositionBottom	= 'auto';
     }
 }
 
