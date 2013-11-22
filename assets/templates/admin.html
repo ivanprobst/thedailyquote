@@ -39,6 +39,10 @@
 			float: left;
 			width: 600px;
 		}
+			#quote-input form a{
+				display: block;
+				margin-top: 10px;
+			}
 
 		#author-input form{
 			width: 100%;
@@ -66,10 +70,11 @@
 	
 	#schedule{}
 		#schedule .year{overflow: hidden; display: block;}
-		#schedule .month{overflow: hidden; display: block; float: left; width: 300px; height: 200px; margin-right: 40px;}
-		#schedule p{display: block; float: left; padding: 10px; width: 20px; height: 20px; text-align: center;}
+		#schedule .month{overflow: hidden; display: block; float: left; width: 300px; margin-right: 40px;}
+		#schedule .month div{display: block; float: left; padding: 5px; width: 30px; height: 30px;}
+		#schedule .month div p{padding: 6px 4px; text-align: center;}
 		
-		#schedule .no-quote{color: #c06363;}
+		#schedule .no-quote{color: #000;}
 		#schedule .quote{color: #17A768; cursor: pointer; font-weight: bold;}
 			#schedule .quote:hover{background: #ccc;}
 		#schedule .today{background: #aaa;}
@@ -120,6 +125,8 @@
 		
 		// fetch quote link listener
 		$('#schedule').on('click', 'p.quote', function(event){
+			$('#schedule p.quote').css({'border':'none'});
+			$(this).css({'border':'1px solid #000'});
   			event.preventDefault();
 			fetchQuote($(this).attr('id'));
 		});
@@ -169,6 +176,7 @@
 	function clearQuoteForm(){
 		$('#add-quote input, #add-quote textarea').val('');
 		$('#add-quote input[type="submit"]').val('add quote');
+		$('#schedule p.quote').css({'border':'none'});
 	}
 
 	// add quote to DB
@@ -200,7 +208,7 @@
 	// fetch quotes function
 	function fetchQuote(pubdate){
 		console.log('fetching quote... '+pubdate);
-		var formattedDate = $('#'+pubdate).parent().parent().attr('id').substring(1) +'-'+ $('#'+pubdate).parent().attr('id').substring(1) +'-'+ $('#'+pubdate).html();
+		var formattedDate = $('#'+pubdate).parent().parent().parent().attr('id').substring(1) +'-'+ $('#'+pubdate).parent().parent().attr('id').substring(1) +'-'+ $('#'+pubdate).html();
 		console.log('final pubdate... '+formattedDate);
 			
 		$.ajax({
@@ -229,6 +237,9 @@
 				else
 					$('#quote-dirt').append(key+" : "+value+" | ");
 			});
+
+			$('#preview').attr('href','/quote/'+$.parseJSON(data)._id);
+
 			checkAuthorID($('#add-quote input[name = "authorID"]').val());
 		}
 	}
@@ -376,9 +387,9 @@
 					$('#schedule #y'+year).append('<div class="month" id="m'+month+'"><h4>'+monthNames[month]+'<h4></div>');
 				
 				if(json[year] && (json[year])[month] && ((json[year])[month])[day])
-					$('#schedule #y'+year+' #m'+month).append('<p class="quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p>');
+					$('#schedule #y'+year+' #m'+month).append('<div><p class="quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p></div>');
 				else
-					$('#schedule #y'+year+' #m'+month).append('<p class="no-quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p>');
+					$('#schedule #y'+year+' #m'+month).append('<div><p class="no-quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p></div>');
 				
 			}
 			
@@ -474,9 +485,11 @@
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>
 					<input id="font-size" name="fontSize" type="text" size="40" placeholder="block font size (48px)" />
+
 					
 					<input type="submit" value="add quote" />
 					<a id="clear-quote" href="#">clear form</a>
+					<a id="preview" href="#" target="_blank">see preview</a>
 				</form>
 			</section>
 			

@@ -48,7 +48,7 @@ http.createServer(function (request, response) {
 				quotePreview.setNoQuoteToday();
 
 			console.log("the quote preview is from: ");
-			console.log(todayQuote.authorID);
+			console.log(quotePreview.authorID);
 
 			templater.getQuotePage(quotePreview, function(htmlpage){
 				response.writeHead(200, {'Content-Type': 'text/html'});

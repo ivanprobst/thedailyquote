@@ -1,9 +1,13 @@
 // external modules
 var http = require('http'),
-	fs = require('fs');
+	fs = require('fs'),
+	ObjectID = require('mongodb').ObjectID;
 
 // internal modules
-var admin = require('./assets/scripts/admin.js');
+var admin = require('./assets/scripts/admin.js'),
+	DB = require('./assets/scripts/db.js'),
+	templater = require('./assets/scripts/templater.js'),
+	Quote = require('./assets/scripts/quote.js');
 
 // admin srv
 var adminPage = new admin();
@@ -82,6 +86,34 @@ http.createServer(function (request, response) {
 			console.log("new author: "+(JSON.parse(dbData)).name);
 			adminPage.addAuthor(JSON.parse(dbData));
 		});
+	}
+	// if asked, serve quote page
+	else if((request.url).match(/\/quote\/[a-f0-9]{24}/)){
+		console.log("displaying a quote");
+
+		// ??? add some control!!!
+		var quoteID = new ObjectID(request.url.match(/\/quote\/([a-f0-9]+)/)[1]);
+
+		console.log("quote _id "+quoteID);
+
+		// update today's quote
+		DB.getItem('quotes', {_id: quoteID}, function(item){
+			var quotePreview = new Quote();
+			if(item)
+				quotePreview = new Quote(item); // ??? replace with set data!!!
+			else
+				quotePreview.setNoQuoteToday();
+
+			console.log("the quote preview is from: ");
+			console.log(quotePreview.authorID);
+
+			templater.getQuotePage(quotePreview, function(htmlpage){
+				response.writeHead(200, {'Content-Type': 'text/html'});
+				response.write(htmlpage);
+				response.end();
+			});
+		});
+		return;
 	}
 	else if(request.url == '/admin-db-action'){
 		console.log('...received db action request');

@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* add preview link in admin
 * move all db request to db module
 * clean adminsrv.js
 * test this night switching
@@ -36,6 +35,8 @@ admin enhanced
 * prevent adding author with existing author_id
 * quote/author update/creation feedback on browser
 * authorID and pubDate duplicate check
+* delete items
+* schedule in red when a quote is there but is missing somehting (date, etc.)
 
 
 modules
