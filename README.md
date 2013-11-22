@@ -45,6 +45,8 @@ modules
 * RSS: https://github.com/dylang/node-rss
 * mongo: http://mongodb.github.io/node-mongodb-native/
 * jquery: https://github.com/coolaj86/node-jquery
+* jsdom
+* xmlhttprequest
 (* geoip: https://github.com/bluesmoon/node-geoip)
 
 icons ref

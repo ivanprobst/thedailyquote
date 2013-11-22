@@ -9,6 +9,18 @@ function Quote (options){
     this.pubDate		= options.pubDate || null;
     this.fontSize 		= options.fontSize || '48px';
 
+    // set some data
+    this.setData = function(options){
+        options = options || {};
+
+        if(options._id) this._id = options._id;
+        if(options.authorID) this.authorID = options.authorID;
+        if(options.text) this.text = options.text;
+        if(options.quotesomeUrl) this.quotesomeUrl = options.quotesomeUrl;
+        if(options.pubDate) this.pubDate = options.pubDate;
+        if(options.fontSize) this.fontSize = options.fontSize;
+    }
+
     // return data on object form
     this.getObjectData = function(){
     	var jsonized = {};

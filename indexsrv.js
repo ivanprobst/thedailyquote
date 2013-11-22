@@ -43,7 +43,7 @@ http.createServer(function (request, response) {
 		DB.getItem('quotes', {pubDate: previewDate}, function(item){
 			var quotePreview = new Quote();
 			if(item)
-				quotePreview = new Quote(item); // ??? replace with set data!!!
+				quotePreview.setData(item); 
 			else
 				quotePreview.setNoQuoteToday();
 

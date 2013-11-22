@@ -1,17 +1,18 @@
 var Quote = require('./quote.js'),
 	Author = require('./author.js'),
 	fs = require('fs'),
-	DB = require('./db.js');/*
-	jsdom = require('jsdom'),
-	$ = require('jquery').create();*/
+	DB = require('./db.js');
 
-var quote = new Quote();
-var author = new Author();
+var quote = null;
+var author = null;
 var htmlPage = '';
 
 module.exports = {
 	// handle the index request
 	getQuotePage : function(aQuote, callback){
+		quote = new Quote();
+		author = new Author();
+		
 		if(aQuote)
 			quote = aQuote;
 		else
@@ -19,14 +20,15 @@ module.exports = {
 
 		DB.getItem('authors',{authorID: quote.authorID}, function(item){
 			if(item)
-				author = new Author(item); // ??? replace with setData when jsdom installed
+				author.setData(item);
 			else{
 				quote.setErrorQuote();
 				author.setErrorAuthor();
 			}
 
-console.log(quote);
-console.log(author);
+			console.log(item);
+			console.log(quote);
+			console.log(author);
 
 			buildQuotePage(callback);
 		});
@@ -42,7 +44,7 @@ function buildQuotePage(callback){
 	file.on('error', function(err){console.error("no index file found...");});
 	file.on('end', function(err){
 		
-		console.log("building...");
+		console.log("building... txt: "+quote.text);
 		// init quote content
 		parseTemplate('quoteText', quote.text);
 		parseTemplate('authorName', author.name);

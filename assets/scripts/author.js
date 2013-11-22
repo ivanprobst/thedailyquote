@@ -22,16 +22,30 @@ function Author (options){
     this.quotePositionTop		= options.quotePositionTop || 'auto';
     this.quotePositionBottom	= options.quotePositionBottom || 'auto';
 
-    /* set some data
+    // set some data
 	this.setData = function(options){
-		// loop through options to set only specified stuff, keeping the rest at default
-		if(options){
-			$.each(options, function(key, value){
-				this[key] = value;
-			});
-		}
+		options = options || {};
+		
+		if(options._id) this._id = options._id;
+		if(options.authorID) this.authorID = options.authorID;
+		if(options.name) this.name = options.name;
+		if(options.quotesomeUrl) this.quotesomeUrl = options.quotesomeUrl;
+		if(options.wikipediaID) this.wikipediaID = options.wikipediaID;
+
+
+		if(options.photoUrl) this.photoUrl = options.photoUrl;
+		if(options.photoWidth) this.photoWidth = options.photoWidth;
+		if(options.photoHeight) this.photoHeight = options.photoHeight;
+		if(options.photoSlideDirection) this.photoSlideDirection = options.photoSlideDirection;
+		if(options.barsBackgroundColor) this.barsBackgroundColor = options.barsBackgroundColor;
+		if(options.quoteFontColor) this.quoteFontColor = options.quoteFontColor;
+		if(options.quoteWidth) this.quoteWidth = options.quoteWidth;
+		if(options.quoteBackgroundColor) this.quoteBackgroundColor = options.quoteBackgroundColor;
+		if(options.quotePositionLeft) this.quotePositionLeft = options.quotePositionLeft;
+		if(options.quotePositionRight) this.quotePositionRight = options.quotePositionRight;
+		if(options.quotePositionTop) this.quotePositionTop = options.quotePositionTop;
+		if(options.quotePositionBottom) this.quotePositionBottom = options.quotePositionBottom;
 	}
-	*/
 
     // return data on object form
     this.getObjectData = function(){
