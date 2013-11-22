@@ -36,6 +36,13 @@ module.exports = {
 		var month = (''+stringDate.match(/-[0-9]+-/)).replace(/-/g,'');
 		var day = (''+stringDate.slice(-2)).replace(/-/g,'');
 		return new Date(year, month, day);
+	},
+
+	strDateToObject : function(stringDate){
+		var year = stringDate.substr(0,4);
+		var month = (''+stringDate.match(/-[0-9]+-/)).replace(/-/g,'');
+		var day = (''+stringDate.slice(-2)).replace(/-/g,'');
+		return new Date(year, month, day);
 	}
 };
 

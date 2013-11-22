@@ -18,36 +18,6 @@ function admin(){
 		});
     }
 
-    this.fetchQuotes = function(response){
-		// query the db
-		mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
-			if (err){console.error('!!! no db found, returning error page...'); buildError(response); return;}
-			console.log("DB connected");
-			
-			// couple of vars
-			var quotes = db.collection('quotes');
-			var authors = db.collection('authors');
-
-			// figure out the date
-			var now = new Date();
-			var dateToFetch = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // replace with relevant!!!
-			console.log("fetching quote from date: "+dateToFetch);
-
-			// fetch the relevant quote
-			quotes.findOne({date:dateToFetch}, function(err, item){
-				if(err || !item){console.log("!!! no quote found"); buildError(response); return;}
-				quote = item;
-
-				authors.findOne({authorID:quote.authorID}, function(err,item){
-					if(err || !item){console.log("!!! no author found"); buildError(response); return;}
-					author = item;
-					console.log("fetched quote from "+author.name+": "+quote.text);
-					buildIndex(response);
-				});
-			});
-		});
-	}
-	
 	// add a quote
 	this.addQuote = function(data){
 		if (!data){console.error('!!! no data to add, returning...'); return;}
@@ -141,38 +111,6 @@ function admin(){
 		});
 	}
 
-	this.fetchQuotes = function(pubdate, callback){
-		console.log("building the quotes list...");
-		console.log("quote: "+pubdate);
-
-		mongo.connect(CONST.db_url, function(err, db) {
-			if (err){console.error('!!! no db found, returning...'); return;}
-			console.log("DB connected");
-			
-			var quotes = db.collection('quotes');
-
-			if(pubdate && pubdate != ''){
-				var pubdateFormatted = CONST.cleanDate(pubdate);
-				console.log('fetching formatted date: '+pubdateFormatted);
-				quotes.findOne({pubDate:pubdateFormatted}, function(err, item){
-					console.log('date: '+pubdateFormatted+', item: '+item);
-					if (err || !item){console.error('!!! error fetching one quote, returning...'); return;}
-					console.log('quote found:');
-					console.log(item);
-					callback(item);
-				});
-			}
-			else{
-				quotes.find().sort({pubDate:1}).toArray(function(err, items) {
-					if (err){console.error('!!! error fetching all quotes, returning...'); return;}
-					if (!items || items.length == 0){console.error('!!! no quotes found, returning...'); return;}
-
-					callback(items);
-				});
-			}
-		});
-	}
-
 	this.fetchAuthors = function(author_id, callback){
 		console.log("building the authors list...");
 		console.log("author: "+author_id);
@@ -257,34 +195,36 @@ function admin(){
 				
 				var schedule = {};
 				items.forEach(function(item){
-					console.log('adding: '+item.pubDate.getFullYear()+'->'+(item.pubDate).getMonth()+'->'+(item.pubDate).getDate());
-					var year = item.pubDate.getFullYear();
-					var month = item.pubDate.getMonth();
-					var day = item.pubDate.getDate();
-					var nested = {};
-					var tmpjson1 = {};
-					var tmpjson2 = {};
-					if(schedule[year]){
-						nested = schedule[year];
-						if(nested[month]){
-							nested = nested[month];
-							if(nested[day]){
-								// dup check, but for now simple overwrite
-								((schedule[year])[month])[day] = item._id;
+					if(item.pubDate && !(item.pubDate instanceof Date)){
+						console.log('on schedule: '+item.pubDate.year+'->'+item.pubDate.month+'->'+item.pubDate.day);
+						var year = item.pubDate.year;
+						var month = item.pubDate.month;
+						var day = item.pubDate.day;
+						var nested = {};
+						var tmpjson1 = {};
+						var tmpjson2 = {};
+						if(schedule[year]){
+							nested = schedule[year];
+							if(nested[month]){
+								nested = nested[month];
+								if(nested[day]){
+									// dup check, but for now simple overwrite
+									((schedule[year])[month])[day] = item._id;
+								}
+								else{
+									((schedule[year])[month])[day] = item._id;
+								}
 							}
 							else{
-								((schedule[year])[month])[day] = item._id;
+								tmpjson1[day] = item._id;
+								(schedule[year])[month] = tmpjson1;
 							}
 						}
 						else{
 							tmpjson1[day] = item._id;
-							(schedule[year])[month] = tmpjson1;
+							tmpjson2[month] = tmpjson1;				
+							schedule[year] = tmpjson2;
 						}
-					}
-					else{
-						tmpjson1[day] = item._id;
-						tmpjson2[month] = tmpjson1;				
-						schedule[year] = tmpjson2;
 					}
 				});
 				callback(schedule);

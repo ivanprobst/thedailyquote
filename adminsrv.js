@@ -1,7 +1,9 @@
 // external modules
 var http = require('http'),
 	fs = require('fs'),
-	ObjectID = require('mongodb').ObjectID;
+	ObjectID = require('mongodb').ObjectID,
+	CONST = require('./assets/scripts/CONST.js'),
+	DB = require('./assets/scripts/db.js');
 
 // internal modules
 var admin = require('./assets/scripts/admin.js'),
@@ -21,23 +23,49 @@ http.createServer(function (request, response) {
 		adminPage.create(response);
 		return;
 	}
-	else if(request.url == '/admin-fetch-schedule'){
-		console.log('...received schedule request');
-		adminPage.fetchSchedule(sendDataToClient);
-		return;
-	}
-	else if(request.url == '/admin-fetch-quotes'){
-		console.log('...received quotes request');
+	else if(request.url.match(/\/admin-fetch-quote/)){
+		console.log('...received quote request');
 		var sentData = ''; 
 
 		request.on('data', function(data){
 			sentData += data;
-
-			console.log("data received: "+data);
 		});
 		request.on('end', function(data){
-			adminPage.fetchQuotes(sentData, sendDataToClient);
+			var objectDate = JSON.parse(sentData);
+
+			console.log('object date:');
+			console.log(objectDate);
+			
+			DB.getItem('quotes', {'pubDate.year' : objectDate.year, 'pubDate.month' : objectDate.month, 'pubDate.day' : objectDate.day}, sendDataToClient);
 		});
+
+		return;
+	}
+	else if(request.url.match(/\/admin-add-quote/)){
+		// ADD UPDATE CREATE CONTROL ??? 
+		console.log('...received a posted quote item');
+		var sentData = ''; 
+
+		request.on('data', function(data){
+			sentData += data;
+		});
+		request.on('end', function(data){
+			var parsedData = JSON.parse(sentData);
+			console.log('got the quote:');
+			console.log(parsedData);
+
+			if(parsedData._id)
+				DB.updateItem('quotes', {_id: new ObjectID(parsedData._id)}, parsedData.my_item, sendDataToClient);
+			else
+				DB.insertItem('quotes', parsedData.my_item, sendDataToClient);
+
+		});
+
+		return;
+	}
+	else if(request.url == '/admin-fetch-schedule'){
+		console.log('...received schedule request');
+		adminPage.fetchSchedule(sendDataToClient);
 		return;
 	}
 	else if(request.url == '/admin-fetch-authors'){
@@ -64,17 +92,6 @@ http.createServer(function (request, response) {
 			adminPage.deleteAuthor(sentData, sendDataToClient);
 		});
 		return;
-	}
-	else if(request.url == '/admin-add-quote' && request.method == 'POST'){
-		var dbData = ''; 
-		console.log('...received posted quote data');
-		request.on('data', function(data){
-			dbData += data;
-		});
-		request.on('end', function(data){
-			console.log("new quote from: "+(JSON.parse(dbData)).author);
-			adminPage.addQuote(JSON.parse(dbData));
-		});
 	}
 	else if(request.url == '/admin-add-author' && request.method == 'POST'){
 		var dbData = ''; 

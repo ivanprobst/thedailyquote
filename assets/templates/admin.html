@@ -182,16 +182,18 @@
 	// add quote to DB
 	function addQuote(){
 		console.log("posting new quote to server...");
-		var formattedDate = $('#pubdate').val().substr(0,4) +'-'+ (parseInt($('#pubdate').val().substr(5,2))-1) +'-'+ parseInt($('#pubdate').val().substr(8,2));
+		//var formattedDate = $('#pubdate').val().substr(0,4) +'-'+ (parseInt($('#pubdate').val().substr(5,2))-1) +'-'+ parseInt($('#pubdate').val().substr(8,2));
+		var formattedDate = {year : parseInt($('#pubdate').val().substr(0,4)), month : (parseInt($('#pubdate').val().substr(5,2))-1), day : parseInt($('#pubdate').val().substr(8,2))};
 
 		var data = {
-			_id:		$('#quote-id').val(),
-			author:		$('#author').val(),
-			authorID:	$('#author-id').val(),
-			quoteUrl:	$('#quote-url').val(),
-			quoteText:	$('#quote-text').val(),
-			pubDate:	formattedDate,
-			fontSize:	$('#font-size').val()
+			_id:  		$('#quote-id').val(),
+			my_item:{
+				authorID:	$('#author-id').val(),
+				quoteUrl:	$('#quote-url').val(),
+				text:		$('#quote-text').val(),
+				pubDate:	formattedDate,
+				fontSize:	$('#font-size').val()
+			}
 		};
 		
 		console.log(data);
@@ -208,13 +210,15 @@
 	// fetch quotes function
 	function fetchQuote(pubdate){
 		console.log('fetching quote... '+pubdate);
-		var formattedDate = $('#'+pubdate).parent().parent().parent().attr('id').substring(1) +'-'+ $('#'+pubdate).parent().parent().attr('id').substring(1) +'-'+ $('#'+pubdate).html();
-		console.log('final pubdate... '+formattedDate);
+		var formattedDate = {year : parseInt($('#'+pubdate).parent().parent().parent().attr('id').substring(1)), month : parseInt($('#'+pubdate).parent().parent().attr('id').substring(1)), day : parseInt($('#'+pubdate).html())};
+
+		console.log('final pubdate...');
+		console.log(formattedDate);
 			
 		$.ajax({
 			type: "POST",
-			url: '/admin-fetch-quotes',
-			data: formattedDate,
+			url: '/admin-fetch-quote',
+		  	data: JSON.stringify(formattedDate),
 			success: setQuoteData
 		});
 
@@ -222,13 +226,13 @@
 			console.log('got quote data back from node:');
 			console.log(data);
 
+			if(!data) return; // add feedback message ???
 			$('#add-quote input, #add-quote textarea').val('');
 			$('#add-quote input[type="submit"]').val('update quote');
 			$.each($.parseJSON(data), function(key, value){
 				console.log("set field "+key+" to "+value);
-				if(key=='pubDate'){
-					var dateObject = new Date(value);				
-					$('#add-quote input[name = "date"]').val(dateObject.getFullYear()+'-'+('0'+(dateObject.getMonth()+1)).slice(-2)+'-'+('0'+dateObject.getDate()).slice(-2));
+				if(key=='pubDate'){			
+					$('#add-quote input[name = "date"]').val(value.year+'-'+('0'+(value.month+1)).slice(-2)+'-'+('0'+value.day).slice(-2));
 				}
 				else if(key=='text')
 					$('#add-quote textarea[name = "text"]').val(value);

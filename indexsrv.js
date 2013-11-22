@@ -26,29 +26,22 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
-
 	// if asked, serve quote page
-	if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
-
+	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
 		// ??? add some control!!!
-		var dateStr = (''+(request.url).match(/\/[-0-9]+/)).substring(1);
-		var day = request.url.match(/\/([0-9][0-9])-/)[1];
-		var month = request.url.match(/-([0-9][0-9])-/)[1];
-		var year = request.url.match(/-([0-9][0-9][0-9][0-9])/)[1];
+		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
+		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
+		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);
+		console.log("preview for: ");
+		console.log(previewDate);
 
-		var previewDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
-		console.log("that day: "+previewDate);
-
-		// update today's quote
-		DB.getItem('quotes', {pubDate: previewDate}, function(item){
+		// get relevant quote
+		DB.getItem('quotes', {'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(item){
 			var quotePreview = new Quote();
 			if(item)
 				quotePreview.setData(item); 
 			else
 				quotePreview.setNoQuoteToday();
-
-			console.log("the quote preview is from: ");
-			console.log(quotePreview.authorID);
 
 			templater.getQuotePage(quotePreview, function(htmlpage){
 				response.writeHead(200, {'Content-Type': 'text/html'});
@@ -58,9 +51,8 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
-	
 	// if asked and if existing, serve rss xml...
-	if(request.url == '/rss.xml' && social.getRSS()){
+	else if(request.url == '/rss.xml' && social.getRSS()){
 		response.writeHead(200, {'Content-Type': 'application/rss+xml'});
 		response.write(social.getRSS());
 		response.end();
@@ -87,11 +79,10 @@ tick(); // 24h timer init
 function tick(){
 	var now = new Date();
 	var nextTick = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
-	var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 	var delay = nextTick - now;
 
 	// update today's quote
-	DB.getItem('quotes', {pubDate: today}, function(item){
+	DB.getItem('quotes', {'pubDate.year' : now.getFullYear(), 'pubDate.month' : now.getMonth(), 'pubDate.day' : now.getDate()}, function(item){
 		if(item)
 			todayQuote = new Quote(item);
 		else
