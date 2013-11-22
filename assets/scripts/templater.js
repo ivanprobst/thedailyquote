@@ -1,22 +1,29 @@
 var Quote = require('./quote.js'),
 	Author = require('./author.js'),
 	fs = require('fs'),
-	DB = require('./db.js');
+	DB = require('./db.js');/*
+	jsdom = require('jsdom'),
+	$ = require('jquery').create();*/
 
-var quote = null;
-var author = null;
+var quote = new Quote();
+var author = new Author();
 var htmlPage = '';
 
 module.exports = {
 	// handle the index request
 	getQuotePage : function(aQuote, callback){
-		quote = aQuote;
+		if(aQuote)
+			quote = aQuote;
+		else
+			quote.setErrorQuote();
 
 		DB.getItem('authors',{authorID: quote.authorID}, function(item){
 			if(item)
-				author = new Author(item);
-			else
-				return; // build author fallback
+				author = new Author(item); // ??? replace with setData when jsdom installed
+			else{
+				quote.setErrorQuote();
+				author.setErrorAuthor();
+			}
 
 			buildQuotePage(callback);
 		});

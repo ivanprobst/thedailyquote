@@ -2,11 +2,11 @@ thequotetribune
 ===============
 
 tobd
-* install mongodb locally
 * author fallback
 * quote preview (in schedule + at creation)
 * move all db request to db module
 * clean adminsrv.js
+* test this night switching
 ...
 * direct link
 * new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
@@ -24,6 +24,7 @@ tobf
 * handle carriage return and links in quote txt
 
 final
+* run through ok if DB fails? where to keep error authors, in DB or author class? Use cases when quote/author missing
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
@@ -41,7 +42,8 @@ modules
 * HTTP calls: https://github.com/mikeal/request
 * RSS: https://github.com/dylang/node-rss
 * mongo: http://mongodb.github.io/node-mongodb-native/
-* geoip: https://github.com/bluesmoon/node-geoip
+* jquery: https://github.com/coolaj86/node-jquery
+(* geoip: https://github.com/bluesmoon/node-geoip)
 
 icons ref
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project

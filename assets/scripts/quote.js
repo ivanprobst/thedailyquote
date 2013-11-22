@@ -47,7 +47,15 @@ function Quote (options){
    		this.quotesomeUrl	= '';
     	this.pubDate		= null;
     }
-    // NO QUOTE FOUND FOR THE DAY ???
+    this.setTooEarlyQuote = function(){
+        this.authorID       = '_err_tooearly';
+        this.text           = 'Once upon a time, there was no quote here.';
+        this.fontSize = '48px';
+
+        this._id            = '';
+        this.quotesomeUrl   = '';
+        this.pubDate        = null;
+    }
     this.setNoQuoteToday = function(){
 	    this.authorID		= '_err_noquote';
 	    this.text			= 'hey, nothing is up today, shame!';
