@@ -17,6 +17,8 @@
 	<![endif]-->
 	
 	<!-- facebook og -->
+	<meta property="fb:admins" content="541693035" />
+	<meta property="fb:app_id" content="135996736500002" /> 
 	<meta property="og:url" content="{{directUrl}}">
 	<meta property="og:title" content="Words from {{authorName}}">
 	<meta property="og:description" content="&#8220;{{quoteText}}&#8221;" />
@@ -198,7 +200,7 @@
 		// fb sharer button listener
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{directUrl}}?fbrefresh=NEW'), 
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{directUrl}}?fbrefresh=BLO'), 
 						'facebook-share-dialog', 
 						'width=626,height=436'
 			);

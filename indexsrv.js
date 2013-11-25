@@ -30,7 +30,7 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		updateSocial(); // for testing
+		//updateSocial(); // for testing
 		console.log('...received index page request');
 		templater.getQuotePage(todayQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
@@ -42,6 +42,7 @@ http.createServer(function (request, response) {
 	// if asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
 		console.log('...received preview request:');
+		//updateSocial();
 		// ??? add some control!!!
 		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
 		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
@@ -130,8 +131,8 @@ function updateSocial(){
 			// ping facebook
 			var url = 'https://graph.facebook.com/1410710079162036/links';
 			var params = {
-				access_token: 'CAAB7sDUrcSIBACgaknt3jV5L0LZCUVeM1yN8eGyAm0qPUZAby85pH2aRlo24qH9tm00sat1e4JBvpTVaq6ZAA70zQRtZArFK0mZBIXieLJu9tPZBBCo05YsOME4BUm5LNRmrtFVKXBJte4d2rj3dQfjtdgH5l9nmCF3wx7JVseHNnrMFYMm462PIeOJT2m5n4ZD',
-				link: 'http://thequotetribune.com/quote/'+aFormattedDate+'?fbrefresh=NEW',
+				access_token: 'CAAB7sDUrcSIBAPs9ZAbzhDgpogukrzMqnnaEXfjF4d9UXpZALv2cZCRkl2Ttc2Xj3rFHILznIyM3AVqm6ZCKZCs2ZBsuNbFrirk6CZA3s57ILgLQSDltCOCSZCEz5lGZAoM5c4xwgSlxCSngoksRvMFX4hHgzyJfPnmg3Y1obJ1WLiUvEWeIE5VuMZCArpb1QP0h8ZD',
+				link: 'http://thequotetribune.com/quote/'+aFormattedDate,
 				message: 'Words from '+mapping[todayQuote.authorID].name,
 				picture: (mapping[todayQuote.authorID].photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg")
 			};
