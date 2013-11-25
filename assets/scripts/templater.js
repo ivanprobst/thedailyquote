@@ -18,6 +18,8 @@ module.exports = {
 		else
 			quote.setErrorQuote();
 
+		console.log(quote);
+
 		DB.getItem('authors',{authorID: quote.authorID}, function(item){
 			if(item)
 				author.setData(item);
@@ -26,7 +28,6 @@ module.exports = {
 				author.setErrorAuthor();
 			}
 
-			console.log(quote);
 
 			buildQuotePage(callback);
 		});
