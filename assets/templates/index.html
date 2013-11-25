@@ -198,7 +198,7 @@
 		// fb sharer button listener
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{directUrl}}?fbrefresh=CAN_BE_ANYTHING'), 
 						'facebook-share-dialog', 
 						'width=626,height=436'
 			);
