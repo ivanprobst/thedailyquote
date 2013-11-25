@@ -1,21 +1,27 @@
 // external modules
 var http = require('http'),
-	fs = require('fs');
+	fs = require('fs'),
+	RSS = require('rss'),
+	Twit = require('twit'),
+	request = require('request');
+
 // internal modules
-var social = require('./assets/scripts/social.js'),
-	templater = require('./assets/scripts/templater.js'),
+var templater = require('./assets/scripts/templater.js'),
 	DB = require('./assets/scripts/db.js'),
 	Quote = require('./assets/scripts/quote.js');
 
-// varz
+// cnst
 var dailyTransitionHour = 6; // 6am UTC
-var timmy = null;
-var todayQuote = new Quote();
+var feed = new RSS({"title":'The Quote Tribune',"description":"Your daily inspirational fix","feed_url":"http://thequotetribune.com/rss.xml","site_url":"http://thequotetribune.com"});
 var extension_map = {
 	".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",
 	".js":"text/javascript",".css":"text/css",
 	".html":"text/html"
 };
+
+// varz
+var todayQuote = new Quote();
+var firstRun = true;
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
@@ -24,6 +30,7 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
+		updateSocial();
 		console.log('...received index page request');
 		templater.getQuotePage(todayQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
@@ -56,9 +63,9 @@ http.createServer(function (request, response) {
 		return;
 	}
 	// if asked and if existing, serve rss xml...
-	else if(request.url == '/rss.xml' && social.getRSS()){
+	else if(request.url == '/rss.xml' && feed.xml()){
 		response.writeHead(200, {'Content-Type': 'application/rss+xml'});
-		response.write(social.getRSS());
+		response.write(feed.xml());
 		response.end();
 		return;
 	}
@@ -79,16 +86,82 @@ http.createServer(function (request, response) {
 }).listen(8124);
 
 
-tick(); // 24h timer init
+// social stuff init
+var now = new Date();
+console.log('...setting up rss feed');
+DB.getMappingAuthorID(function(mapping){
+	DB.getCollectionArray('quotes', function(items){
+		if(items && items.length > 0){
+			for(var i=0; i<items.length; i++){
+				var aQuote = new Quote(items[i]);
+				if(aQuote.pubDate && mapping[aQuote.authorID]){ // ONLY FOR QUOTE FROM TODAY AND EARLIER
+					var aDate = new Date (aQuote.pubDate.year, aQuote.pubDate.month, aQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
+					var aFormattedDate = ('0'+aQuote.pubDate.day).slice(-2)+'-'+('0'+(aQuote.pubDate.month+1)).slice(-2)+'-'+aQuote.pubDate.year;
+					feed.item({title: 'Words from '+mapping[aQuote.authorID].name, description: aQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[aQuote.authorID].name});
+				}
+			}
+		}
+	});
+});
+
+
+// global social stuff updater
+function updateSocial(){
+	DB.getMappingAuthorID(function(mapping){
+		if(todayQuote.pubDate && mapping[todayQuote.authorID]){
+			var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
+			var aFormattedDate = ('0'+todayQuote.pubDate.day).slice(-2)+'-'+('0'+(todayQuote.pubDate.month+1)).slice(-2)+'-'+todayQuote.pubDate.year;
+
+			// add rss item
+			feed.item({title: 'Words from '+mapping[todayQuote.authorID].name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[todayQuote.authorID].name});
+
+			// ping twitter
+			var T = new Twit({
+				consumer_key:         'CoNoEzyQ5OqXv2PkAxA'
+			  , consumer_secret:      'ESTtXkBGGFH8rxZPHMENC3TRoRNlUsUO7lP4pWlvSU'
+			  , access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z'
+			  , access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
+			});
+			T.post('statuses/update', { status: 'New words of wisdom from '+mapping[todayQuote.authorID].name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
+				if(err) return console.log("error: "+err);
+				else console.log("# posted to twitter: "+reply);
+			});
+
+			// ping facebook
+			var url = 'https://graph.facebook.com/1410710079162036/links';
+			var params = {
+				access_token: 'CAAB7sDUrcSIBAIFHCSMFiZB1tWHUq4SlPOTXNwxQhAzZALOOXJ2grzZCjenrhWreZARMlz8UNgfnKvTVc8j68ZBwJGBfIAovvRk9wZBczkL0I6amumSdpHwbBUv7iZA2Bwqh6NNt5IPmvutYucZA6msXWccal9FuWuUqPPNGPkFZBbZBh1mvhCh6OwUCCNZAqkyMpAZD',
+				link: 'http://thequotetribune.com/quote/'+aFormattedDate,
+				message: 'Words from '+mapping[todayQuote.authorID].name,
+				picture: (mapping[todayQuote.authorID].photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg")
+			};
+			request.post({url: url, qs: params}, function(err, resp, body) {
+				  // Handle any errors that occur
+				  if (err) return console.error("Error occured: ", err);
+				  body = JSON.parse(body);
+				  if (body.error) return console.error("Error returned from facebook: ", body.error);
+
+				  // Generate output
+				  console.log('# posted to facebook: '+JSON.stringify(body, null, '\t'));
+			});
+		}
+	});
+}
+
+
+// transition stuff init
+tick();
 function tick(){
 	var now = new Date();
-	var nextTick = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, dailyTransitionHour, 0, 0, 0);
-	var delay = nextTick - now;
+	var delay = (new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, dailyTransitionHour, 0, 0, 0)) - now;
+	console.log('tick now @'+now+'next tick in: '+delay);
 
 	// update today's quote
 	DB.getItem('quotes', {'pubDate.year' : now.getFullYear(), 'pubDate.month' : now.getMonth(), 'pubDate.day' : now.getDate()}, function(item){
-		if(item)
+		if(item){
 			todayQuote = new Quote(item);
+			if(!firstRun) updateSocial();
+		}
 		else
 			todayQuote.setNoQuoteToday();
 
@@ -96,10 +169,9 @@ function tick(){
 		console.log(todayQuote.authorID);
 	});
 
-	// update social stuff???
-	// ....
-
-	console.log('tick now @'+now);
-	console.log("next tick in: "+delay);
+	firstRun = false;
 	setTimeout(tick,delay);
 }
+
+
+

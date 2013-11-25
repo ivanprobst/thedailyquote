@@ -162,6 +162,30 @@ module.exports = {
 				});
 			}
 		});
+	},
+	// get an object with authorID - author object mapping
+	getMappingAuthorID : function(callback){
+		connect(function(db){
+			if(!db){
+				callback(null);
+				return;
+			}
+			
+			var authors = db.collection('authors');
+			if(authors){
+				authors.find().toArray(function(err, items) {
+					if(items && items.length > 0){
+						var map = {};
+						for(var i=0; i<items.length; i++){
+							map[items[i].authorID] = items[i];
+						}
+						callback(map);
+					}
+					else
+						callback(null);
+				});
+			}
+		});
 	}
 };
 
