@@ -32,14 +32,14 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
-	// if asked, serve quote page
+	// if asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
+		console.log('...received preview request:');
 		// ??? add some control!!!
 		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
 		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
 		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);
-		console.log("preview for: ");
-		console.log(previewDate);
+		console.log(day+'-'+month+'-'+year+' (js format)');
 
 		// get relevant quote
 		DB.getItem('quotes', {'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(item){

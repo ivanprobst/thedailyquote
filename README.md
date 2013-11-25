@@ -3,7 +3,8 @@ thequotetribune
 
 tobd
 * new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
-* direct link (users can't see after today, provide menu option for this)
+* share and tweet must use direct link
+* direct link (users can't see after today, provide menu option for direct link)
 * check quote tomorrow morning
 
 tobf
@@ -12,7 +13,7 @@ tobf
 * fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found
 * final error pages (clear menu, link to go back home)
-* when unexisting url, redirect to home
+* url: when direct link does not exist, direct to home
 * simplify scaling, too much js
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * handle carriage return and links in quote txt
