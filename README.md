@@ -3,6 +3,7 @@ thequotetribune
 
 tobd
 * test this night switching
+* prevent error when schedule empty
 * new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
 * direct link (users can't see after today, provide menu option for this)
 * set data ok or not?
@@ -42,9 +43,9 @@ modules
 * HTTP calls: https://github.com/mikeal/request
 * RSS: https://github.com/dylang/node-rss
 * mongo: http://mongodb.github.io/node-mongodb-native/
-* jquery: https://github.com/coolaj86/node-jquery
-* jsdom
-* xmlhttprequest
+(* jquery: https://github.com/coolaj86/node-jquery)
+(* jsdom)
+(* xmlhttprequest)
 (* geoip: https://github.com/bluesmoon/node-geoip)
 
 icons ref

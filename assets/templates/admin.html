@@ -189,7 +189,7 @@
 			_id:  		$('#quote-id').val(),
 			my_item:{
 				authorID:	$('#q-authorID').val(),
-				quoteUrl:	$('#quote-url').val(),
+				quotesomeUrl: $('#quote-quotesome').val(),
 				text:		$('#quote-text').val(),
 				pubDate:	formattedDate,
 				fontSize:	$('#font-size').val()
@@ -492,7 +492,7 @@
 					<input id="quote-id" name="_id" type="text" size="60" placeholder="_id" disabled />
 					<input id="author" name="author" type="text" size="60" placeholder="author (won't go in DB)" disabled />
 					<input id="q-authorID"  class="incorrect" name="authorID" type="text" size="60" placeholder="authorID" />
-					<input id="quote-url" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
+					<input id="quote-quotesome" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>
 					<input id="font-size" name="fontSize" type="text" size="40" placeholder="block font size (48px)" />

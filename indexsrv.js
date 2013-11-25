@@ -4,7 +4,6 @@ var http = require('http'),
 // internal modules
 var social = require('./assets/scripts/social.js'),
 	templater = require('./assets/scripts/templater.js'),
-	CONST = require('./assets/scripts/CONST.js'),
 	DB = require('./assets/scripts/db.js'),
 	Quote = require('./assets/scripts/quote.js');
 

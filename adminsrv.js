@@ -88,31 +88,33 @@ http.createServer(function (request, response) {
 	
 		DB.getCollectionArray('quotes', function(items){			
 			var schedule = {};
-			items.forEach(function(item){
-				if(item.pubDate && !(item.pubDate instanceof Date)){
-					console.log('- on schedule: '+item.pubDate.year+'->'+item.pubDate.month+'->'+item.pubDate.day);
-					var year = item.pubDate.year;
-					var month = item.pubDate.month;
-					var day = item.pubDate.day;
-					var jsonLevel1 = {};
-					var jsonLevel2 = {};
-					if(schedule[year]){
-						jsonLevel2 = schedule[year];
-						if(jsonLevel2[month]){
-							((schedule[year])[month])[day] = item._id; // for now simple override, but implement dup check later ???
+			if(items){
+				items.forEach(function(item){
+					if(item.pubDate && !(item.pubDate instanceof Date)){
+						console.log('- on schedule: '+item.pubDate.year+'->'+item.pubDate.month+'->'+item.pubDate.day);
+						var year = item.pubDate.year;
+						var month = item.pubDate.month;
+						var day = item.pubDate.day;
+						var jsonLevel1 = {};
+						var jsonLevel2 = {};
+						if(schedule[year]){
+							jsonLevel2 = schedule[year];
+							if(jsonLevel2[month]){
+								((schedule[year])[month])[day] = item._id; // for now simple override, but implement dup check later ???
+							}
+							else{
+								jsonLevel2[day] = item._id;
+								(schedule[year])[month] = jsonLevel2;
+							}
 						}
 						else{
 							jsonLevel2[day] = item._id;
-							(schedule[year])[month] = jsonLevel2;
+							jsonLevel1[month] = jsonLevel2;
+							schedule[year] = jsonLevel1;
 						}
 					}
-					else{
-						jsonLevel2[day] = item._id;
-						jsonLevel1[month] = jsonLevel2;
-						schedule[year] = jsonLevel1;
-					}
-				}
-			});
+				});
+			}
 			sendDataToClient(schedule);
 		});
 		return;
