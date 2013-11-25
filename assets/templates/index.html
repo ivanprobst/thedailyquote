@@ -17,9 +17,9 @@
 	<![endif]-->
 	
 	<!-- facebook og -->
-	<meta property="og:url" content="http://thequotetribune.com">
-	<meta property="og:title" content="Words of wisdom from {{authorName}}">
-	<meta property="og:description" content="&#8220;{{quoteText}}&#8221; &mdash; {{authorName}}" />
+	<meta property="og:url" content="{{directUrl}}">
+	<meta property="og:title" content="Words from {{authorName}}">
+	<meta property="og:description" content="&#8220;{{quoteText}}&#8221;" />
 	<meta property="og:type" content="website">
 	<meta property="og:image" content="{{authorThumbPath}}">
 	<meta property="og:site_name" content="The Quote Tribune">
@@ -188,7 +188,7 @@
 		// tweet button listener
 		$('#twitter-menu-item').click(function(event) {
 			window.open(
-						'https://twitter.com/share?url='+encodeURIComponent(location.href)+'&via=thequotetribune&text=Words%20of%20wisdom%20from%20'+('{{authorName}}').replace(/ /g,'%20')+':',
+						'https://twitter.com/share?url='+encodeURIComponent('{{directUrl}}')+'&via=thequotetribune&text=Words%20from%20'+('{{authorName}}').replace(/ /g,'%20')+':',
 						'twitter',
 						'width=626,height=436'
 			);

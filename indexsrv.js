@@ -30,7 +30,7 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		updateSocial();
+		// updateSocial(); // for testing
 		console.log('...received index page request');
 		templater.getQuotePage(todayQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
@@ -93,8 +93,8 @@ DB.getMappingAuthorID(function(mapping){
 	DB.getCollectionArray('quotes', function(items){
 		if(items && items.length > 0){
 			for(var i=0; i<items.length; i++){
-				var aQuote = new Quote(items[i]);
-				if(aQuote.pubDate && mapping[aQuote.authorID]){ // ONLY FOR QUOTE FROM TODAY AND EARLIER
+				var aQuote = new Quote(items[i]); // maybe limit number of rss item generated?
+				if(mapping[aQuote.authorID] && (aQuote.pubDate.year < now.getFullYear() || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month < now.getMonth()) || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month == now.getMonth() && aQuote.pubDate.day <= now.getDate()))){ // ONLY FOR QUOTE FROM TODAY AND EARLIER
 					var aDate = new Date (aQuote.pubDate.year, aQuote.pubDate.month, aQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
 					var aFormattedDate = ('0'+aQuote.pubDate.day).slice(-2)+'-'+('0'+(aQuote.pubDate.month+1)).slice(-2)+'-'+aQuote.pubDate.year;
 					feed.item({title: 'Words from '+mapping[aQuote.authorID].name, description: aQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[aQuote.authorID].name});
@@ -165,11 +165,11 @@ function tick(){
 		else
 			todayQuote.setNoQuoteToday();
 
+		firstRun = false;
 		console.log("the quote today is from: ");
 		console.log(todayQuote.authorID);
 	});
 
-	firstRun = false;
 	setTimeout(tick,delay);
 }
 

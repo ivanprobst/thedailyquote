@@ -80,6 +80,9 @@ function buildQuotePage(callback){
 		parseTemplate('authorPositionRight', author.quotePositionRight);
 		parseTemplate('authorPositionTop', author.quotePositionTop);
 		parseTemplate('authorPositionBottom', author.quotePositionBottom);
+
+		// random
+		parseTemplate('directUrl', 'http://thequotetribune.com/quote/'+('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year);
 		
 		// fire in the hole!!!
 		callback(htmlPage);

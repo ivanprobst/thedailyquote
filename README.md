@@ -18,6 +18,7 @@ tobf
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
+* favicon redirect when not on homepage
 
 final
 * run through ok if DB fails? where to keep error authors, in DB or author class? Use cases when quote/author missing
