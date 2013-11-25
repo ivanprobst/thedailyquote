@@ -43,10 +43,8 @@ http.createServer(function (request, response) {
 
 		// get relevant quote
 		DB.getItem('quotes', {'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(item){
-			var quotePreview = new Quote();
-			if(item)
-				quotePreview.setData(item); 
-			else
+			var quotePreview = new Quote(null);
+			if(!item)
 				quotePreview.setNoQuoteToday();
 
 			templater.getQuotePage(quotePreview, function(htmlpage){
@@ -90,7 +88,7 @@ function tick(){
 	// update today's quote
 	DB.getItem('quotes', {'pubDate.year' : now.getFullYear(), 'pubDate.month' : now.getMonth(), 'pubDate.day' : now.getDate()}, function(item){
 		if(item)
-			todayQuote.setData(item);
+			todayQuote = new Quote(item);
 		else
 			todayQuote.setNoQuoteToday();
 

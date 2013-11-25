@@ -2,14 +2,11 @@ thequotetribune
 ===============
 
 tobd
-* test this night switching
-* prevent error when schedule empty
 * new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
 * direct link (users can't see after today, provide menu option for this)
-* set data ok or not?
+* check quote tomorrow morning
 
 tobf
-* map admin author with _id rather than authorID
 * ie7+
 * fb sharing caching
 * fallback to override auto date switching (in case timers are messed up)

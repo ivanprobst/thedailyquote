@@ -32,10 +32,8 @@ http.createServer(function (request, response) {
 
 		// update today's quote
 		DB.getItem('quotes', {_id: quoteID}, function(item){
-			var quotePreview = new Quote();
-			if(item)
-				quotePreview.setData(item);
-			else
+			var quotePreview = new Quote(null);
+			if(!item)
 				quotePreview.setNoQuoteToday();
 
 			templater.getQuotePage(quotePreview, function(htmlpage){
