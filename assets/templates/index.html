@@ -186,7 +186,7 @@
 		
 		// menu opening listening
 		$("footer nav a.modal").click(function(event){openMenu(event);});
-		
+
 		// tweet button listener
 		$('#twitter-menu-item').click(function(event) {
 			window.open(
@@ -210,8 +210,7 @@
 		// wikipedia data call
 		$("article#wikipedia").hide();
 		if('{{authorWikipediaRef}}' != 'null'){
-			$("article#wikipedia h4").html('About '+'{{authorName}}'+' (more on <a href="" target="_blank">Wikipedia</a>)');
-			$("article#wikipedia h4 a").attr('href','http://en.wikipedia.org/wiki/{{authorWikipediaRef}}');
+			$("article#wikipedia h4").html('About '+'{{authorName}}'+' (more on <a href="http://en.wikipedia.org/wiki/{{authorWikipediaRef}}" target="_blank">Wikipedia</a>)');
 			$.ajax({
 				type: "GET",
 				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles={{authorWikipediaRef}}',
@@ -344,20 +343,22 @@
 			
 			<section id="quotedetails-content">
 				<h3>ABOUT TODAY'S QUOTE</h3>
-				{{#quoteQuotesomeUrl}}
-				<article id="source">
-					<p><strong>Source</strong>: <a href="{{quoteQuotesomeUrl}}" target="_blank">{{quoteQuotesomeUrl}}</a></p>
+				<article id="direct-link">
+					<p><strong>Direct link:</strong> <a href="{{directUrl}}">{{directUrl}}</a></p>
 				</article>
-				{{/quoteQuotesomeUrl}}
+				{{#authorQuotesomeUrl}}
+				<article id="more-quotes">
+					<h4>More on Quotesome</h4>
+					{{#quoteQuotesomeUrl}}<p>The quote: <a href="{{quoteQuotesomeUrl}}" target="_blank">{{quoteQuotesomeUrl}}</a></p>{{/quoteQuotesomeUrl}}
+					<p>The author: <a href="{{authorQuotesomeUrl}}" target="_blank">{{authorQuotesomeUrl}}</a></p>
+				</article>
+				{{/authorQuotesomeUrl}}
 				<article id="wikipedia">
 					<h4></h4>
 					<p></p>
 				</article>
-				{{#authorQuotesomeUrl}}
-				<article id="more-quotes">
-					<p><a href="{{authorQuotesomeUrl}}" target="_blank">Other quotes from {{authorName}}</a></p>
-				</article>
-				{{/authorQuotesomeUrl}}
+				
+				
 			</section>
 			
 			<section id="about-content">

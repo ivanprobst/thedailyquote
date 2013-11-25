@@ -2,14 +2,11 @@ thequotetribune
 ===============
 
 tobd
-* new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
-* share and tweet must use direct link
-* direct link (users can't see after today, provide menu option for direct link)
+* fix fb sharin cache
 * check quote tomorrow morning
 
 tobf
 * ie7+
-* fb sharing caching
 * fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found
 * final error pages (clear menu, link to go back home)

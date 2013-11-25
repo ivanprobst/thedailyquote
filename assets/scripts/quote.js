@@ -60,7 +60,7 @@ function Quote (options){
         this.pubDate       = {};
     }
     this.setUnpublishedQuote = function(){
-	    this.authorID      = '_err_unpublished';
+	    this.authorID      = '_err_noauthor';
 	    this.text          = 'You sneaky person, it\'s not yet time!';
 	    this.fontSize      = '48px';
 

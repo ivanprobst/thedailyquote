@@ -22,6 +22,7 @@ var extension_map = {
 // varz
 var todayQuote = new Quote();
 var firstRun = true;
+var today = new Date();
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
@@ -54,6 +55,8 @@ http.createServer(function (request, response) {
 			var quotePreview = new Quote(item);
 			if(!item)
 				quotePreview.setNoQuoteToday();
+			if(!(year < now.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
+				quotePreview.setUnpublishedQuote();
 
 			templater.getQuotePage(quotePreview, function(htmlpage){
 				response.writeHead(200, {'Content-Type': 'text/html'});
@@ -95,7 +98,7 @@ DB.getMappingAuthorID(function(mapping){
 		if(items && items.length > 0){
 			for(var i=0; i<items.length; i++){
 				var aQuote = new Quote(items[i]); // maybe limit number of rss item generated?
-				if(mapping[aQuote.authorID] && (aQuote.pubDate.year < now.getFullYear() || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month < now.getMonth()) || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month == now.getMonth() && aQuote.pubDate.day <= now.getDate()))){ // ONLY FOR QUOTE FROM TODAY AND EARLIER
+				if(mapping[aQuote.authorID] && (aQuote.pubDate.year < now.getFullYear() || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month < now.getMonth()) || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month == now.getMonth() && aQuote.pubDate.day <= now.getDate()))){
 					var aDate = new Date (aQuote.pubDate.year, aQuote.pubDate.month, aQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
 					var aFormattedDate = ('0'+aQuote.pubDate.day).slice(-2)+'-'+('0'+(aQuote.pubDate.month+1)).slice(-2)+'-'+aQuote.pubDate.year;
 					feed.item({title: 'Words from '+mapping[aQuote.authorID].name, description: aQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[aQuote.authorID].name});
@@ -123,7 +126,7 @@ function updateSocial(){
 			  , access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z'
 			  , access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
 			});
-			T.post('statuses/update', { status: 'New words of wisdom from '+mapping[todayQuote.authorID].name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
+			T.post('statuses/update', { status: 'Words from '+mapping[todayQuote.authorID].name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
 				if(err) return console.log("error: "+err);
 				else console.log("# posted to twitter: "+reply);
 			});
@@ -153,12 +156,12 @@ function updateSocial(){
 // transition stuff init
 tick();
 function tick(){
-	var now = new Date();
-	var delay = (new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, dailyTransitionHour, 0, 0, 0)) - now;
+	today = new Date();
+	var delay = (new Date(today.getFullYear(), today.getMonth(), today.getDate()+1, dailyTransitionHour, 0, 0, 0)) - today;
 	console.log('tick now @'+now+'next tick in: '+delay);
 
 	// update today's quote
-	DB.getItem('quotes', {'pubDate.year' : now.getFullYear(), 'pubDate.month' : now.getMonth(), 'pubDate.day' : now.getDate()}, function(item){
+	DB.getItem('quotes', {'pubDate.year' : today.getFullYear(), 'pubDate.month' : today.getMonth(), 'pubDate.day' : today.getDate()}, function(item){
 		if(item){
 			todayQuote = new Quote(item);
 			if(!firstRun) updateSocial();
