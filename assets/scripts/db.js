@@ -132,37 +132,7 @@ module.exports = {
 				});
 			}
 		});
-	},/*
-	// update an item
-	upsertItem : function(collectionName, condition, item, callback){
-		if(!collectionName || !item || !condition){
-			console.error('!!! no collection name indicated or no item / condition passed');
-			callback(null);
-			return;
-		}
-
-		console.log('connecting to db to upsert a "'+collectionName+'"...')
-		connect(function(db){
-			if(!db){
-				callback(null);
-				return;
-			}
-			
-			var collection = db.collection(collectionName);
-
-			if(collection){
-				collection.update(null, {$set: item}, {upsert: true}, function(err, result){
-					if (err){
-						console.error('!!! error updating item with condition "'+condition+'" and new data "'+item+'", in collection "'+collectionName+'"');
-						callback(null);
-						return;
-					}
-
-					callback(result);
-				});
-			}
-		});
-	},*/
+	},
 	// remove an item
 	removeItem : function(collectionName, condition, callback){
 		if(!collectionName || !condition){

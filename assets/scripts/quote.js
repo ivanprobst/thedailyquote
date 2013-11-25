@@ -3,8 +3,8 @@ function Quote (options){
 
 	// var init
     this._id			= options._id || ''; // ???
-    this.authorID		= options.authorID || '';
-    this.text			= options.text || ''; // fallback text?
+    this.authorID		= options.authorID || 'No author';
+    this.text			= options.text || 'No quote';
     this.quotesomeUrl	= options.quotesomeUrl || '';
     this.pubDate		= options.pubDate || null;
     this.fontSize 		= options.fontSize || '48px';
@@ -13,12 +13,12 @@ function Quote (options){
     this.setData = function(options){
         options = options || {};
 
-        if(options._id) this._id = options._id;
-        if(options.authorID) this.authorID = options.authorID;
-        if(options.text) this.text = options.text;
-        if(options.quotesomeUrl) this.quotesomeUrl = options.quotesomeUrl;
-        if(options.pubDate) this.pubDate = options.pubDate;
-        if(options.fontSize) this.fontSize = options.fontSize;
+        this._id            = options._id || ''; // ???
+        this.authorID       = options.authorID || 'No author';
+        this.text           = options.text || 'No quote';
+        this.quotesomeUrl   = options.quotesomeUrl || '';
+        this.pubDate        = options.pubDate || null;
+        this.fontSize       = options.fontSize || '48px';
     }
 
     // return data on object form

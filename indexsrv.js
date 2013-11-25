@@ -9,8 +9,14 @@ var social = require('./assets/scripts/social.js'),
 	Quote = require('./assets/scripts/quote.js');
 
 // varz
+var dailyTransitionHour = 6; // 6am UTC
 var timmy = null;
 var todayQuote = new Quote();
+var extension_map = {
+	".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",
+	".js":"text/javascript",".css":"text/css",
+	".html":"text/html"
+};
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
@@ -19,9 +25,10 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		templater.getQuotePage(todayQuote, function(htmlpage){
+		console.log('...received index page request');
+		templater.getQuotePage(todayQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
-			response.write(htmlpage);
+			response.write(htmlPage);
 			response.end();
 		});
 		return;
@@ -60,7 +67,7 @@ http.createServer(function (request, response) {
 	}
 	
 	// if asked other, set header and stream the file when existing
-	var requestExtension = CONST.extension_map[request.url.match(/\.[0-9a-z]+$/)];
+	var requestExtension = extension_map[request.url.match(/\.[0-9a-z]+$/)];
 	if(!requestExtension) requestExtension = 'text/plain';
 	response.writeHead(200, {'Content-Type': requestExtension});
 	console.log('... serving: '+request.url);
@@ -78,13 +85,13 @@ http.createServer(function (request, response) {
 tick(); // 24h timer init
 function tick(){
 	var now = new Date();
-	var nextTick = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, CONST.daily_transition_hour, 0, 0, 0);
+	var nextTick = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, dailyTransitionHour, 0, 0, 0);
 	var delay = nextTick - now;
 
 	// update today's quote
 	DB.getItem('quotes', {'pubDate.year' : now.getFullYear(), 'pubDate.month' : now.getMonth(), 'pubDate.day' : now.getDate()}, function(item){
 		if(item)
-			todayQuote = new Quote(item);
+			todayQuote.setData(item);
 		else
 			todayQuote.setNoQuoteToday();
 

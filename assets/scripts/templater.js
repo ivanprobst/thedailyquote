@@ -32,7 +32,19 @@ module.exports = {
 
 			buildQuotePage(callback);
 		});
-	}
+	},
+
+	getAdminPage : function(callback) {
+		htmlPage = '';
+		var file = fs.createReadStream('assets/templates/admin.html');
+		file.on('data', function(data){htmlPage = htmlPage + data;});
+		file.on('error', function(err){console.error("no index file found...");});
+		file.on('end', function(err){
+			callback(htmlPage);
+			//response.write(this.htmlPage);
+			//response.end();
+		});
+    }
 };
 
 // building index page

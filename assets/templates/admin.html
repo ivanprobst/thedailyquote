@@ -113,8 +113,8 @@
 		});
 
 		// check if authorID exists when quote field change
-		$("#quote-input #author-id").keyup(function(event){
-			checkAuthorID($("#quote-input #author-id").val());
+		$("#quote-input #q-authorID").keyup(function(event){
+			checkAuthorID($("#quote-input #q-authorID").val());
 		});
 		
 		// fetch schedule link listener
@@ -156,7 +156,7 @@
   			event.preventDefault();
   			if(confirm("are you sure you want to delete this guy?")){
 				console.log('sending delete id: '+$(this).attr('id'));
-				deleteAuthor($(this).attr('id'));
+				removeAuthor($(this).attr('id'));
 			}
 			else{}
 		});
@@ -188,7 +188,7 @@
 		var data = {
 			_id:  		$('#quote-id').val(),
 			my_item:{
-				authorID:	$('#author-id').val(),
+				authorID:	$('#q-authorID').val(),
 				quoteUrl:	$('#quote-url').val(),
 				text:		$('#quote-text').val(),
 				pubDate:	formattedDate,
@@ -200,7 +200,7 @@
 
 		$.ajax({
 		  type: "POST",
-		  url: '/admin-add-quote',
+		  url: '/admin-upsert-quote',
 		  data: JSON.stringify(data),
 		  success: fetchSchedule
 		});
@@ -217,7 +217,7 @@
 			
 		$.ajax({
 			type: "POST",
-			url: '/admin-fetch-quote',
+			url: '/admin-get-quote-by-day',
 		  	data: JSON.stringify(formattedDate),
 			success: setQuoteData
 		});
@@ -250,15 +250,14 @@
 
 	// check authorID existence
 	function checkAuthorID(id_to_check){
-		$("#quote-input #author-id").removeClass();
 		for(var i = 0; i<currentAuthors.length; i++){
+			$("#quote-input #q-authorID").removeClass();
 			if((currentAuthors[i])['authorID'] == id_to_check){
-				$("#quote-input #author-id").removeClass();
-				$("#quote-input #author-id").addClass('correct');
+				$("#quote-input #q-authorID").addClass('correct');
 				break;
 			}
 			else
-				$("#quote-input #author-id").addClass('incorrect');
+				$("#quote-input #q-authorID").addClass('incorrect');
 		}
 	}
 
@@ -266,20 +265,21 @@
 	function addAuthor(){
 		console.log("posting new author to server...");
 
-		if($('#author-input #author-id').val() && $('#author-input #author-id').val() != ''){
-			var data = {};
+		if($('#author-input #a-authorID').val() && $('#author-input #a-authorID').val() != ''){
+			var formData = {};
 			$('#author-input fieldset input').each(function(index){
-				if($(this).val() && $(this).val() != '' && $(this).attr('name') != '_id'){
-					data[$(this).attr('name')] = ''+$(this).val();
-				}
+				if($(this).val() && $(this).val() != '' && $(this).attr('name') != '_id')
+					formData[$(this).attr('name')] = ''+$(this).val();
 			});
 
-			console.log('sending new author / update:');
-			console.log(data);
+			var data = {
+				_id: $('#author-input #author-id').val(),
+				my_item: formData
+			};
 
 			$.ajax({
 			  type: "POST",
-			  url: '/admin-add-author',
+			  url: '/admin-upsert-author',
 			  data: JSON.stringify(data),
 			  success: fetchAuthors
 			});
@@ -290,12 +290,12 @@
 	}
 
 		// fetch authors function
-	function deleteAuthor(_id){
+	function removeAuthor(_id){
 		console.log("deleting one authors...");
 			
 		$.ajax({
 			type: "POST",
-			url: '/admin-delete-author',
+			url: '/admin-remove-author',
 			data: _id,
 			success: fetchAuthors
 		});
@@ -307,7 +307,7 @@
 			
 		$.ajax({
 			type: "POST",
-			url: '/admin-fetch-authors',
+			url: '/admin-get-authors',
 			data: _id,
 			success: setAuthorData
 		});
@@ -334,7 +334,7 @@
 			
 		$.ajax({
 			type: "POST",
-			url: '/admin-fetch-authors',
+			url: '/admin-get-authors',
 			data: null,
 			success: listAuthors
 		});
@@ -344,14 +344,15 @@
 			console.log(data);
 
 			currentAuthors = $.parseJSON(data);
+			currentAuthors.sort(SortByName);
 
 			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaRef"></td><td class="quotesomeUrl"></td><td></td><td class="photoUrl"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
 			
 			$('#author-output table tbody').empty();
-			$.each($.parseJSON(data), function(index, value){
+			$.each(currentAuthors, function(index, value){
 				$('#author-output table tbody').append('<tr id="r'+index+'">'+rowTemplate+'</tr>');
-				$('#author-output table tbody tr#r'+index+' .edit').attr('id', value.authorID);
-				$('#author-output table tbody tr#r'+index+' .delete').attr('id', value.authorID);
+				$('#author-output table tbody tr#r'+index+' .edit').attr('id', value._id);
+				$('#author-output table tbody tr#r'+index+' .delete').attr('id', value._id);
 				$.each(value, function(key, prop){
 					$('#author-output table tbody tr#r'+index+' .'+key).html(prop);
 				});
@@ -365,7 +366,7 @@
 		
 		$.ajax({
 			type: "POST",
-			url: '/admin-fetch-schedule',
+			url: '/admin-get-schedule',
 			success: displaySchedule
 		});
 		
@@ -450,7 +451,7 @@
 		}
 	}
 
-		// fetch schedule function
+	// fetch schedule function
 	function dbAction(){
 		console.log("executing db action...");
 		
@@ -459,6 +460,12 @@
 			url: '/admin-db-action',
 			success: null
 		});
+	}
+
+	function SortByName(a, b){
+  		var aName = a.authorID.toLowerCase();
+	  	var bName = b.authorID.toLowerCase(); 
+	  	return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
 	}
 	
 </script>
@@ -484,7 +491,7 @@
 				<form id="add-quote" onsubmit="return false;">
 					<input id="quote-id" name="_id" type="text" size="60" placeholder="_id" disabled />
 					<input id="author" name="author" type="text" size="60" placeholder="author (won't go in DB)" disabled />
-					<input id="author-id"  class="incorrect" name="authorID" type="text" size="60" placeholder="authorID" />
+					<input id="q-authorID"  class="incorrect" name="authorID" type="text" size="60" placeholder="authorID" />
 					<input id="quote-url" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>
@@ -522,8 +529,8 @@
 				<form id="add-author" onsubmit="return false;">
 					<fieldset id="data">
 						<legend>Data</legend>
-						<input id="_id" name="_id" type="text" size="60" placeholder="_id"  disabled/>
-						<input id="author-id" name="authorID" type="text" size="60" placeholder="authorID" required />
+						<input id="author-id" name="_id" type="text" size="60" placeholder="_id"  disabled/>
+						<input id="a-authorID" name="authorID" type="text" size="60" placeholder="authorID" required />
 						<input id="author-name" name="name" type="text" size="60" placeholder="author" />
 						<input id="author-wiki" name="wikipediaRef" type="text" size="60" placeholder="wikipediaID" />
 						<input id="author-quotesome" name="quotesomeUrl" type="url" size="100" placeholder="quotesome url" />

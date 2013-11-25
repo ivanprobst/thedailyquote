@@ -2,20 +2,18 @@ thequotetribune
 ===============
 
 tobd
-* move all db request to db module
 * test this night switching
-* clean adminsrv.js
-...
-* direct link (users can't see after today)
 * new quote -> update social stuff (social stuff should depend of templater, in case we look at a specific quote)
+* direct link (users can't see after today, provide menu option for this)
+* set data ok or not?
 
 tobf
-* map author with _id rather than authorID
+* map admin author with _id rather than authorID
 * ie7+
 * fb sharing caching
 * fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found
-* final error page (clear menu, link to go back home)
+* final error pages (clear menu, link to go back home)
 * when unexisting url, redirect to home
 * simplify scaling, too much js
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
@@ -36,6 +34,7 @@ admin enhanced
 * authorID and pubDate duplicate check
 * delete items
 * schedule in red when a quote is there but is missing somehting (date, etc.)
+* handle schedule duplicates
 
 
 modules
