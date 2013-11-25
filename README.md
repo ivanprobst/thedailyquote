@@ -3,7 +3,6 @@ thequotetribune
 
 tobd
 * fix fb sharin cache
-* provide direct link from menu bar
 * check quote tomorrow morning
 
 tobf
