@@ -111,7 +111,7 @@ DB.getMappingAuthorID(function(mapping){
 // global social stuff updater
 function updateSocial(){
 	DB.getMappingAuthorID(function(mapping){
-		if(todayQuote.pubDate && mapping[todayQuote.authorID]){
+		if(mapping && todayQuote.pubDate && mapping[todayQuote.authorID]){
 			var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
 			var aFormattedDate = ('0'+todayQuote.pubDate.day).slice(-2)+'-'+('0'+(todayQuote.pubDate.month+1)).slice(-2)+'-'+todayQuote.pubDate.year;
 			var thumb = mapping[todayQuote.authorID].photoUrl ? (mapping[todayQuote.authorID].photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg") : '';
