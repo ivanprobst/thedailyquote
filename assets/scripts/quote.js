@@ -86,6 +86,15 @@ function Quote (options){
    		this.quotesomeUrl  = '';
     	this.pubDate	   = {};
     }
+    this.setBackupQuote = function(){
+        this.authorID      = 'ralph_waldo_Emerson';
+        this.text          = 'No change of circumstances can repair a defect of character.';
+        this.fontSize      = '48px';
+
+        this._id           = '';
+        this.quotesomeUrl  = 'http://quoteso.me/q/63864';
+        this.pubDate       = {};
+    }
 }
 
 module.exports = Quote;

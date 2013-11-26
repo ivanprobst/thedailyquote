@@ -177,9 +177,11 @@ function tick(){
 		else
 			todayQuote.setNoQuoteToday();
 
+		// EMERGENCY SWITCH !!!
+		// todayQuote.setBackupQuote();
+
 		firstRun = false;
-		console.log("the quote today is from: ");
-		console.log(todayQuote.authorID);
+		console.log("the quote today is from "+todayQuote.authorID);
 	});
 
 	setTimeout(tick,delay);

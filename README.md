@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found, final error pages (clear menu, link to go back home)
 * re-test daily switch, fb included
 
@@ -32,7 +31,6 @@ admin enhanced
 * delete items
 * schedule in red when a quote is there but is missing somehting (date, etc.)
 * handle schedule duplicates
-
 
 modules
 * Twitter API: https://github.com/ttezel/twit
