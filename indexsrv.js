@@ -55,7 +55,7 @@ http.createServer(function (request, response) {
 			var quotePreview = new Quote(item);
 			if(!item)
 				quotePreview.setNoQuoteToday();
-			if(!(year < now.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
+			if(!(year < today.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
 				quotePreview.setUnpublishedQuote();
 
 			templater.getQuotePage(quotePreview, function(htmlpage){
@@ -91,14 +91,13 @@ http.createServer(function (request, response) {
 
 
 // social stuff init
-var now = new Date();
 console.log('...setting up rss feed');
 DB.getMappingAuthorID(function(mapping){
 	DB.getCollectionArray('quotes', function(items){
 		if(items && items.length > 0){
 			for(var i=0; i<items.length; i++){
 				var aQuote = new Quote(items[i]); // maybe limit number of rss item generated?
-				if(mapping[aQuote.authorID] && (aQuote.pubDate.year < now.getFullYear() || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month < now.getMonth()) || (aQuote.pubDate.year == now.getFullYear() && aQuote.pubDate.month == now.getMonth() && aQuote.pubDate.day <= now.getDate()))){
+				if(mapping[aQuote.authorID] && (aQuote.pubDate.year < today.getFullYear() || (aQuote.pubDate.year == today.getFullYear() && aQuote.pubDate.month < today.getMonth()) || (aQuote.pubDate.year == today.getFullYear() && aQuote.pubDate.month == today.getMonth() && aQuote.pubDate.day <= today.getDate()))){
 					var aDate = new Date (aQuote.pubDate.year, aQuote.pubDate.month, aQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
 					var aFormattedDate = ('0'+aQuote.pubDate.day).slice(-2)+'-'+('0'+(aQuote.pubDate.month+1)).slice(-2)+'-'+aQuote.pubDate.year;
 					feed.item({title: 'Words from '+mapping[aQuote.authorID].name, description: aQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[aQuote.authorID].name});
@@ -158,7 +157,7 @@ tick();
 function tick(){
 	today = new Date();
 	var delay = (new Date(today.getFullYear(), today.getMonth(), today.getDate()+1, dailyTransitionHour, 0, 0, 0)) - today;
-	console.log('tick now @'+now+'next tick in: '+delay);
+	console.log('tick now @'+today+'next tick in: '+delay);
 
 	// update today's quote
 	DB.getItem('quotes', {'pubDate.year' : today.getFullYear(), 'pubDate.month' : today.getMonth(), 'pubDate.day' : today.getDate()}, function(item){

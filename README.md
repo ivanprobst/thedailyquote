@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* check quote tomorrow morning
 * fb access token duration
 * ie7+
 * fallback to override auto date switching (in case timers are messed up)
@@ -13,6 +12,7 @@ tobf
 * simplify scaling, too much js
 * favicon redirect when not on homepage
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
+* if srv restarted between 0am and 6am, it will pulled today quote, and not yesterday one
 ...
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
