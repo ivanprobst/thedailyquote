@@ -31,7 +31,7 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		//updateSocial(); // for testing
+		updateSocial(); // for testing
 		console.log('...received index page request');
 		templater.getQuotePage(todayQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
@@ -90,6 +90,8 @@ http.createServer(function (request, response) {
 }).listen(8124);
 
 
+
+
 // social stuff init
 console.log('...setting up rss feed');
 DB.getMappingAuthorID(function(mapping){
@@ -114,9 +116,11 @@ function updateSocial(){
 		if(todayQuote.pubDate && mapping[todayQuote.authorID]){
 			var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
 			var aFormattedDate = ('0'+todayQuote.pubDate.day).slice(-2)+'-'+('0'+(todayQuote.pubDate.month+1)).slice(-2)+'-'+todayQuote.pubDate.year;
+			var thumb = mapping[todayQuote.authorID].photoUrl ? (mapping[todayQuote.authorID].photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg") : '';
+			var name = mapping[todayQuote.authorID].name ? mapping[todayQuote.authorID].name : '';
 
 			// add rss item
-			feed.item({title: 'Words from '+mapping[todayQuote.authorID].name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[todayQuote.authorID].name});
+			feed.item({title: 'Words from '+name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: name});
 
 			// ping twitter
 			var T = new Twit({
@@ -125,28 +129,35 @@ function updateSocial(){
 			  , access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z'
 			  , access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
 			});
-			T.post('statuses/update', { status: 'Words from '+mapping[todayQuote.authorID].name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
+			T.post('statuses/update', { status: 'Words from '+name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
 				if(err) return console.log("error: "+err);
 				else console.log("# posted to twitter: "+reply);
 			});
 
 			// ping facebook
 			var url = 'https://graph.facebook.com/1410710079162036/links';
+			var token = 'CAAB7sDUrcSIBAH4C9U8ZBZBjZCmL4T9ltxifkidZCOHUI2YP7DZCpyW1Os22MAPqjfuL0XKVcX8X86q2ZC6LDOZCeEc6LQeZAw0iACSUNOdSIAD6cvow3Ni1fV4BsjCE5boRDLXoMVZBVSxiZBxEi8CUYCRf2xpp2wJ5rErHaOmBV8ijrdpe5q9usT';
 			var params = {
-				access_token: 'CAAB7sDUrcSIBAPs9ZAbzhDgpogukrzMqnnaEXfjF4d9UXpZALv2cZCRkl2Ttc2Xj3rFHILznIyM3AVqm6ZCKZCs2ZBsuNbFrirk6CZA3s57ILgLQSDltCOCSZCEz5lGZAoM5c4xwgSlxCSngoksRvMFX4hHgzyJfPnmg3Y1obJ1WLiUvEWeIE5VuMZCArpb1QP0h8ZD',
+				access_token: token,
 				link: 'http://thequotetribune.com/quote/'+aFormattedDate,
-				message: 'Words from '+mapping[todayQuote.authorID].name,
-				picture: (mapping[todayQuote.authorID].photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg")
+				message: 'In today\'s edition',
+				picture: thumb
 			};
 			request.post({url: url, qs: params}, function(err, resp, body) {
-				  // Handle any errors that occur
 				  if (err) return console.error("Error occured: ", err);
 				  body = JSON.parse(body);
 				  if (body.error) return console.error("Error returned from facebook: ", body.error);
 
-				  // Generate output
 				  console.log('# posted to facebook: '+JSON.stringify(body, null, '\t'));
 			});
+
+/* STUFF TO GENERATE EXTENDED ACCESS TOKEN
+				var extUrl = "https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=135996736500002&client_secret=bf9e38c6bcd00d0e3b4ccdc1408db739&fb_exchange_token=CAAB7sDUrcSIBAOgEG2zZBHpUpQj83bJDXn1ePf3SPZAZCeNT3mTitQwS9KAx14NZAtZBmKiz576E6qn2JZBo2oIYuC1cVGcmxDg7lv1iPg5L1hQUZBIaWyY5lZCZB38Xp0W0XFSO6KmQXwxU8lWYDsH3h2ZAuMvW0OMbo8HOGeGl3hf9pfLGnMFi3FQCcVBUh4724ZD";
+				request.get({url: extUrl}, function(err, resp, body){
+					console.log("new token: ")
+					console.log(body);
+				});
+*/
 		}
 	});
 }
