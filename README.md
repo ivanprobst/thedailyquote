@@ -2,20 +2,20 @@ thequotetribune
 ===============
 
 tobd
-* fix fb sharin cache
 * check quote tomorrow morning
-
-tobf
+* fb access token duration
 * ie7+
 * fallback to override auto date switching (in case timers are messed up)
-* fallback when no quote/author found
-* final error pages (clear menu, link to go back home)
+* fallback when no quote/author found, final error pages (clear menu, link to go back home)
+
+tobf
 * url: when direct link does not exist, direct to home
 * simplify scaling, too much js
+* favicon redirect when not on homepage
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
+...
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
-* favicon redirect when not on homepage
 
 final
 * run through ok if DB fails? where to keep error authors, in DB or author class? Use cases when quote/author missing

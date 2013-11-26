@@ -32,7 +32,7 @@ http.createServer(function (request, response) {
 
 		// update today's quote
 		DB.getItem('quotes', {_id: quoteID}, function(item){
-			var quotePreview = new Quote(null);
+			var quotePreview = new Quote(item);
 			if(!item)
 				quotePreview.setNoQuoteToday();
 
