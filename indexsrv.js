@@ -31,7 +31,6 @@ http.createServer(function (request, response) {
 
 	// if asked, serve home page...
 	if(request.url == '/'){
-		updateSocial(); // for testing
 		console.log('...received index page request');
 		templater.getQuotePage(todayQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
@@ -43,8 +42,7 @@ http.createServer(function (request, response) {
 	// if asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
 		console.log('...received preview request:');
-		//updateSocial();
-		// ??? add some control!!!
+		// add some control ???
 		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
 		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
 		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);

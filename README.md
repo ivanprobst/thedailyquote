@@ -5,6 +5,7 @@ tobd
 * ie7+
 * fallback to override auto date switching (in case timers are messed up)
 * fallback when no quote/author found, final error pages (clear menu, link to go back home)
+* re-test daily switch, fb included
 
 tobf
 * url: when direct link does not exist, direct to home
