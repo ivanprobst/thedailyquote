@@ -16,21 +16,26 @@ module.exports = {
 		if(aQuote)
 			quote = aQuote;
 		else
-			quote.setErrorQuote();
+			quote.set404Quote();
 
 		console.log(quote);
 
-		DB.getItem('authors',{authorID: quote.authorID}, function(item){
-			if(item)
-				author.setData(item);
-			else{
-				quote.setErrorQuote();
-				author.setErrorAuthor();
-			}
-
-
+		if(quote.errorType && quote.errorType != ''){
+			author.setError(quote.errorType);
 			buildQuotePage(callback);
-		});
+		}
+		else{
+			DB.getItem('authors',{authorID: quote.authorID}, function(item){
+				if(item)
+					author.setData(item);
+				else{
+					quote.setNoAuthorQuote();
+					author.setError(quote.errorType);
+				}
+
+				buildQuotePage(callback);
+			});
+		}
 	},
 
 	getAdminPage : function(callback) {
@@ -50,12 +55,15 @@ module.exports = {
 function buildQuotePage(callback){
 
 	htmlPage = '';
-	var file = fs.createReadStream('assets/templates/index.html');
+	if(quote.template)
+		var file = fs.createReadStream(quote.template);
+	else
+		var file = fs.createReadStream('assets/templates/index.html');
 	file.on('data', function(data){htmlPage = htmlPage + data;});
 	file.on('error', function(err){console.error("no index file found...");});
 	file.on('end', function(err){
 		
-		console.log("building... txt: "+quote.text);
+		console.log("building... txt: "+quote.text+" - from: "+author.name);
 		// init quote content
 		parseTemplate('quoteText', quote.text);
 		parseTemplate('authorName', author.name);

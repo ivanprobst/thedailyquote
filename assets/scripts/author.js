@@ -88,27 +88,135 @@ function Author (options){
     	return jsonized;
     }
 
-    // pre-built author template
-    this.setErrorAuthor = function(){
-		// data var init
-	    this.authorID		= '_err_noauthor';
-	    this.name			= '300 (+104) PAGE NOT FOUND';
-	    this.quotesomeUrl	= '';
-	    this.wikipediaID	= '';
+    this.setError = function(errorType){
+        console.log('error type: '+errorType);
+        switch(errorType){
+            case '404':
+                // data var init
+                this.authorID       = '_err_404';
+                this.name           = '300 (+104) PAGE NOT FOUND';
+                this.quotesomeUrl   = '';
+                this.wikipediaID    = '';
 
-		// design var init
-	    this.photoUrl				= 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/error.jpg';
-	    this.photoWidth				= 3100;
-	    this.photoHeight			= 1408;
-	    this.photoSlideDirection	= 'center';
-	    this.barsBackgroundColor	= '#fff';
-	    this.quoteFontColor			= '#fff';
-	    this.quoteWidth				= '30%';
-	    this.quoteBackgroundColor	= 'none';
-	    this.quotePositionLeft		= '2%';
-	    this.quotePositionRight		= 'auto';
-	    this.quotePositionTop		= '3%';
-	    this.quotePositionBottom	= 'auto';
+                // design var init
+                this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_404.jpg';
+                this.photoWidth             = 3100;
+                this.photoHeight            = 1408;
+                this.photoSlideDirection    = 'center';
+                this.barsBackgroundColor    = '#fff';
+                this.quoteFontColor         = '#fff';
+                this.quoteWidth             = '30%';
+                this.quoteBackgroundColor   = 'none';
+                this.quotePositionLeft      = '2%';
+                this.quotePositionRight     = 'auto';
+                this.quotePositionTop       = '3%';
+                this.quotePositionBottom    = 'auto';
+                break;
+            case 'noauthor':
+                // data var init
+                this.authorID       = '_err_noauthor';
+                this.name           = 'Some random weirdo with a mask';
+                this.quotesomeUrl   = '';
+                this.wikipediaID    = '';
+
+                // design var init
+                this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_noauthor.jpg';
+                this.photoWidth             = 3100;
+                this.photoHeight            = 1400;
+                this.photoSlideDirection    = 'center';
+                this.barsBackgroundColor    = '#fff';
+                this.quoteFontColor         = '#fff';
+                this.quoteWidth             = '35%';
+                this.quoteBackgroundColor   = 'none';
+                this.quotePositionLeft      = '2%';
+                this.quotePositionRight     = 'auto';
+                this.quotePositionTop       = '3%';
+                this.quotePositionBottom    = 'auto';
+                break;
+            case 'noquote':
+                // data var init
+                this.authorID       = '_err_noquote';
+                this.name           = 'The Gang (+ a teenager)';
+                this.quotesomeUrl   = '';
+                this.wikipediaID    = '';
+
+                // design var init
+                this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_noquote.jpg';
+                this.photoWidth             = 2100;
+                this.photoHeight            = 1100;
+                this.photoSlideDirection    = 'center';
+                this.barsBackgroundColor    = '#fff';
+                this.quoteFontColor         = '#fff';
+                this.quoteWidth             = '35%';
+                this.quoteBackgroundColor   = '#444';
+                this.quotePositionLeft      = 'auto';
+                this.quotePositionRight     = '6%';
+                this.quotePositionTop       = 'auto';
+                this.quotePositionBottom    = '3%';
+                break;
+            case 'unpublished':
+                // data var init
+                this.authorID       = '_err_unpublished';
+                this.name           = 'A punctual wizard';
+                this.quotesomeUrl   = '';
+                this.wikipediaID    = '';
+
+                // design var init
+                this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_unpublished.jpg';
+                this.photoWidth             = 2560;
+                this.photoHeight            = 1195;
+                this.photoSlideDirection    = 'center';
+                this.barsBackgroundColor    = '#fff';
+                this.quoteFontColor         = '#fff';
+                this.quoteWidth             = '35%';
+                this.quoteBackgroundColor   = '#000';
+                this.quotePositionLeft      = '2%';
+                this.quotePositionRight     = 'auto';
+                this.quotePositionTop       = '3%';
+                this.quotePositionBottom    = 'auto';
+                break;
+            case 'tooearly':
+                // data var init
+                this.authorID       = '_err_tooearly';
+                this.name           = 'Some distant voice';
+                this.quotesomeUrl   = '';
+                this.wikipediaID    = '';
+
+                // design var init
+                this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_tooearly.jpg';
+                this.photoWidth             = 2560;
+                this.photoHeight            = 1195;
+                this.photoSlideDirection    = 'center';
+                this.barsBackgroundColor    = '#fff';
+                this.quoteFontColor         = '#fff';
+                this.quoteWidth             = '35%';
+                this.quoteBackgroundColor   = '#000';
+                this.quotePositionLeft      = '2%';
+                this.quotePositionRight     = 'auto';
+                this.quotePositionTop       = '3%';
+                this.quotePositionBottom    = 'auto';
+                break;
+            default:
+                // data var init
+                this.authorID       = '_err_404';
+                this.name           = '300 (+104) PAGE NOT FOUND';
+                this.quotesomeUrl   = '';
+                this.wikipediaID    = '';
+
+                // design var init
+                this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_404.jpg';
+                this.photoWidth             = 3100;
+                this.photoHeight            = 1408;
+                this.photoSlideDirection    = 'center';
+                this.barsBackgroundColor    = '#fff';
+                this.quoteFontColor         = '#fff';
+                this.quoteWidth             = '30%';
+                this.quoteBackgroundColor   = 'none';
+                this.quotePositionLeft      = '2%';
+                this.quotePositionRight     = 'auto';
+                this.quotePositionTop       = '3%';
+                this.quotePositionBottom    = 'auto';
+        }
     }
 }
 

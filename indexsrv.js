@@ -52,7 +52,7 @@ http.createServer(function (request, response) {
 		DB.getItem('quotes', {'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(item){
 			var quotePreview = new Quote(item);
 			if(!item)
-				quotePreview.setNoQuoteToday();
+				quotePreview.setTooEarlyQuote();
 			if(!(year < today.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
 				quotePreview.setUnpublishedQuote();
 
@@ -175,7 +175,7 @@ function tick(){
 			if(!firstRun) updateSocial();
 		}
 		else
-			todayQuote.setNoQuoteToday();
+			todayQuote.setTodayNoQuote();
 
 		// EMERGENCY SWITCH !!!
 		// todayQuote.setBackupQuote();

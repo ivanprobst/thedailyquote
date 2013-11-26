@@ -41,50 +41,60 @@ function Quote (options){
     }
 
     // pre-built quote templates
-    this.setErrorQuote = function(){
+    this.set404Quote = function(){
 	    this.authorID      = '_err_404';
-	    this.text          = 'Something went wrong. We are mighty angry about it. We go have a look, and you stay back here.';
+	    this.text          = 'Something went wrong. We are mighty angry about it. We go have a look, you stay back here.';
 	    this.fontSize      = '48px';
 
   		this._id           = '';
    		this.quotesomeUrl  = '';
     	this.pubDate       = {};
+        this.errorType     = '404';
+        this.template      = 'assets/templates/error.html';
     }
-    this.setNoAuthor = function(){
+    this.setNoAuthorQuote = function(){
         this.authorID      = '_err_noauthor';
-        this.text          = 'That guy, he actually doesn\'t exist, does he?';
+        this.text          = 'Hey psst... we couldn\'t find the author for the requested quote. He doesn\'t actually exist... kinda screw up hu? I\'ll investigate.';
         this.fontSize      = '48px';
 
         this._id           = '';
         this.quotesomeUrl  = '';
         this.pubDate       = {};
+        this.errorType     = 'noauthor';
+        this.template      = 'assets/templates/error.html';
+    }
+    this.setTodayNoQuote = function(){
+        this.authorID      = '_err_noquote';
+        this.text          = 'Seems the quote you were looking for has disappeared. And we have nothing to do with this. We promise.';
+        this.fontSize      = '48px';
+
+        this._id           = '';
+        this.quotesomeUrl  = '';
+        this.pubDate       = {};
+        this.errorType     = 'noquote';
+        this.template      = 'assets/templates/error.html';
     }
     this.setUnpublishedQuote = function(){
-	    this.authorID      = '_err_noauthor';
-	    this.text          = 'You sneaky person, it\'s not yet time!';
+	    this.authorID      = '_err_unpublished';
+	    this.text          = 'How disappointing... you are too early, please come back at the right time.';
 	    this.fontSize      = '48px';
 
   		this._id           = '';
    		this.quotesomeUrl  = '';
     	this.pubDate       = {};
+        this.errorType     = 'unpublished';
+        this.template      = 'assets/templates/error.html';
     }
     this.setTooEarlyQuote = function(){
         this.authorID      = '_err_tooearly';
-        this.text          = 'Once upon a time, there was no quote here.';
+        this.text          = 'Who would have thought that... Once upon a time, there was no quote here.';
         this.fontSize      = '48px';
 
         this._id           = '';
         this.quotesomeUrl  = '';
         this.pubDate       = {};
-    }
-    this.setNoQuoteToday = function(){
-	    this.authorID      = '_err_noquote';
-	    this.text		   = 'hey, nothing is up today, shame!';
-	    this.fontSize      = '48px';
-
-  		this._id           = '';
-   		this.quotesomeUrl  = '';
-    	this.pubDate	   = {};
+        this.errorType     = 'tooearly';
+        this.template      = 'assets/templates/error.html';
     }
     this.setBackupQuote = function(){
         this.authorID      = 'ralph_waldo_Emerson';
@@ -94,6 +104,7 @@ function Quote (options){
         this._id           = '';
         this.quotesomeUrl  = 'http://quoteso.me/q/63864';
         this.pubDate       = {};
+        this.errorType     = true;
     }
 }
 

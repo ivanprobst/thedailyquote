@@ -2,7 +2,7 @@ thequotetribune
 ===============
 
 tobd
-* fallback when no quote/author found, final error pages (clear menu, link to go back home)
+* adapt template on error page
 * re-test daily switch, fb included
 
 tobf
@@ -22,7 +22,7 @@ final
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
 * comment most of logs
-* CLEAN AND REFILL THAT DB
+* CLEAN AND REFILL THAT DB (+ create error bg thumb)
 
 admin enhanced
 * prevent adding author with existing author_id
