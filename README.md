@@ -3,7 +3,6 @@ thequotetribune
 
 tobd
 * simplify scaling, too much js
-* get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * webmaster google tools, analytics
 * host jquery, reset on s3
 

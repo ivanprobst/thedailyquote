@@ -170,20 +170,17 @@
 </style>
 
 <script type="text/javascript">
-	var windowWidth = 0;
-	var windowHeight = 0;
-	var lastMenu = "";
-	var originalBlockFontSize = 0;
-	var originalAuthorPhotoWidth = 0;
-	var originalAuthorPhotoHeight = 0;
+	var originalBlockFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
+	var originalAuthorPhotoWidth = parseInt($('#container').width());
+	var originalAuthorPhotoHeight = parseInt($('#container').height());
 	
 	// INIT
 	$(document).ready(function(){
 	
 		// couple of var init
-		originalBlockFontSize = parseInt($('blockquote').css('font-size'));
-		originalAuthorPhotoWidth = parseInt($('#container').width());
-		originalAuthorPhotoHeight = parseInt($('#container').height());
+		var authorName = $('blockquote footer').html().slice(-2);
+		var wikipediaAuthor = $('blockquote footer').attr('id');
+		var directUrl = $('#direct-url a').html();
 	
 		// autosize listener
 		$(window).resize(updateScaling);
@@ -194,7 +191,7 @@
 		// tweet button listener
 		$('#twitter-menu-item').click(function(event) {
 			window.open(
-						'https://twitter.com/share?url='+encodeURIComponent('{{directUrl}}')+'&via=thequotetribune&text=Words%20from%20'+('{{authorName}}').replace(/ /g,'%20')+':',
+						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':', // TEST !!!
 						'twitter',
 						'width=626,height=436'
 			);
@@ -204,7 +201,7 @@
 		// fb sharer button listener
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{directUrl}}?fbrefresh=BLO'), 
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),  // TEST !!!
 						'facebook-share-dialog', 
 						'width=626,height=436'
 			);
@@ -213,11 +210,11 @@
 		
 		// wikipedia data call
 		$("article#wikipedia").hide();
-		if('{{authorWikipediaRef}}' != 'null'){
-			$("article#wikipedia h4").html('About '+'{{authorName}}'+' (more on <a href="http://en.wikipedia.org/wiki/{{authorWikipediaRef}}" target="_blank">Wikipedia</a>)');
+		if(wikipediaAuthor != 'null'){
+			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)'); // TEST !!!
 			$.ajax({
 				type: "GET",
-				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles={{authorWikipediaRef}}',
+				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor,
 				dataType: "jsonp",
 				success: function(data){
 					if(data.query.pages[-1])
@@ -239,8 +236,8 @@
 
 	// UPDATE SCALING
 	function updateScaling(){
-		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		//$('#resolution').html('(' + windowWidth + 'x' +windowHeight + ')');
 		
 		// set the current photo size
@@ -272,6 +269,7 @@
 	}
 
 	// MENU TOGGLING
+	var lastMenu = "";
 	function openMenu(event){
 		var currentMenu = event.target.id.replace(/\b-.+/,"-content");
 		
@@ -303,6 +301,8 @@
 
 <body>
 <div id="fb-root"></div>
+
+<!-- fb like stuff -->
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -320,7 +320,7 @@
 		
 		<blockquote>
 			<p>&#8220;{{quoteText}}&#8221;</p>
-			<footer>&mdash; {{authorName}}</footer>
+			<footer id="{{authorWikipediaRef}}">&mdash; {{authorName}}</footer>
 		</blockquote>
 		
 		<footer class="bar">
@@ -361,7 +361,7 @@
 			
 			<section id="quotedetails-content">
 				<h3>ABOUT TODAY'S QUOTE</h3>
-				<article id="direct-link">
+				<article id="direct-url">
 					<p><strong>Direct link:</strong> <a href="{{directUrl}}">{{directUrl}}</a></p>
 				</article>
 				{{#authorQuotesomeUrl}}
