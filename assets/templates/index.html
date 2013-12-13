@@ -170,7 +170,7 @@
 </style>
 
 <script type="text/javascript">
-	var originalBlockFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
+	var originalQuoteFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
 	var originalAuthorPhotoWidth = parseInt($('#container').width());
 	var originalAuthorPhotoHeight = parseInt($('#container').height());
 	
@@ -226,7 +226,6 @@
 					$("article#wikipedia").show();
 				},
 				error: function(){
-					 console.log("No Wikipedia data available.");
 				}
 			});
 		}
@@ -240,7 +239,7 @@
 		var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		//$('#resolution').html('(' + windowWidth + 'x' +windowHeight + ')');
 		
-		// set the current photo size
+		// Max out the scaled photo height to the original height
 		if(originalAuthorPhotoHeight >= windowHeight){
 			var cPicHeight = windowHeight;
 			$("body").css("marginTop","0px");
@@ -264,8 +263,8 @@
 			$("#container").width(cPicWidth);
 				
 		// quote txt scaling
-		$('blockquote').css('font-size', parseInt(originalBlockFontSize)*ratio+'px');
-		$('blockquote p').css('text-indent', parseInt(originalBlockFontSize)*ratio*-0.6+'px');
+		$('blockquote').css('font-size', parseInt(originalQuoteFontSize)*ratio+'px');
+		$('blockquote p').css('text-indent', parseInt(originalQuoteFontSize)*ratio*-0.6+'px');
 	}
 
 	// MENU TOGGLING

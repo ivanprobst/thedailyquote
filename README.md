@@ -2,9 +2,9 @@ thequotetribune
 ===============
 
 tobd
-* simplify scaling, too much js
+* host jquery+reset.css on s3
+* simplify scaling (container: maxed width and height. blockquote: em or % that auto-scale. Packed ie8 spec stuff)
 * webmaster google tools, analytics
-* host jquery, reset on s3
 
 final
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
@@ -27,7 +27,7 @@ admin enhanced
 * quote/author update/creation feedback on browser
 * authorID and pubDate duplicate check
 * delete items
-* schedule in red when a quote is there but is missing somehting (date, etc.)
+* schedule in red when a quote is there but is missing something (date, etc.)
 * handle schedule duplicates
 
 modules
