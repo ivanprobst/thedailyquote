@@ -29,7 +29,7 @@ console.log('# running server on http://127.0.0.1:8124/');
 http.createServer(function (request, response) {
 	console.log('# classic srv asked for: '+request.url);
 
-	// if asked, serve home page...
+	// if home page asked, serve home page...
 	if(request.url == '/'){
 		console.log('...received index page request');
 		templater.getQuotePage(todayQuote, function(htmlPage){
@@ -39,7 +39,7 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
-	// if asked, serve preview page
+	// if quote preview asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
 		console.log('...received preview request:');
 		// add some control ???
@@ -64,6 +64,17 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
+	// if weird page asked, serve error page
+	else if(!(request.url.match(/\.[0-9a-z]+$/)) || request.url.match(/\.[0-9a-z]+$/) == ''){
+		// error page for now, but maybe redirection to home ???
+
+		templater.getQuotePage(null, function(htmlpage){
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.write(htmlpage);
+			response.end();
+		});
+		return;
+	}
 	// if asked and if existing, serve rss xml...
 	else if(request.url == '/rss.xml' && feed.xml()){
 		response.writeHead(200, {'Content-Type': 'application/rss+xml'});
@@ -74,15 +85,17 @@ http.createServer(function (request, response) {
 	
 	// if asked other, set header and stream the file when existing
 	var requestExtension = extension_map[request.url.match(/\.[0-9a-z]+$/)];
+	var cleanedUrl = request.url.replace(/([a-z]+\/)+/,''); // keep only the file name
 	if(!requestExtension) requestExtension = 'text/plain';
 	response.writeHead(200, {'Content-Type': requestExtension});
-	console.log('... serving: '+request.url);
-	var file = fs.createReadStream(('.'+request.url));
+	console.log('... serving: '+cleanedUrl);
+	var file = fs.createReadStream(('.'+cleanedUrl));
 	file.pipe(response);
 
 	// log when can't stream the file
 	file.on('error',function(err){
 		console.error('!!! no existing file: '+err);
+		// set header to 404 + send error something ???
 		response.end();
 	});
 }).listen(8124);

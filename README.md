@@ -2,11 +2,10 @@ thequotetribune
 ===============
 
 tobd
-* url: when direct link does not exist, direct to home
 * simplify scaling, too much js
-* favicon redirect when not on homepage
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
 * webmaster google tools, analytics
+* host jquery, reset on s3
 
 final
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
@@ -14,6 +13,7 @@ final
 * setup sandbox env
 * run through ok if DB fails? Use cases when quote/author missing
 * comment most of logs
+* replicates changes in index template to error template
 * CLEAN AND REFILL THAT DB (+ create error bg thumb)
 
 tobf
