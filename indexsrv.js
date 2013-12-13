@@ -165,11 +165,14 @@ function updateSocial(){
 tick();
 function tick(){
 	today = new Date();
-	var delay = (new Date(today.getFullYear(), today.getMonth(), today.getDate()+1, dailyTransitionHour, 0, 0, 0)) - today;
+	var quoteDay = new Date();
+	quoteDay.setDate(quoteDay.getHours() < dailyTransitionHour ? quoteDay.getDate()-1 : quoteDay.getDate()); // check if we should still display prev day quote
+
+	var delay = (new Date(quoteDay.getFullYear(), quoteDay.getMonth(), quoteDay.getDate()+1, dailyTransitionHour, 0, 0, 0)) - today;
 	console.log('tick now @'+today+'next tick in: '+delay);
 
 	// update today's quote
-	DB.getItem('quotes', {'pubDate.year' : today.getFullYear(), 'pubDate.month' : today.getMonth(), 'pubDate.day' : today.getDate()}, function(item){
+	DB.getItem('quotes', {'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()}, function(item){
 		if(item){
 			todayQuote = new Quote(item);
 			if(!firstRun) updateSocial();

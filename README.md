@@ -2,27 +2,26 @@ thequotetribune
 ===============
 
 tobd
-* adapt template on error page
-* re-test daily switch, fb included
-
-tobf
 * url: when direct link does not exist, direct to home
 * simplify scaling, too much js
 * favicon redirect when not on homepage
 * get out of js code: authorName, authorWikipediaRef, move wikipedia code to server side
-* if srv restarted between 0am and 6am, it will pulled today quote, and not yesterday one
-...
-* handle carriage return and links in quote txt
-* clean data setting in quote and author
-* monitor facebook access token
+* webmaster google tools, analytics
 
 final
-* run through ok if DB fails? where to keep error authors, in DB or author class? Use cases when quote/author missing
 * clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
+* run through ok if DB fails? Use cases when quote/author missing
 * comment most of logs
 * CLEAN AND REFILL THAT DB (+ create error bg thumb)
+
+tobf
+* ...
+* create better template (separate in different parts to build the page)
+* handle carriage return and links in quote txt
+* clean data setting in quote and author
+* monitor facebook access token
 
 admin enhanced
 * prevent adding author with existing author_id
