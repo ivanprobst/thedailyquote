@@ -27,11 +27,11 @@ var today = new Date();
 // server
 console.log('# running server on http://127.0.0.1:8124/');
 http.createServer(function (request, response) {
-	console.log('# classic srv asked for: '+request.url);
+	console.log('# index srv asked for: '+request.url);
 
 	// if home page asked, serve home page...
 	if(request.url == '/'){
-		console.log('...received index page request');
+		console.log('...processing index page request');
 		templater.getQuotePage(todayQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
 			response.write(htmlPage);
@@ -41,12 +41,11 @@ http.createServer(function (request, response) {
 	}
 	// if quote preview asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
-		console.log('...received preview request:');
+		console.log('...processing preview request:');
 		// add some control ???
 		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
 		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
 		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);
-		console.log(day+'-'+month+'-'+year+' (js format)');
 
 		// get relevant quote
 		DB.getItem('quotes', {'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(item){
@@ -66,8 +65,9 @@ http.createServer(function (request, response) {
 	}
 	// if weird page asked, serve error page
 	else if(!(request.url.match(/\.[0-9a-z]+$/)) || request.url.match(/\.[0-9a-z]+$/) == ''){
-		// error page for now, but maybe redirection to home ???
+		console.log('...processing unknown page request');
 
+		// error page for now, but maybe redirection to home ???
 		templater.getQuotePage(null, function(htmlpage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
 			response.write(htmlpage);
@@ -88,13 +88,13 @@ http.createServer(function (request, response) {
 	var cleanedUrl = request.url.replace(/([a-z]+\/)+/,''); // keep only the file name
 	if(!requestExtension) requestExtension = 'text/plain';
 	response.writeHead(200, {'Content-Type': requestExtension});
-	console.log('... serving: '+cleanedUrl);
+	console.log('...serving file: '+cleanedUrl);
 	var file = fs.createReadStream(('.'+cleanedUrl));
 	file.pipe(response);
 
 	// log when can't stream the file
 	file.on('error',function(err){
-		console.error('!!! no existing file: '+err);
+		console.error('!!! ERR (file asked to server doesn\'t exist): '+err);
 		// set header to 404 + send error something ???
 		response.end();
 	});
@@ -114,8 +114,10 @@ DB.getMappingAuthorID(function(mapping){
 					var aDate = new Date (aQuote.pubDate.year, aQuote.pubDate.month, aQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
 					var aFormattedDate = ('0'+aQuote.pubDate.day).slice(-2)+'-'+('0'+(aQuote.pubDate.month+1)).slice(-2)+'-'+aQuote.pubDate.year;
 					feed.item({title: 'Words from '+mapping[aQuote.authorID].name, description: aQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[aQuote.authorID].name});
+					console.log('-> rss item added (quote: '+aQuote.text+', from '+mapping[aQuote.authorID].name+')');
 				}
 			}
+			console.log('# rss feed completed');
 		}
 	});
 });
@@ -123,6 +125,7 @@ DB.getMappingAuthorID(function(mapping){
 
 // global social stuff updater
 function updateSocial(){
+	console.log('...sending social updates');
 	DB.getMappingAuthorID(function(mapping){
 		if(mapping && todayQuote.pubDate && mapping[todayQuote.authorID]){
 			var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
@@ -132,6 +135,7 @@ function updateSocial(){
 
 			// add rss item
 			feed.item({title: 'Words from '+name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: name});
+			console.log('# rss item added');
 
 			// ping twitter
 			var T = new Twit({
@@ -141,7 +145,7 @@ function updateSocial(){
 			  , access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
 			});
 			T.post('statuses/update', { status: 'Words from '+name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
-				if(err) return console.log("error: "+err);
+				if(err) return console.error("!!! ERR (posting update to twitter): "+err);
 				else console.log("# posted to twitter: "+reply);
 			});
 
@@ -155,9 +159,9 @@ function updateSocial(){
 				picture: thumb
 			};
 			request.post({url: url, qs: params}, function(err, resp, body) {
-				  if (err) return console.error("Error occured: ", err);
+				  if (err) return console.error("!!! ERR (posting update to facebook): ", err);
 				  body = JSON.parse(body);
-				  if (body.error) return console.error("Error returned from facebook: ", body.error);
+				  if (body.error) return console.error("!!! ERR (posting update to facebook, returned from facebook): ", body.error);
 
 				  console.log('# posted to facebook: '+JSON.stringify(body, null, '\t'));
 			});
@@ -182,7 +186,7 @@ function tick(){
 	quoteDay.setDate(quoteDay.getHours() < dailyTransitionHour ? quoteDay.getDate()-1 : quoteDay.getDate()); // check if we should still display prev day quote
 
 	var delay = (new Date(quoteDay.getFullYear(), quoteDay.getMonth(), quoteDay.getDate()+1, dailyTransitionHour, 0, 0, 0)) - today;
-	console.log('tick now @'+today+'next tick in: '+delay);
+	console.log('# tick now @'+today+', next tick in: '+delay);
 
 	// update today's quote
 	DB.getItem('quotes', {'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()}, function(item){
@@ -197,7 +201,7 @@ function tick(){
 		// todayQuote.setBackupQuote();
 
 		firstRun = false;
-		console.log("the quote today is from "+todayQuote.authorID);
+		console.log("# the quote today is: "+todayQuote.text + ', from: '+todayQuote.authorID);
 	});
 
 	setTimeout(tick,delay);

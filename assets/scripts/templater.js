@@ -18,8 +18,6 @@ module.exports = {
 		else
 			quote.set404Quote();
 
-		console.log(quote);
-
 		if(quote.errorType && quote.errorType != ''){
 			author.setError(quote.errorType);
 			buildQuotePage(callback);
@@ -42,11 +40,9 @@ module.exports = {
 		htmlPage = '';
 		var file = fs.createReadStream('assets/templates/admin.html');
 		file.on('data', function(data){htmlPage = htmlPage + data;});
-		file.on('error', function(err){console.error("no index file found...");});
+		file.on('error', function(err){console.error("!!! ERR (admin template file not found)");});
 		file.on('end', function(err){
 			callback(htmlPage);
-			//response.write(this.htmlPage);
-			//response.end();
 		});
     }
 };
@@ -60,10 +56,10 @@ function buildQuotePage(callback){
 	else
 		var file = fs.createReadStream('assets/templates/index.html');
 	file.on('data', function(data){htmlPage = htmlPage + data;});
-	file.on('error', function(err){console.error("no index file found...");});
+	file.on('error', function(err){console.error('no index file found...');});
 	file.on('end', function(err){
 		
-		console.log("building... txt: "+quote.text+" - from: "+author.name);
+		console.log('...building a quote page with text: '+quote.text+', from: '+author.name);
 		// init quote content
 		parseTemplate('quoteText', quote.text);
 		parseTemplate('authorName', author.name);
@@ -73,7 +69,7 @@ function buildQuotePage(callback){
 
 		// photo
 		parseTemplate('authorPhotoPath', author.photoUrl);
-		parseTemplate('authorThumbPath', (author.photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg"));
+		parseTemplate('authorThumbPath', (author.photoUrl).replace(/\.[0-9a-z]+$/,'_thumb.jpg'));
 		parseTemplate('authorPhotoWidth', author.photoWidth);
 		parseTemplate('authorPhotoHeight', author.photoHeight);
 		parseTemplate('authorDirectionSlide', author.photoSlideDirection);
@@ -93,6 +89,7 @@ function buildQuotePage(callback){
 		parseTemplate('directUrl', 'http://thequotetribune.com/quote/'+('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year);
 		
 		// fire in the hole!!!
+		console.log('# quote page built');
 		callback(htmlPage);
 	});
 

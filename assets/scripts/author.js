@@ -89,7 +89,6 @@ function Author (options){
     }
 
     this.setError = function(errorType){
-        console.log('error type: '+errorType);
         switch(errorType){
             case '404':
                 // data var init

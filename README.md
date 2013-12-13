@@ -11,7 +11,6 @@ final
 * setup prod env (better permissions on ec2, better EBS, db redundancy)
 * setup sandbox env
 * run through ok if DB fails? Use cases when quote/author missing
-* comment most of logs
 * replicates changes in index template to error template
 * CLEAN AND REFILL THAT DB (+ create error bg thumb)
 
