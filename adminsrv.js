@@ -167,7 +167,7 @@ http.createServer(function (request, response) {
 			console.log(sentData);
 
 			if(sentData && sentData != 'null' && sentData != '')
-				DB.removeItem('authors', {_id: new ObjectID(sentData)}, parsedData.my_item, sendDataToClient);
+				DB.removeItem('authors', {_id: new ObjectID(sentData)}, sendDataToClient);
 			else
 				sendDataToClient('_id error');
 		});
