@@ -2,8 +2,8 @@ thequotetribune
 ===============
 
 tobd
-* host jquery+reset.css on s3
 * simplify scaling (container: maxed width and height. blockquote: em or % that auto-scale. Packed ie8 spec stuff)
+* create error thumbs
 * webmaster google tools, analytics
 
 final
@@ -12,10 +12,9 @@ final
 * setup sandbox env
 * run through ok if DB fails? Use cases when quote/author missing
 * replicates changes in index template to error template
-* CLEAN AND REFILL THAT DB (+ create error bg thumb)
+* CLEAN AND REFILL THAT DB
 
 tobf
-* ...
 * create better template (separate in different parts to build the page)
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
