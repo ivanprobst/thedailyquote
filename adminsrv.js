@@ -96,8 +96,8 @@ http.createServer(function (request, response) {
 						var jsonLevel1 = {};
 						var jsonLevel2 = {};
 						if(schedule[year]){
-							jsonLevel2 = schedule[year];
-							if(jsonLevel2[month]){
+							jsonLevel1 = schedule[year];
+							if(jsonLevel1[month]){
 								((schedule[year])[month])[day] = item._id; // for now simple override, but implement dup check later ???
 							}
 							else{
