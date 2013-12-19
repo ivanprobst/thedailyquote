@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* simplify scaling (container: maxed width and height. blockquote: em or % that auto-scale. Packed ie8 spec stuff)
 * webmaster google tools, analytics
 
 final

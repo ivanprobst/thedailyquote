@@ -28,8 +28,9 @@
 	
 <style type="text/css">
 	@import url(https://s3-eu-west-1.amazonaws.com/thequotetribune/misc/reset.min.css);
-	 
+	html{height: 100%;}
 	body{
+		height: 100%;
 		color: #242323;
 		font-family: 'Arbutus Slab', serif;
 	}
@@ -38,15 +39,14 @@
 	ul{list-style-type: none;}
 
 	#container{
+		position: relative;
+		height: 100%;
+		margin: 0 auto;
 		background-repeat: no-repeat;
 		background-size: auto 100%;
-		position: relative;
-		margin: 0 auto;
-		border-left: 1px solid #333;
-		border-right: 1px solid #333;
 		
 		background-image: url('{{authorPhotoPath}}');
-		width: {{authorPhotoWidth}}px; height: {{authorPhotoHeight}}px;
+		max-width: {{authorPhotoWidth}}px; max-height: {{authorPhotoHeight}}px;
 		background-position-x: {{authorDirectionSlide}}; background-position-y: center;
 	}
 		#container img#bg{
@@ -89,7 +89,7 @@
 		position: absolute;
 		margin-top: 100px; margin-bottom: 80px; /* set to current header and footer height, might change */
 		padding: 0.6% 0.3% 0.6% 2%;
-		line-height: 1.3em;
+		line-height: 1.4em;
 		opacity: 0.7;
 		
 		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
@@ -97,8 +97,8 @@
 		color: {{authorBlockFontColor}};
 		font-size: {{quoteBlockFontSize}};
 		background: {{authorBlockBackgroundColor}};
-		/*box-shadow: 5px 5px 10px #333;*/
-	}
+	}	
+		blockquote p{text-indent: -3%;}
 		blockquote footer{margin-top: 10px;}
 		
 	#container>footer{
@@ -170,9 +170,9 @@
 </style>
 
 <script type="text/javascript">
-	var originalQuoteFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
-	var originalAuthorPhotoWidth = parseInt($('#container').width());
-	var originalAuthorPhotoHeight = parseInt($('#container').height());
+	var originalQuoteFontSize = 0;
+	var originalAuthorPhotoWidth = 0;
+	var originalAuthorPhotoHeight = 0;
 	
 	// INIT
 	$(document).ready(function(){
@@ -181,6 +181,9 @@
 		var authorName = $('blockquote footer').html().slice(-2);
 		var wikipediaAuthor = $('blockquote footer').attr('id');
 		var directUrl = $('#direct-url a').html();
+		originalQuoteFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
+		originalAuthorPhotoWidth = parseInt($('#container').css('max-width'));
+		originalAuthorPhotoHeight = parseInt($('#container').css('max-height'));
 	
 		// autosize listener
 		$(window).resize(updateScaling);
@@ -237,34 +240,17 @@
 	function updateScaling(){
 		var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		//$('#resolution').html('(' + windowWidth + 'x' +windowHeight + ')');
 		
-		// Max out the scaled photo height to the original height
-		if(originalAuthorPhotoHeight >= windowHeight){
-			var cPicHeight = windowHeight;
-			$("body").css("marginTop","0px");
+		// container width and font size scaling
+		var cPicWidth = Math.floor(windowHeight * originalAuthorPhotoWidth / originalAuthorPhotoHeight);
+		cPicWidth >= windowWidth ? $("#container").width('100%') : $("#container").width(cPicWidth);
+		$('blockquote').css('font-size', (windowHeight * parseInt(originalQuoteFontSize) / originalAuthorPhotoHeight)+'px');
+
+		// lt ie9 fix
+		if($('#container #bg').css('display') != 'none'){
+			$('#container #bg').height(windowHeight);
+			cPicWidth >= windowWidth ? $('#container #bg').css({left: '0px'}) : $('#container #bg').css({left: ((windowWidth-cPicWidth)/2)+'px'});
 		}
-		else{
-			var cPicHeight = originalAuthorPhotoHeight;
-			$("body").css("marginTop",Math.floor((windowHeight-cPicHeight)/2)+"px");
-		}
-		var ratio = cPicHeight / originalAuthorPhotoHeight;
-		var cPicWidth = Math.floor(ratio * originalAuthorPhotoWidth);
-		
-		// ie9< fix
-		$('#container #bg').height(cPicHeight);
-		windowWidth < cPicWidth ? $('#container #bg').css({left: ((windowWidth-cPicWidth)/2)+'px'}) : $('#container #bg').css({left: '0px'});
-			
-		// container scaling
-		$("#container").height(cPicHeight);
-		if(cPicWidth>windowWidth)
-			$("#container").width(windowWidth-2*parseInt($("#container").css("border-left-width"),10)); // substracting the container border size
-		else
-			$("#container").width(cPicWidth);
-				
-		// quote txt scaling
-		$('blockquote').css('font-size', parseInt(originalQuoteFontSize)*ratio+'px');
-		$('blockquote p').css('text-indent', parseInt(originalQuoteFontSize)*ratio*-0.6+'px');
 	}
 
 	// MENU TOGGLING
@@ -313,7 +299,7 @@
 	<div id="container">
 		<img id="bg" src="{{authorPhotoPath}}" />
 		<header class="bar">
-			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a><span id="resolution"></span></h1>
+			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a></h1>
 			<h2>your daily inspirational fix</h2>
 		</header>
 		
