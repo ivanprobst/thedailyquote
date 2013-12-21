@@ -3,11 +3,7 @@ thequotetribune
 
 tobd
 * webmaster google tools, analytics
-
-final
-* clean npm in commits: http://blog.nodejitsu.com/package-dependencies-done-right
-* setup prod env (better permissions on ec2, better EBS, db redundancy)
-* setup sandbox env
+* get everything up and running on instance reboot
 * run through ok if DB fails? Use cases when quote/author missing
 * replicates changes in index template to error template
 * CLEAN AND REFILL THAT DB
@@ -17,6 +13,7 @@ tobf
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
 * monitor facebook access token
+* db replications / backups
 
 admin enhanced
 * prevent adding author with existing author_id
