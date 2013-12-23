@@ -178,7 +178,7 @@
 	$(document).ready(function(){
 	
 		// couple of var init
-		var authorName = $('blockquote footer').html().slice(-2);
+		var authorName = $('blockquote footer').html().substring(2);
 		var wikipediaAuthor = $('blockquote footer').attr('id');
 		var directUrl = $('#direct-url a').html();
 		originalQuoteFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
