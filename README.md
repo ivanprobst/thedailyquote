@@ -2,11 +2,14 @@ thequotetribune
 ===============
 
 tobd
-* webmaster google tools, analytics
+* analytics check, if ko, fallback on this: https://npmjs.org/package/universal-analytics
 * get everything up and running on instance reboot
 * run through ok if DB fails? Use cases when quote/author missing
-* replicates changes in index template to error template
+* fix wiki
+* ...
+* check TEST and ??? tags
 * CLEAN AND REFILL THAT DB
+* clean facebook url when error page
 
 tobf
 * create better template (separate in different parts to build the page)
@@ -14,6 +17,8 @@ tobf
 * clean data setting in quote and author
 * monitor facebook access token
 * db replications / backups
+* nginx gzip, caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
+* store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 
 admin enhanced
 * prevent adding author with existing author_id
@@ -24,10 +29,10 @@ admin enhanced
 * handle schedule duplicates
 
 modules
-* Twitter API: https://github.com/ttezel/twit
-* HTTP calls: https://github.com/mikeal/request
-* RSS: https://github.com/dylang/node-rss
-* mongo: http://mongodb.github.io/node-mongodb-native/
+* twit: https://github.com/ttezel/twit
+* request: https://github.com/mikeal/request
+* rss: https://github.com/dylang/node-rss
+* mongodb: http://mongodb.github.io/node-mongodb-native/
 (* jquery: https://github.com/coolaj86/node-jquery)
 (* jsdom)
 (* xmlhttprequest)

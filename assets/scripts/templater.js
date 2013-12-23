@@ -86,7 +86,10 @@ function buildQuotePage(callback){
 		parseTemplate('authorPositionBottom', author.quotePositionBottom);
 
 		// random
-		parseTemplate('directUrl', 'http://thequotetribune.com/quote/'+('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year);
+		if(quote.errorType && quote.errorType != '')
+			parseTemplate('directUrl', 'http://thequotetribune.com/quote/'+quote.errorType);
+		else
+			parseTemplate('directUrl', 'http://thequotetribune.com/error/'+('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year);
 		
 		// fire in the hole!!!
 		console.log('# quote page built');

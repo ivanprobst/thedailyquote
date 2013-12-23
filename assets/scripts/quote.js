@@ -97,7 +97,7 @@ function Quote (options){
         this.template      = 'assets/templates/error.html';
     }
     this.setBackupQuote = function(){
-        this.authorID      = 'ralph_waldo_Emerson';
+        this.authorID      = 'ralph_waldo_emerson';
         this.text          = 'No change of circumstances can repair a defect of character.';
         this.fontSize      = '48px';
 

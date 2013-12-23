@@ -5,8 +5,8 @@
 	
 	<link rel="shortcut icon" href="favicon.ico" /> 
 	<link rel="alternate" type="application/rss+xml" title="The Quote Tribune" href="/rss.xml" />
-	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab|Open+Sans|Open+Sans:700' rel='stylesheet' type='text/css'>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab' rel='stylesheet' type='text/css'>
+	<script src="https://s3-eu-west-1.amazonaws.com/thequotetribune/scripts/jquery.min.js"></script>
 
 	<!--[if lt IE 8]>
 	<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js"></script>
@@ -27,26 +27,26 @@
 	<meta property="og:site_name" content="The Quote Tribune">
 	
 <style type="text/css">
-	@import url(http://reset5.googlecode.com/hg/reset.min.css);
-	 
+	@import url(https://s3-eu-west-1.amazonaws.com/thequotetribune/misc/reset.min.css);
+	html{height: 100%;}
 	body{
+		height: 100%;
 		color: #242323;
-		font-family: 'Arbutus Slab', 'Open Sans', serif;
+		font-family: 'Arbutus Slab', serif;
 	}
 	a{color: #242323;}
 		a:hover{}
 	ul{list-style-type: none;}
 
 	#container{
+		position: relative;
+		height: 100%;
+		margin: 0 auto;
 		background-repeat: no-repeat;
 		background-size: auto 100%;
-		position: relative;
-		margin: 0 auto;
-		border-left: 1px solid #333;
-		border-right: 1px solid #333;
 		
 		background-image: url('{{authorPhotoPath}}');
-		width: {{authorPhotoWidth}}px; height: {{authorPhotoHeight}}px;
+		max-width: {{authorPhotoWidth}}px; max-height: {{authorPhotoHeight}}px;
 		background-position-x: {{authorDirectionSlide}}; background-position-y: center;
 	}
 		#container img#bg{
@@ -83,14 +83,13 @@
 			padding: 15px 0;
 			font-size: 1.2em;
 			opacity: 0.7;
-			/*font-family: 'Open Sans', serif;*/
 		}
 	
 	blockquote{
 		position: absolute;
 		margin-top: 100px; margin-bottom: 80px; /* set to current header and footer height, might change */
 		padding: 0.6% 0.3% 0.6% 2%;
-		line-height: 1.3em;
+		line-height: 1.4em;
 		opacity: 0.7;
 		
 		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
@@ -98,8 +97,8 @@
 		color: {{authorBlockFontColor}};
 		font-size: {{quoteBlockFontSize}};
 		background: {{authorBlockBackgroundColor}};
-		/*box-shadow: 5px 5px 10px #333;*/
-	}
+	}	
+		blockquote p{text-indent: -3%;}
 		blockquote footer{margin-top: 10px;}
 		
 	#container>footer{
@@ -129,7 +128,6 @@
 				#quotedetails-menu-item{background-position: 5px -7px;}
 				#register-menu-item{position: absolute; top: 10px; right: 70px; background-position: -150px -7px;}
 				#about-menu-item{position: absolute; top: 10px; right: 10px; background-position: -446px -7px;}
-
 				#home-menu-item{background: none; width: 360px; text-align: center; text-decoration: none; font-size: 3em; line-height: 1.4em;}
 
 		footer section{
@@ -173,10 +171,7 @@
 </style>
 
 <script type="text/javascript">
-	var windowWidth = 0;
-	var windowHeight = 0;
-	var lastMenu = "";
-	var originalBlockFontSize = 0;
+	var originalQuoteFontSize = 0;
 	var originalAuthorPhotoWidth = 0;
 	var originalAuthorPhotoHeight = 0;
 	
@@ -184,54 +179,83 @@
 	$(document).ready(function(){
 	
 		// couple of var init
-		originalBlockFontSize = parseInt($('blockquote').css('font-size'));
-		originalAuthorPhotoWidth = parseInt($('#container').width());
-		originalAuthorPhotoHeight = parseInt($('#container').height());
+		var authorName = $('blockquote footer').html().slice(-2);
+		var wikipediaAuthor = $('blockquote footer').attr('id');
+		var directUrl = $('#direct-url a').html();
+		originalQuoteFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
+		originalAuthorPhotoWidth = parseInt($('#container').css('max-width'));
+		originalAuthorPhotoHeight = parseInt($('#container').css('max-height'));
 	
 		// autosize listener
 		$(window).resize(updateScaling);
 		
 		// menu opening listening
 		$("footer nav a.modal").click(function(event){openMenu(event);});
+
+		// tweet button listener
+		$('#twitter-menu-item').click(function(event) {
+			window.open(
+						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':', // TEST !!!
+						'twitter',
+						'width=626,height=436'
+			);
+			return false;
+		});
+		
+		// fb sharer button listener
+		$('#facebook-menu-item').click(function(event) {
+			window.open(
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),  // TEST !!!
+						'facebook-share-dialog', 
+						'width=626,height=436'
+			);
+			return false;
+		});
+		
+		// wikipedia data call
+		$("article#wikipedia").hide();
+		if(wikipediaAuthor != 'null'){
+			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)'); // TEST !!!
+			$.ajax({
+				type: "GET",
+				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor,
+				dataType: "jsonp",
+				success: function(data){
+					if(data.query.pages[-1])
+						return;
+					for(var key in data.query.pages){
+						var wikiData = data.query.pages[key];
+						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
+					}
+					$("article#wikipedia").show();
+				},
+				error: function(){
+				}
+			});
+		}
 		
 		updateScaling();
 	});
 
 	// UPDATE SCALING
 	function updateScaling(){
-		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		//$('#resolution').html('(' + windowWidth + 'x' +windowHeight + ')');
+		var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		
-		// set the current photo size
-		if(originalAuthorPhotoHeight >= windowHeight){
-			var cPicHeight = windowHeight;
-			$("body").css("marginTop","0px");
+		// container width and font size scaling
+		var cPicWidth = Math.floor(windowHeight * originalAuthorPhotoWidth / originalAuthorPhotoHeight);
+		cPicWidth >= windowWidth ? $("#container").width('100%') : $("#container").width(cPicWidth);
+		$('blockquote').css('font-size', (windowHeight * parseInt(originalQuoteFontSize) / originalAuthorPhotoHeight)+'px');
+
+		// lt ie9 fix
+		if($('#container #bg').css('display') != 'none'){
+			$('#container #bg').height(windowHeight);
+			cPicWidth >= windowWidth ? $('#container #bg').css({left: '0px'}) : $('#container #bg').css({left: ((windowWidth-cPicWidth)/2)+'px'});
 		}
-		else{
-			var cPicHeight = originalAuthorPhotoHeight;
-			$("body").css("marginTop",Math.floor((windowHeight-cPicHeight)/2)+"px");
-		}
-		var ratio = cPicHeight / originalAuthorPhotoHeight;
-		var cPicWidth = Math.floor(ratio * originalAuthorPhotoWidth);
-		
-		// ie9< fix
-		$('#container #bg').height(cPicHeight);
-		windowWidth < cPicWidth ? $('#container #bg').css({left: ((windowWidth-cPicWidth)/2)+'px'}) : $('#container #bg').css({left: '0px'});
-			
-		// container scaling
-		$("#container").height(cPicHeight);
-		if(cPicWidth>windowWidth)
-			$("#container").width(windowWidth-2*parseInt($("#container").css("border-left-width"),10)); // substracting the container border size
-		else
-			$("#container").width(cPicWidth);
-				
-		// quote txt scaling
-		$('blockquote').css('font-size', parseInt(originalBlockFontSize)*ratio+'px');
-		$('blockquote p').css('text-indent', parseInt(originalBlockFontSize)*ratio*-0.6+'px');
 	}
 
 	// MENU TOGGLING
+	var lastMenu = "";
 	function openMenu(event){
 		var currentMenu = event.target.id.replace(/\b-.+/,"-content");
 		
@@ -263,6 +287,8 @@
 
 <body>
 <div id="fb-root"></div>
+
+<!-- fb like stuff -->
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -274,13 +300,13 @@
 	<div id="container">
 		<img id="bg" src="{{authorPhotoPath}}" />
 		<header class="bar">
-			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a><span id="resolution"></span></h1>
+			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a></h1>
 			<h2>your daily inspirational fix</h2>
 		</header>
 		
 		<blockquote>
 			<p>&#8220;{{quoteText}}&#8221;</p>
-			<footer>&mdash; {{authorName}}</footer>
+			<footer id="{{authorWikipediaRef}}">&mdash; {{authorName}}</footer>
 		</blockquote>
 		
 		<footer class="bar">
