@@ -14,7 +14,7 @@ module.exports = {
 		author = new Author();
 		
 		if(aQuote)
-			quote = aQuote;
+			quote.setData(aQuote.getObjectData());
 		else
 			quote.set404Quote();
 
@@ -24,14 +24,21 @@ module.exports = {
 		}
 		else{
 			DB.getItem('authors',{authorID: quote.authorID}, function(item){
-				if(item)
+				if(item){
 					author.setData(item);
-				else{
-					quote.setNoAuthorQuote();
-					author.setError(quote.errorType);
+					buildQuotePage(callback);
 				}
-
-				buildQuotePage(callback);
+				else{
+					DB.isOn(function(status){
+						if(status)
+							quote.setNoAuthorQuote();
+						else
+							quote.set404Quote();
+						
+						author.setError(quote.errorType);
+						buildQuotePage(callback);
+					});
+				}
 			});
 		}
 	},

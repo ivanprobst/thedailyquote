@@ -3,13 +3,10 @@ thequotetribune
 
 tobd
 * analytics check, if ko, fallback on this: https://npmjs.org/package/universal-analytics
-* get everything up and running on instance reboot
-* run through ok if DB fails? Use cases when quote/author missing
 * fix wiki
 * ...
 * check TEST and ??? tags
 * CLEAN AND REFILL THAT DB
-* clean facebook url when error page
 
 tobf
 * create better template (separate in different parts to build the page)
@@ -17,6 +14,7 @@ tobf
 * clean data setting in quote and author
 * monitor facebook access token
 * db replications / backups
+* autostart forever on server reboot
 * nginx gzip, caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 

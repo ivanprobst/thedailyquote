@@ -19,6 +19,8 @@ function Quote (options){
         if(options.quotesomeUrl) this.quotesomeUrl = options.quotesomeUrl;
         if(options.pubDate) this.pubDate = options.pubDate;
         if(options.fontSize) this.fontSize = options.fontSize;
+        if(options.errorType) this.errorType = options.errorType;
+        if(options.template) this.template = options.template;
     }
 
     // return data on object form
@@ -36,6 +38,10 @@ function Quote (options){
     		jsonized.pubDate = this.pubDate;
     	if(this.fontSize && this.fontSize != '')
     		jsonized.fontSize = this.fontSize;
+        if(this.errorType && this.errorType != '')
+            jsonized.errorType = this.errorType;
+        if(this.template && this.template != '')
+            jsonized.template = this.template;
 
     	return jsonized;
     }

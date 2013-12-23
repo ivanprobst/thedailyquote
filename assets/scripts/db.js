@@ -2,7 +2,7 @@ var	mongo = require('mongodb').MongoClient,
 	ObjectID = require('mongodb').ObjectID;
 
 module.exports = {
-	// 
+	// get all items of a collection
 	getCollectionArray : function(collectionName, callback){
 		if(!collectionName){
 			console.error('!!! no collection name indicated');
@@ -19,7 +19,7 @@ module.exports = {
 			var collection = db.collection(collectionName);
 
 			if(collection){
-				collection.find().toArray(function(err, items) { // warning with big collections (quotes)
+				collection.find().toArray(function(err, items) { // warning with big collections (quotes) ???
 					if (err){
 						console.error('!!! error getting the collection "'+collectionName+'"');
 						callback(null);
@@ -37,7 +37,7 @@ module.exports = {
 			}
 		});
 	},
-	// 
+	// get a single item
 	getItem : function(collectionName, condition, callback){
 		if(!collectionName){
 			console.error('!!! no collection name indicated');
@@ -185,6 +185,17 @@ module.exports = {
 						callback(null);
 				});
 			}
+		});
+	},
+
+	// check if db is reachable
+	isOn : function(callback){
+		connect(function(db){
+			if(db)
+				callback(true);
+			else
+				callback(false);
+			return;
 		});
 	}
 };
