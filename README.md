@@ -3,7 +3,6 @@ thequotetribune
 
 tobd
 * analytics check, if ko, fallback on this: https://npmjs.org/package/universal-analytics
-* fix wiki
 * ...
 * check TEST and ??? tags
 * CLEAN AND REFILL THAT DB

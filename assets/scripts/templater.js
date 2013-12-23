@@ -66,13 +66,13 @@ function buildQuotePage(callback){
 	file.on('error', function(err){console.error('no index file found...');});
 	file.on('end', function(err){
 		
-		console.log('...building a quote page with text: '+quote.text+', from: '+author.name);
+		console.log('...building a quote page with text: '+quote.text+', from: '+author.name+', wiki ref: '+author.wikipediaID);
 		// init quote content
 		parseTemplate('quoteText', quote.text);
 		parseTemplate('authorName', author.name);
 		parseTemplate('quoteQuotesomeUrl', quote.quotesomeUrl);
 		parseTemplate('authorQuotesomeUrl', author.quotesomeUrl);
-		parseTemplate('authorWikipediaRef', author.wikipediaRef);	
+		parseTemplate('authorWikipediaID', author.wikipediaID);
 
 		// photo
 		parseTemplate('authorPhotoPath', author.photoUrl);
@@ -94,9 +94,9 @@ function buildQuotePage(callback){
 
 		// random
 		if(quote.errorType && quote.errorType != '')
-			parseTemplate('directUrl', 'http://thequotetribune.com/quote/'+quote.errorType);
+			parseTemplate('directUrl', 'http://thequotetribune.com/error/'+quote.errorType);
 		else
-			parseTemplate('directUrl', 'http://thequotetribune.com/error/'+('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year);
+			parseTemplate('directUrl', 'http://thequotetribune.com/quote/'+('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year);
 		
 		// fire in the hole!!!
 		console.log('# quote page built');

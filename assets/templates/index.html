@@ -214,8 +214,10 @@
 		
 		// wikipedia data call
 		$("article#wikipedia").hide();
+		console.log('wikiauthor: '+wikipediaAuthor);
 		if(wikipediaAuthor != 'null'){
 			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)'); // TEST !!!
+			console.log('wiki pull: '+'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor);
 			$.ajax({
 				type: "GET",
 				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor,
@@ -317,7 +319,7 @@
 		
 		<blockquote>
 			<p>&#8220;{{quoteText}}&#8221;</p>
-			<footer id="{{authorWikipediaRef}}">&mdash; {{authorName}}</footer>
+			<footer id="{{authorWikipediaID}}">&mdash; {{authorName}}</footer>
 		</blockquote>
 		
 		<footer class="bar">
