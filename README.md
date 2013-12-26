@@ -2,10 +2,10 @@ thequotetribune
 ===============
 
 tobd
-* analytics check, if ko, fallback on this: https://npmjs.org/package/universal-analytics
+* input some quotes for day switch testing
 * ...
-* check TEST and ??? tags
-* CLEAN AND REFILL THAT DB
+* analytics: https://npmjs.org/package/universal-analytics
+* FILL THAT DB
 
 tobf
 * create better template (separate in different parts to build the page)
@@ -15,7 +15,11 @@ tobf
 * db replications / backups
 * autostart forever on server reboot
 * nginx gzip, caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
+* s3 caching?
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
+* does it make sense to redirect to (static) error pages, rather than generate them on the go?
+* DOM for quote and author
+* prevent generation of a large DB array when building schedule (limit quote fetched to the 3 months span)
 
 admin enhanced
 * prevent adding author with existing author_id
@@ -23,17 +27,13 @@ admin enhanced
 * authorID and pubDate duplicate check
 * delete items
 * schedule in red when a quote is there but is missing something (date, etc.)
-* handle schedule duplicates
+* handle schedule duplicates (check when upserting in db, check when fetching schedule)
 
 modules
 * twit: https://github.com/ttezel/twit
 * request: https://github.com/mikeal/request
 * rss: https://github.com/dylang/node-rss
 * mongodb: http://mongodb.github.io/node-mongodb-native/
-(* jquery: https://github.com/coolaj86/node-jquery)
-(* jsdom)
-(* xmlhttprequest)
-(* geoip: https://github.com/bluesmoon/node-geoip)
 
 icons ref
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project

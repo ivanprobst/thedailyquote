@@ -49,7 +49,7 @@ function Quote (options){
     // pre-built quote templates
     this.set404Quote = function(){
 	    this.authorID      = '_err_404';
-	    this.text          = 'Something went wrong. We are mighty angry about it. We go have a look, you stay back here.';
+	    this.text          = 'Something went wrong. We are mighty angry about it. We go have a look, you stay back there.';
 	    this.fontSize      = '48px';
 
   		this._id           = '';

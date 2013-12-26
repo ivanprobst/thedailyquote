@@ -182,7 +182,7 @@
 		var authorName = $('blockquote footer').html().substring(2);
 		var wikipediaAuthor = $('blockquote footer').attr('id');
 		var directUrl = $('#direct-url a').html();
-		originalQuoteFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
+		originalQuoteFontSize = parseInt($('blockquote').css('font-size'));
 		originalAuthorPhotoWidth = parseInt($('#container').css('max-width'));
 		originalAuthorPhotoHeight = parseInt($('#container').css('max-height'));
 	
@@ -195,7 +195,7 @@
 		// tweet button listener
 		$('#twitter-menu-item').click(function(event) {
 			window.open(
-						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':', // TEST !!!
+						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':',
 						'twitter',
 						'width=626,height=436'
 			);
@@ -205,7 +205,7 @@
 		// fb sharer button listener
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),  // TEST !!!
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),
 						'facebook-share-dialog', 
 						'width=626,height=436'
 			);
@@ -216,7 +216,7 @@
 		$("article#wikipedia").hide();
 		console.log('wikiauthor: '+wikipediaAuthor);
 		if(wikipediaAuthor != 'null'){
-			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)'); // TEST !!!
+			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)');
 			console.log('wiki pull: '+'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor);
 			$.ajax({
 				type: "GET",

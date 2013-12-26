@@ -26,11 +26,10 @@ http.createServer(function (request, response) {
 	else if((request.url).match(/\/quote\/[a-f0-9]{24}/)){
 		console.log("...received quote preview request:");
 
-		// ??? add some control!!!
 		var quoteID = new ObjectID(request.url.match(/\/quote\/([a-f0-9]+)/)[1]);
 		console.log(quoteID);
 
-		// update today's quote
+		// generate preview quote
 		DB.getItem('quotes', {_id: quoteID}, function(item){
 			var quotePreview = new Quote(item);
 			if(!item)
@@ -98,7 +97,7 @@ http.createServer(function (request, response) {
 						if(schedule[year]){
 							jsonLevel1 = schedule[year];
 							if(jsonLevel1[month]){
-								((schedule[year])[month])[day] = item._id; // for now simple override, but implement dup check later ???
+								((schedule[year])[month])[day] = item._id;
 							}
 							else{
 								jsonLevel2[day] = item._id;
@@ -117,9 +116,9 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
-	// serve author request
+	// serve authors request
 	else if(request.url.match(/\/admin-get-authors/)){
-		console.log('...received authors request:');
+		console.log('...received authors list request:');
 		var sentData = ''; 
 
 		request.on('data', function(data){

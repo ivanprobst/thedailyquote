@@ -21,9 +21,22 @@
 	}
 	
 	header{
-		margin-bottom: 30px;
+		margin-bottom: 20px;
 		font-size: 1.2em;
 	}
+		header h2{
+			padding: 10px;
+			font-size: 0.8em;
+		}
+			header h2.default{
+				background: #ccc;
+			}
+			header h2.error{
+				background: #c06363;
+			}
+			header h2.success{
+				background: #17A768;
+			}
 
 	#author-admin{
 		display: none;
@@ -69,7 +82,7 @@
 		#authors-data th, #authors-data td{padding: 4px;}
 	
 	#schedule{}
-		#schedule .year{overflow: hidden; display: block;}
+		#schedule .year{overflow: hidden; display: block; float: left;}
 		#schedule .month{overflow: hidden; display: block; float: left; width: 300px; margin-right: 40px;}
 		#schedule .month div{display: block; float: left; padding: 5px; width: 30px; height: 30px;}
 		#schedule .month div p{padding: 6px 4px; text-align: center;}
@@ -179,6 +192,12 @@
 		$('#schedule p.quote').css({'border':'none'});
 	}
 
+	function setAlert(type, message){
+		$('#alert').removeClass();
+		$('#alert').addClass(type);
+		$('#alert').html(message);
+	}
+
 	// add quote to DB
 	function addQuote(){
 		console.log("posting new quote to server...");
@@ -226,7 +245,8 @@
 			console.log('got quote data back from node:');
 			console.log(data);
 
-			if(!data) return; // add feedback message ???
+			if(!data) {setAlert('error','no quote returned'); return;}
+			setAlert('success','quote retrieved');
 			$('#add-quote input, #add-quote textarea').val('');
 			$('#add-quote input[type="submit"]').val('update quote');
 			$.each($.parseJSON(data), function(key, value){
@@ -377,9 +397,9 @@
 			$('#schedule').empty();
 			var json = $.parseJSON(data);
 			var now = new Date();
-			var endDate = new Date(now.getFullYear(), now.getMonth()+2, 1);
+			var endDate = new Date(now.getFullYear(), now.getMonth()+3, 1);
 			
-			// display these 3 months
+			// display these 4 months
 			for(var startDate = new Date(now.getFullYear(), now.getMonth()-1, 1); startDate < endDate; startDate.setDate(startDate.getDate()+1)){
 				var year = startDate.getFullYear();
 				var month = startDate.getMonth();
@@ -414,9 +434,10 @@
 				data = data.contents.replace(/<script[^>]*>[sS]*?<\/script>/gi, '');
 				if (data.length > 0){
 					$('#author').val($('.row .author', data).html());
-					$('#author-id').val((($('.author', data).html()).toLowerCase()).replace(/ /g,'_'));
-					$('#quote-url').val(url);
+					$('#q-authorID').val((($('.author', data).html()).toLowerCase()).replace(/ /g,'_'));
+					$('#quote-quotesome').val(url);
 					$('#quote-text').val($('.quote-block-quote-text', data).html());
+					checkAuthorID($('#q-authorID').val());
 					var now = new Date();
 					if(!freeDaySet)
 						$('#pubdate').val(now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+(now.getDate())).slice(-2));
@@ -476,6 +497,7 @@
 	<div id="container">
 		<header>
 			<h1>ADMIN (<a id="admin-switch" href="#">switch admin panel</a>)</h1>
+			<h2 id="alert" class="default">loaded</h2>
 		</header>
 		
 		<div id="quote-admin">

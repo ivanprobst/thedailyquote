@@ -19,7 +19,7 @@ module.exports = {
 			var collection = db.collection(collectionName);
 
 			if(collection){
-				collection.find().toArray(function(err, items) { // warning with big collections (quotes) ???
+				collection.find().toArray(function(err, items) {
 					if (err){
 						console.error('!!! error getting the collection "'+collectionName+'"');
 						callback(null);
@@ -204,7 +204,7 @@ module.exports = {
 function connect(callback){
 	mongo.connect("mongodb://localhost:27017/thequotetribune", function(err, db) {
 		if (err){
-			console.error('!!! no db found...');
+			console.error('!!! no db found');
 			callback(null);
 			return;
 		}

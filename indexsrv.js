@@ -42,7 +42,6 @@ http.createServer(function (request, response) {
 	// if quote preview asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]/)){
 		console.log('...processing preview request:');
-		// add some control ???
 		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
 		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
 		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);
@@ -67,7 +66,6 @@ http.createServer(function (request, response) {
 	else if(!(request.url.match(/\.[0-9a-z]+$/)) || request.url.match(/\.[0-9a-z]+$/) == ''){
 		console.log('...processing unknown page request');
 
-		// error page for now, but maybe redirection to home ???
 		templater.getQuotePage(null, function(htmlpage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
 			response.write(htmlpage);
@@ -95,8 +93,13 @@ http.createServer(function (request, response) {
 	// log when can't stream the file
 	file.on('error',function(err){
 		console.error('!!! ERR (file asked to server doesn\'t exist): '+err);
-		// set header to 404 + send error something ???
-		response.end();
+		
+		// return 404 page
+		templater.getQuotePage(null, function(htmlpage){
+			response.writeHead(404, {'Content-Type': 'text/html'});
+			response.write(htmlpage);
+			response.end();
+		});
 	});
 }).listen(8124);
 

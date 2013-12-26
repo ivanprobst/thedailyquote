@@ -98,7 +98,7 @@ function buildQuotePage(callback){
 		else
 			parseTemplate('directUrl', 'http://thequotetribune.com/quote/'+('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year);
 		
-		// fire in the hole!!!
+		// fire in the hole!
 		console.log('# quote page built');
 		callback(htmlPage);
 	});

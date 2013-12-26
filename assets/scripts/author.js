@@ -2,14 +2,14 @@ function Author (options){
 	options = options || {};
 
 	// data var init
-    this._id			= options._id || ''; // ???
+    this._id			= options._id || '';
     this.authorID		= options.authorID || '';
     this.name			= options.name || '';
     this.quotesomeUrl	= options.quotesomeUrl || '';
     this.wikipediaID	= options.wikipediaID || '';
 
 	// design var init
-    this.photoUrl				= options.photoUrl || ''; // fallback photo???
+    this.photoUrl				= options.photoUrl || 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_tooearly.jpg';
     this.photoWidth				= options.photoWidth || 0;
     this.photoHeight			= options.photoHeight || 0;
     this.photoSlideDirection	= options.photoSlideDirection || 'center';
