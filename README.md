@@ -2,8 +2,7 @@ thequotetribune
 ===============
 
 tobd
-* input some quotes for day switch testing
-* ...
+* make top and bottom bars to autohide
 * analytics: https://npmjs.org/package/universal-analytics
 * FILL THAT DB
 
@@ -22,6 +21,8 @@ tobf
 * prevent generation of a large DB array when building schedule (limit quote fetched to the 3 months span)
 
 admin enhanced
+* fix auto-dater when fetching quote from quotesome
+* auto reload id when adding a quote / author
 * prevent adding author with existing author_id
 * quote/author update/creation feedback on browser
 * authorID and pubDate duplicate check
