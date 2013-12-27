@@ -2,8 +2,8 @@ thequotetribune
 ===============
 
 tobd
-* make top and bottom bars to autohide
 * analytics: https://npmjs.org/package/universal-analytics
+* ...
 * FILL THAT DB
 
 tobf

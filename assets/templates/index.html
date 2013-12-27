@@ -60,19 +60,29 @@
 		display: block;
 		width: 100%;
 		background: #fff;
-
 		opacity: 0.9;
-		transition: opacity .25s ease-in-out;
-		-moz-transition: opacity .25s ease-in-out;
-		-webkit-transition: opacity .25s ease-in-out;
 	}
 	
 	#container>header{
-		top: 0;
 		border-bottom: 1px solid #555;
 		text-align: center;
 		box-shadow: 0px 3px 10px #555;
+
+		top: -85px;
+		-o-transition:1s;
+		-ms-transition:1s;
+		-moz-transition:1s;
+		-webkit-transition:1s;
+		transition:1s;
 	}
+		#container:hover>header{
+			top: 0px;
+			-o-transition:1s;
+			-ms-transition:1s;
+			-moz-transition:1s;
+			-webkit-transition:1s;
+			transition:1s;
+		}
 		header h1{
 			padding-top: 15px;
 			font-size: 2em;
@@ -102,9 +112,23 @@
 		blockquote footer{margin-top: 10px;}
 		
 	#container>footer{
-		bottom: 0;
 		border-top: 1px solid #555;
+
+		bottom: -69px;
+		-o-transition:1s;
+		-ms-transition:1s;
+		-moz-transition:1s;
+		-webkit-transition:1s;
+		transition:1s;
 	}
+		#container:hover>footer{
+			bottom: 0px;
+			-o-transition:1s;
+			-ms-transition:1s;
+			-moz-transition:1s;
+			-webkit-transition:1s;
+			transition:1s;
+		}
 		footer nav{
 			overflow: hidden;
 			margin: 0 auto;
@@ -281,6 +305,8 @@
 	$(document).ready(function(){
 		$('#container #bg').show();
 		$('#fb-link').hide();
+		$('#container>header').css({'top':'0px'});
+		$('#container>footer').css({'bottom':'0px'});
 	});
 </script>
 <![endif]-->
