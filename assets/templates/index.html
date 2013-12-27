@@ -37,6 +37,8 @@
 	a{color: #242323;}
 		a:hover{}
 	ul{list-style-type: none;}
+	.fixedbottom {bottom: 0px !important;}
+	.fixedtop {top: 0px !important;}
 
 	#container{
 		position: relative;
@@ -288,11 +290,15 @@
 		if(lastMenu != "") {
 			$("#"+lastMenu.replace(/\b-.+/,"-menu-item")).removeClass("active"); // disable menu icon
 			$("footer section#"+lastMenu).slideToggle(1000);
+			$("#container>footer").removeClass('fixedbottom');
+			$("#container>header").removeClass('fixedtop');
 		}
 		
 		if(currentMenu != lastMenu) {
 			$("#"+event.target.id).addClass("active"); // enable menu icon
 			$("footer section#"+currentMenu).slideToggle(1000);
+			$("#container>footer").addClass('fixedbottom');
+			$("#container>header").addClass('fixedtop');
 			lastMenu = currentMenu;
 		}
 		else

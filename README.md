@@ -2,8 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* analytics: https://npmjs.org/package/universal-analytics
-* ...
 * FILL THAT DB
 
 tobf
