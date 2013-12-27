@@ -12,7 +12,7 @@ function Author (options){
     this.photoUrl				= options.photoUrl || 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_tooearly.jpg';
     this.photoWidth				= options.photoWidth || 0;
     this.photoHeight			= options.photoHeight || 0;
-    this.photoSlideDirection	= options.photoSlideDirection || 'center';
+    this.quoteDirectionSlide	= options.quoteDirectionSlide || 'center';
     this.barsBackgroundColor	= options.barsBackgroundColor || '#fff';
     this.quoteFontColor			= options.quoteFontColor || '#000';
     this.quoteWidth				= options.quoteWidth || '35%';
@@ -36,7 +36,7 @@ function Author (options){
 		if(options.photoUrl) this.photoUrl = options.photoUrl;
 		if(options.photoWidth) this.photoWidth = options.photoWidth;
 		if(options.photoHeight) this.photoHeight = options.photoHeight;
-		if(options.photoSlideDirection) this.photoSlideDirection = options.photoSlideDirection;
+		if(options.quoteDirectionSlide) this.quoteDirectionSlide = options.quoteDirectionSlide;
 		if(options.barsBackgroundColor) this.barsBackgroundColor = options.barsBackgroundColor;
 		if(options.quoteFontColor) this.quoteFontColor = options.quoteFontColor;
 		if(options.quoteWidth) this.quoteWidth = options.quoteWidth;
@@ -66,8 +66,8 @@ function Author (options){
     		jsonized.photoWidth = this.photoWidth;
     	if(this.photoHeight && this.photoHeight != '')
     		jsonized.photoHeight = this.photoHeight;
-    	if(this.photoSlideDirection && this.photoSlideDirection != '')
-    		jsonized.photoSlideDirection = this.photoSlideDirection;
+    	if(this.quoteDirectionSlide && this.quoteDirectionSlide != '')
+    		jsonized.quoteDirectionSlide = this.quoteDirectionSlide;
     	if(this.barsBackgroundColor && this.barsBackgroundColor != '')
     		jsonized.barsBackgroundColor = this.barsBackgroundColor;
     	if(this.quoteFontColor && this.quoteFontColor != '')
@@ -101,7 +101,7 @@ function Author (options){
                 this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_404.jpg';
                 this.photoWidth             = 3100;
                 this.photoHeight            = 1408;
-                this.photoSlideDirection    = 'center';
+                this.quoteDirectionSlide    = 'center';
                 this.barsBackgroundColor    = '#fff';
                 this.quoteFontColor         = '#fff';
                 this.quoteWidth             = '30%';
@@ -122,7 +122,7 @@ function Author (options){
                 this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_noauthor.jpg';
                 this.photoWidth             = 3100;
                 this.photoHeight            = 1400;
-                this.photoSlideDirection    = 'center';
+                this.quoteDirectionSlide    = 'center';
                 this.barsBackgroundColor    = '#fff';
                 this.quoteFontColor         = '#fff';
                 this.quoteWidth             = '35%';
@@ -143,7 +143,7 @@ function Author (options){
                 this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_noquote.jpg';
                 this.photoWidth             = 2100;
                 this.photoHeight            = 1100;
-                this.photoSlideDirection    = 'center';
+                this.quoteDirectionSlide    = 'center';
                 this.barsBackgroundColor    = '#fff';
                 this.quoteFontColor         = '#fff';
                 this.quoteWidth             = '35%';
@@ -164,7 +164,7 @@ function Author (options){
                 this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_unpublished.jpg';
                 this.photoWidth             = 2560;
                 this.photoHeight            = 1195;
-                this.photoSlideDirection    = 'center';
+                this.quoteDirectionSlide    = 'center';
                 this.barsBackgroundColor    = '#fff';
                 this.quoteFontColor         = '#fff';
                 this.quoteWidth             = '35%';
@@ -185,7 +185,7 @@ function Author (options){
                 this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_tooearly.jpg';
                 this.photoWidth             = 2560;
                 this.photoHeight            = 1195;
-                this.photoSlideDirection    = 'center';
+                this.quoteDirectionSlide    = 'center';
                 this.barsBackgroundColor    = '#fff';
                 this.quoteFontColor         = '#fff';
                 this.quoteWidth             = '35%';
@@ -206,7 +206,7 @@ function Author (options){
                 this.photoUrl               = 'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_404.jpg';
                 this.photoWidth             = 3100;
                 this.photoHeight            = 1408;
-                this.photoSlideDirection    = 'center';
+                this.quoteDirectionSlide    = 'center';
                 this.barsBackgroundColor    = '#fff';
                 this.quoteFontColor         = '#fff';
                 this.quoteWidth             = '30%';

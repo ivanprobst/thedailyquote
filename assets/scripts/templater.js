@@ -79,7 +79,7 @@ function buildQuotePage(callback){
 		parseTemplate('authorThumbPath', (author.photoUrl).replace(/\.[0-9a-z]+$/,'_thumb.jpg'));
 		parseTemplate('authorPhotoWidth', author.photoWidth);
 		parseTemplate('authorPhotoHeight', author.photoHeight);
-		parseTemplate('authorDirectionSlide', author.photoSlideDirection);
+		parseTemplate('quoteDirectionSlide', author.quoteDirectionSlide);
 
 		// init quote styling
 		parseTemplate('authorBarsColor', author.barsBackgroundColor);
