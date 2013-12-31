@@ -2,7 +2,7 @@ thequotetribune
 ===============
 
 tobd
-* FILL THAT DB
+* ...
 
 tobf
 * create better template (separate in different parts to build the page)
