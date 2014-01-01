@@ -51,7 +51,13 @@ http.createServer(function (request, response) {
 	// if home page asked, serve home page...
 	if(request.url == '/'){
 		console.log('...processing index page request');
-		templater.getQuotePage(todayQuote, function(htmlPage){
+
+		var tmpQuote = new Quote();
+		tmpQuote.setData(todayQuote.getObjectData());
+		if($.Mobile)
+			tmpQuote.template = 'assets/templates/mobile.html';
+
+		templater.getQuotePage(tmpQuote, function(htmlPage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
 			response.write(htmlPage);
 			response.end();
