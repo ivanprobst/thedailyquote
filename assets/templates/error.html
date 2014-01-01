@@ -20,7 +20,7 @@
 	<meta property="fb:admins" content="541693035" />
 	<meta property="fb:app_id" content="135996736500002" /> 
 	<meta property="og:url" content="{{directUrl}}">
-	<meta property="og:title" content="Words from {{authorName}}">
+	<meta property="og:title" content="Error">
 	<meta property="og:description" content="&#8220;{{quoteText}}&#8221;" />
 	<meta property="og:type" content="website">
 	<meta property="og:image" content="{{authorThumbPath}}">
@@ -37,6 +37,8 @@
 	a{color: #242323;}
 		a:hover{}
 	ul{list-style-type: none;}
+	.fixedbottom {bottom: 0px !important;}
+	.fixedtop {top: 0px !important;}
 
 	#container{
 		position: relative;
@@ -47,7 +49,7 @@
 		
 		background-image: url('{{authorPhotoPath}}');
 		max-width: {{authorPhotoWidth}}px; max-height: {{authorPhotoHeight}}px;
-		background-position-x: {{authorDirectionSlide}}; background-position-y: center;
+		background-position-x: {{quoteDirectionSlide}}; background-position-y: center;
 	}
 		#container img#bg{
 			display: none;
@@ -60,19 +62,29 @@
 		display: block;
 		width: 100%;
 		background: #fff;
-
 		opacity: 0.9;
-		transition: opacity .25s ease-in-out;
-		-moz-transition: opacity .25s ease-in-out;
-		-webkit-transition: opacity .25s ease-in-out;
 	}
 	
 	#container>header{
-		top: 0;
 		border-bottom: 1px solid #555;
 		text-align: center;
 		box-shadow: 0px 3px 10px #555;
+
+		top: -85px;
+		-o-transition:1s;
+		-ms-transition:1s;
+		-moz-transition:1s;
+		-webkit-transition:1s;
+		transition:1s;
 	}
+		#container:hover>header{
+			top: 0px;
+			-o-transition:1s;
+			-ms-transition:1s;
+			-moz-transition:1s;
+			-webkit-transition:1s;
+			transition:1s;
+		}
 		header h1{
 			padding-top: 15px;
 			font-size: 2em;
@@ -89,7 +101,7 @@
 		position: absolute;
 		margin-top: 100px; margin-bottom: 80px; /* set to current header and footer height, might change */
 		padding: 0.6% 0.3% 0.6% 2%;
-		line-height: 1.4em;
+		line-height: 1.3em;
 		opacity: 0.7;
 		
 		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
@@ -102,9 +114,23 @@
 		blockquote footer{margin-top: 10px;}
 		
 	#container>footer{
-		bottom: 0;
 		border-top: 1px solid #555;
+
+		bottom: -69px;
+		-o-transition:1s;
+		-ms-transition:1s;
+		-moz-transition:1s;
+		-webkit-transition:1s;
+		transition:1s;
 	}
+		#container:hover>footer{
+			bottom: 0px;
+			-o-transition:1s;
+			-ms-transition:1s;
+			-moz-transition:1s;
+			-webkit-transition:1s;
+			transition:1s;
+		}
 		footer nav{
 			overflow: hidden;
 			margin: 0 auto;
@@ -126,32 +152,31 @@
 				#twitter-menu-item{background-position: -302px -6px;}
 				#facebook-menu-item{background-position: -380px -7px;}
 				#quotedetails-menu-item{background-position: 5px -7px;}
-				#register-menu-item{position: absolute; top: 10px; right: 70px; background-position: -150px -7px;}
-				#about-menu-item{position: absolute; top: 10px; right: 10px; background-position: -446px -7px;}
+				#about-menu-item{position: absolute; top: 10px; right: 70px; background-position: -150px -7px;}
+				#register-menu-item{position: absolute; top: 10px; right: 10px; background-position: -446px -7px;}
 				#home-menu-item{background: none; width: 360px; text-align: center; text-decoration: none; font-size: 3em; line-height: 1.4em;}
 
 		footer section{
 			display: none;
-			padding: 20px 0;
+			padding: 20px 0 10px 0;
 			border-top: 1px solid #ddd;
 			background: #fff;
 			text-align: justify;
 			line-height: 1.4em;
-			max-height: 400px;
+			max-height: 500px;
 		}
 			footer section article{margin: 0 auto 15px auto; width: 650px;}
 			footer section h3{text-align: center; font-size: 2em; margin-bottom: 20px;}
-			footer section h4{margin: 5px 0 10px 0;}
+			footer section h4{clear: both; margin: 5px 0 10px 0;}
 			footer section p{margin-bottom: 10px;}
 			footer section q{font-style: italic;}
-			footer section em{color: #666;}
+			footer section em{color: #ccc;}
+				footer section em a{color: #999;}
 			
 			footer section#quotedetails-content{}
 				
 			footer section#register-content{}
-				footer section#register-content ul{
-					overflow: hidden;
-				}
+				footer section#register-content ul{margin-bottom: 50px;}
 					footer section#register-content li{
 						line-height: 2.5em;
 						clear: both;
@@ -179,10 +204,10 @@
 	$(document).ready(function(){
 	
 		// couple of var init
-		var authorName = $('blockquote footer').html().slice(-2);
+		var authorName = $('blockquote footer').html().substring(2);
 		var wikipediaAuthor = $('blockquote footer').attr('id');
 		var directUrl = $('#direct-url a').html();
-		originalQuoteFontSize = parseInt($('blockquote').css('font-size')); // TEST !!!
+		originalQuoteFontSize = parseInt($('blockquote').css('font-size'));
 		originalAuthorPhotoWidth = parseInt($('#container').css('max-width'));
 		originalAuthorPhotoHeight = parseInt($('#container').css('max-height'));
 	
@@ -195,7 +220,7 @@
 		// tweet button listener
 		$('#twitter-menu-item').click(function(event) {
 			window.open(
-						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':', // TEST !!!
+						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':',
 						'twitter',
 						'width=626,height=436'
 			);
@@ -205,7 +230,7 @@
 		// fb sharer button listener
 		$('#facebook-menu-item').click(function(event) {
 			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),  // TEST !!!
+						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),
 						'facebook-share-dialog', 
 						'width=626,height=436'
 			);
@@ -215,7 +240,7 @@
 		// wikipedia data call
 		$("article#wikipedia").hide();
 		if(wikipediaAuthor != 'null'){
-			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)'); // TEST !!!
+			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)');
 			$.ajax({
 				type: "GET",
 				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor,
@@ -262,11 +287,15 @@
 		if(lastMenu != "") {
 			$("#"+lastMenu.replace(/\b-.+/,"-menu-item")).removeClass("active"); // disable menu icon
 			$("footer section#"+lastMenu).slideToggle(1000);
+			$("#container>footer").removeClass('fixedbottom');
+			$("#container>header").removeClass('fixedtop');
 		}
 		
 		if(currentMenu != lastMenu) {
 			$("#"+event.target.id).addClass("active"); // enable menu icon
 			$("footer section#"+currentMenu).slideToggle(1000);
+			$("#container>footer").addClass('fixedbottom');
+			$("#container>header").addClass('fixedtop');
 			lastMenu = currentMenu;
 		}
 		else
@@ -279,10 +308,22 @@
 	$(document).ready(function(){
 		$('#container #bg').show();
 		$('#fb-link').hide();
+		$('#container>header').css({'top':'0px'});
+		$('#container>footer').css({'bottom':'0px'});
 	});
 </script>
 <![endif]-->
 
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46593993-1', 'thequotetribune.com');
+  ga('send', 'pageview');
+
+</script>
 </head>
 
 <body>
@@ -314,22 +355,21 @@
 				<a href="/" id="home-menu-item">BACK HOME</a>
 
 				<a href="#" id="register-menu-item" class="modal" alt="About"></a>
-				<a href="#" id="about-menu-item" class="modal" alt="About"></a>
 			</nav>
 			
 			<section id="register-content">
 				<h3>GET THE WORDS, WRITE SOME</h3>
 				<article>
-					<h4>Want to stay fresh and up to date?</h4>
+					<h4>Want to stay up to date?</h4>
 					<ul>
+						<li id="fb-link">
+							<div class="tleft"><div class="fb-like" data-href="https://www.facebook.com/thequotetribune" data-width="60" data-height="20" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="false" data-send="false"></div></div>
+							<div class="tright">Like us very very much (with rainbows and butterflies)</div>
+						</li>
 						<li>
 							<div class="tleft"><a href="https://twitter.com/thequotetribune" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @thequotetribune</a>
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></div>
-							<div class="tright">Follow us to infinity (might even be beyond)</div>
-						</li>
-						<li id="fb-link">
-							<div class="tleft"><div class="fb-like" data-href="https://www.facebook.com/thequotetribune" data-width="60" data-height="20" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="false" data-send="false"></div></div>
-							<div class="tright">Like us very very much (with love and butterflies)</div>
+							<div class="tright">Follow us to infinity (beyond is even better)</div>
 						</li>
 						<li id="rss-link">
 							<div class="tleft"><a href="http://feeds.feedburner.com/TheQuoteTribune" target="_blank"></a></div>
@@ -338,22 +378,13 @@
 					</ul>
 				</article>
 				<article>
-					<h4>Anything to share?</h4>
-					<p>We promise we will listen: <a href="mailto:sayhi@thequotetribune.com">sayhi@thequotetribune.com</a></p>
-				</article>
-			</section>
-			
-			<section id="about-content">
-				<h3>WHAT IS THE QUOTE TRIBUNE</h3>
-				<article>
-					<h4>Everyday we give you a new awesome quote with that crazy one's handsome photo.</h4>
-					<p>Some Latin chap once said <q>"Acta Non Verba"</q>, meaning <q>"Actions, not words"</q>. Thoughtful and true.</p>
-					<p>But the thing is, words are powerful, and have always been inspirational for the most beautiful minds history has seen.</p>
-					<p>So we believe quotes of the greatest must be heard and shared. And for us, attaching the author's photo to the words makes it even more powerful. It's a visual gong inside your brain.</p>
-					<p>So that's what we do. Simply.</p>
+					<h4>What is The Quote Tribune?</h4>
+					<p>Everyday you can find here a new awesome quote with its crazy author's photo.</p>
+					<p>Some Latin guy once said <q>"Acta Non Verba"</q>, meaning <q>"Actions, not words"</q>. Thoughtful and true.</p>
+					<p>But the thing is, words are powerful, and have always been inspirational for the most beautiful minds in history. Quotes of the greatest must be heard and shared. And in order to make it even more powerful, we decided to add a mighty handsome photo of the author. Simply.</p>
 				</article>
 				<article>
-					<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a>, quotes curated by <a href="https://www.quotesome.com/" target="_blank">Quotesome</a></em></p>
+					<p><em>created by <a href="http://ivanprobst.com" target="_blank">Ivan Probst</a>. Something to say? <a href="mailto:sayhi@thequotetribune.com">sayhi@thequotetribune.com</a></em></p>
 				</article>
 			</section>
 		</footer>
