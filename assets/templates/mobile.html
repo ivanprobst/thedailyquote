@@ -6,7 +6,7 @@
 	<link rel="shortcut icon" href="favicon.ico" /> 
 	<link rel="alternate" type="application/rss+xml" title="The Quote Tribune" href="/rss.xml" />
 	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab' rel='stylesheet' type='text/css'>
-	<script src="https://s3-eu-west-1.amazonaws.com/thequotetribune/scripts/jquery.min.js"></script>
+	<!--<script src="https://s3-eu-west-1.amazonaws.com/thequotetribune/scripts/jquery.min.js"></script>-->
 
 	<!--[if lt IE 8]>
 	<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js"></script>
@@ -37,162 +37,32 @@
 	a{color: #242323;}
 		a:hover{}
 	ul{list-style-type: none;}
-	.fixedbottom {bottom: 0px !important;}
-	.fixedtop {top: 0px !important;}
 
 	#container{
 		position: relative;
-		height: 100%;
-		margin: 0 auto;
+		height: 100%; width: 100%;
+	}
+
+	header{
+		height: 66%; width: 100%;
 		background-repeat: no-repeat;
 		background-size: auto 100%;
-		
 		background-image: url('{{authorPhotoPath}}');
-		max-width: {{authorPhotoWidth}}px; max-height: {{authorPhotoHeight}}px;
 		background-position-x: {{quoteDirectionSlide}}; background-position-y: center;
 	}
-		#container img#bg{
-			display: none;
-			position: absolute;
-			top: 0px; left: 0px;
-		}
-	
-	.bar{
-		position: absolute;
-		display: block;
-		width: 100%;
-		background: #fff;
-		opacity: 0.9;
-	}
-	
-	#container>header{
-		border-bottom: 1px solid #555;
-		text-align: center;
-		box-shadow: 0px 3px 10px #555;
 
-		top: -85px;
-		-o-transition:1s;
-		-ms-transition:1s;
-		-moz-transition:1s;
-		-webkit-transition:1s;
-		transition:1s;
-	}
-		#container:hover>header{
-			top: 0px;
-			-o-transition:1s;
-			-ms-transition:1s;
-			-moz-transition:1s;
-			-webkit-transition:1s;
-			transition:1s;
-		}
-		header h1{
-			padding-top: 15px;
-			font-size: 2em;
-			opacity: 0.9;
-		}
-			header h1 a{text-decoration: none;}
-		header h2{
-			padding: 15px 0;
-			font-size: 1.2em;
-			opacity: 0.7;
-		}
-	
 	blockquote{
-		position: absolute;
-		margin-top: 100px; margin-bottom: 80px; /* set to current header and footer height, might change */
 		padding: 0.6% 0.3% 0.6% 2%;
 		line-height: 1.3em;
 		opacity: 0.7;
-		
-		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
-		max-width: {{authorBlockWidth}};
-		color: {{authorBlockFontColor}};
+		height: 34%; width: 100%;
+		color: #fff;
+		background: #000;
 		font-size: {{quoteBlockFontSize}};
-		background: {{authorBlockBackgroundColor}};
 	}	
 		blockquote p{text-indent: -3%;}
 		blockquote footer{margin-top: 10px;}
-		
-	#container>footer{
-		border-top: 1px solid #555;
-
-		bottom: -69px;
-		-o-transition:1s;
-		-ms-transition:1s;
-		-moz-transition:1s;
-		-webkit-transition:1s;
-		transition:1s;
-	}
-		#container:hover>footer{
-			bottom: 0px;
-			-o-transition:1s;
-			-ms-transition:1s;
-			-moz-transition:1s;
-			-webkit-transition:1s;
-			transition:1s;
-		}
-		footer nav{
-			overflow: hidden;
-			margin: 0 auto;
-			padding: 10px 0;
-			width: 240px;
-		}
-			footer nav a{
-				float: left; display: block;
-				width: 80px; height: 60px;
-				background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat;
-				
-				opacity: 0.2;
-				transition: opacity .5s ease-in-out;
-				-moz-transition: opacity .5s ease-in-out;
-				-webkit-transition: opacity .5s ease-in-out;
-			}
-				footer nav a:hover, footer nav a.active{opacity: 0.8;}
-
-				#twitter-menu-item{background-position: -302px -6px;}
-				#facebook-menu-item{background-position: -380px -7px;}
-				#quotedetails-menu-item{background-position: 5px -7px;}
-				#about-menu-item{position: absolute; top: 10px; right: 70px; background-position: -150px -7px;}
-				#register-menu-item{position: absolute; top: 10px; right: 10px; background-position: -446px -7px;}
-				#home-menu-item{background: none; width: 360px; text-align: center; text-decoration: none; font-size: 3em; line-height: 1.4em;}
-
-		footer section{
-			display: none;
-			padding: 20px 0 10px 0;
-			border-top: 1px solid #ddd;
-			background: #fff;
-			text-align: justify;
-			line-height: 1.4em;
-			max-height: 500px;
-		}
-			footer section article{margin: 0 auto 15px auto; width: 650px;}
-			footer section h3{text-align: center; font-size: 2em; margin-bottom: 20px;}
-			footer section h4{clear: both; margin: 5px 0 10px 0;}
-			footer section p{margin-bottom: 10px;}
-			footer section q{font-style: italic;}
-			footer section em{color: #ccc;}
-				footer section em a{color: #999;}
-			
-			footer section#quotedetails-content{}
-				
-			footer section#register-content{}
-				footer section#register-content ul{margin-bottom: 50px;}
-					footer section#register-content li{
-						line-height: 2.5em;
-						clear: both;
-					}
-						footer section#register-content li div{float: left;}
-						footer section#register-content li div.tleft{width: 90px;}
-						footer section#register-content li div.tright{margin-top: -5px;}
-						
-					footer section#register-content li#rss-link a{
-						float: left;
-						display: block;
-						width: 80px; height: 30px;
-						background: url("https://s3-eu-west-1.amazonaws.com/thequotetribune/img/icons.png") no-repeat -11px -97px;
-						opacity: 0.7;
-					}
-						footer section#register-content li#rss-link a:hover{opacity: 1;}
+	
 </style>
 
 <script type="text/javascript">
@@ -332,8 +202,8 @@
 
 	<div id="container">
 		<header class="bar">
-			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE MOBILE &sim;</a></h1>
-			<h2>your daily inspirational fix</h2>
+		<!--	<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE MOBILE &sim;</a></h1>
+			<h2>your daily inspirational fix</h2>-->
 		</header>
 		
 		<blockquote>

@@ -17,6 +17,7 @@ tobf
 * does it make sense to redirect to (static) error pages, rather than generate them on the go?
 * DOM for quote and author
 * prevent generation of a large DB array when building schedule (limit quote fetched to the 3 months span)
+* real mobile implem.
 
 admin enhanced
 * fix auto-dater when fetching quote from quotesome
