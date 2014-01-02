@@ -7,14 +7,6 @@
 	<link rel="alternate" type="application/rss+xml" title="The Quote Tribune" href="/rss.xml" />
 	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab' rel='stylesheet' type='text/css'>
 	<!--<script src="https://s3-eu-west-1.amazonaws.com/thequotetribune/scripts/jquery.min.js"></script>-->
-
-	<!--[if lt IE 8]>
-	<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js"></script>
-	<![endif]-->
-
-	<!--[if lt IE 9]>
-	<script src="https://s3-eu-west-1.amazonaws.com/thequotetribune/scripts/html5shiv.js"></script>
-	<![endif]-->
 	
 	<!-- facebook og -->
 	<meta property="fb:admins" content="541693035" />
@@ -44,6 +36,10 @@
 	}
 
 	header{
+		display: none;
+	}
+
+	#background{
 		height: 80%; width: 100%;
 		background-repeat: no-repeat;
 		background-size: auto 100%;
@@ -64,114 +60,8 @@
 </style>
 
 <script type="text/javascript">
-
-/*
-	var originalQuoteFontSize = 0;
-	var originalAuthorPhotoWidth = 0;
-	var originalAuthorPhotoHeight = 0;
-	
 	// INIT
-	$(document).ready(function(){
-	
-		// couple of var init
-		var authorName = $('blockquote footer').html().substring(2);
-		var wikipediaAuthor = $('blockquote footer').attr('id');
-		var directUrl = $('#direct-url a').html();
-		originalQuoteFontSize = parseInt($('blockquote').css('font-size'));
-		originalAuthorPhotoWidth = parseInt($('#container').css('max-width'));
-		originalAuthorPhotoHeight = parseInt($('#container').css('max-height'));
-	
-		// autosize listener
-		$(window).resize(updateScaling);
-		
-		// menu opening listening
-		$("footer nav a.modal").click(function(event){openMenu(event);});
-
-		// tweet button listener
-		$('#twitter-menu-item').click(function(event) {
-			window.open(
-						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':',
-						'twitter',
-						'width=626,height=436'
-			);
-			return false;
-		});
-		
-		// fb sharer button listener
-		$('#facebook-menu-item').click(function(event) {
-			window.open(
-						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),
-						'facebook-share-dialog', 
-						'width=626,height=436'
-			);
-			return false;
-		});
-		
-		// wikipedia data call
-		$("article#wikipedia").hide();
-		if(wikipediaAuthor != 'null'){
-			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)');
-			$.ajax({
-				type: "GET",
-				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor,
-				dataType: "jsonp",
-				success: function(data){
-					if(data.query.pages[-1])
-						return;
-					for(var key in data.query.pages){
-						var wikiData = data.query.pages[key];
-						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
-					}
-					$("article#wikipedia").show();
-				},
-				error: function(){
-				}
-			});
-		}
-		
-		updateScaling();
-	});
-
-	// UPDATE SCALING
-	function updateScaling(){
-		var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		
-		// container width and font size scaling
-		var cPicWidth = Math.floor(windowHeight * originalAuthorPhotoWidth / originalAuthorPhotoHeight);
-		cPicWidth >= windowWidth ? $("#container").width('100%') : $("#container").width(cPicWidth);
-		$('blockquote').css('font-size', (windowHeight * parseInt(originalQuoteFontSize) / originalAuthorPhotoHeight)+'px');
-
-		// lt ie9 fix
-		if($('#container #bg').css('display') != 'none'){
-			$('#container #bg').height(windowHeight);
-			cPicWidth >= windowWidth ? $('#container #bg').css({left: '0px'}) : $('#container #bg').css({left: ((windowWidth-cPicWidth)/2)+'px'});
-		}
-	}
-
-	// MENU TOGGLING
-	var lastMenu = "";
-	function openMenu(event){
-		var currentMenu = event.target.id.replace(/\b-.+/,"-content");
-		
-		if(lastMenu != "") {
-			$("#"+lastMenu.replace(/\b-.+/,"-menu-item")).removeClass("active"); // disable menu icon
-			$("footer section#"+lastMenu).slideToggle(1000);
-			$("#container>footer").removeClass('fixedbottom');
-			$("#container>header").removeClass('fixedtop');
-		}
-		
-		if(currentMenu != lastMenu) {
-			$("#"+event.target.id).addClass("active"); // enable menu icon
-			$("footer section#"+currentMenu).slideToggle(1000);
-			$("#container>footer").addClass('fixedbottom');
-			$("#container>header").addClass('fixedtop');
-			lastMenu = currentMenu;
-		}
-		else
-			lastMenu = "";
-	}
-*/
+	$(document).ready(function(){});
 </script>
 
 <script>
@@ -187,22 +77,13 @@
 </head>
 
 <body>
-<div id="fb-root"></div>
-
-<!-- fb like stuff -->
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=135996736500002";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
 	<div id="container">
-		<header class="bar">
-		<!--	<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE MOBILE &sim;</a></h1>
-			<h2>your daily inspirational fix</h2>-->
+		<header>
+			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE MOBILE &sim;</a></h1>
+			<h2>your daily inspirational fix</h2>
 		</header>
+
+		<div id="background"></div>
 		
 		<blockquote>
 			<p>&#8220;{{quoteText}}&#8221;</p>
