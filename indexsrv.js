@@ -46,7 +46,6 @@ http.createServer(function (request, response) {
 	    $.Mac = /(Intel|PPC) Mac OS X ?([0-9\._]*)[\)\;]/.exec(ua)[2].replace(/_/g, '.') || true;
 	if (/Windows NT/.test(ua))
 	    $.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
-	console.log('test:'+$.Mobile+', and: '+$.Mac);
 
 	// if home page asked, serve home page...
 	if(request.url == '/'){
