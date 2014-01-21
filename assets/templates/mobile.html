@@ -40,7 +40,7 @@
 	}
 
 	#background{
-		height: 80%; width: 100%;
+		height: 100%; width: 100%;
 		background-repeat: no-repeat;
 		background-size: auto 100%;
 		background-image: url('{{authorThumbPath}}');
@@ -52,26 +52,27 @@
 		color: #fff;
 		background: #888;
 		font-size: {{quoteBlockFontSize}};
+		-webkit-text-size-adjust: none;
+		opacity: 0.8;
 	}	
-		blockquote p{padding: 3% 6%; text-indent: -4%;}
-		blockquote footer{padding: 3% 6%;}
+		blockquote p{padding: 2% 2% 1% 6%; text-indent: -4%;}
+		blockquote footer{padding: 1% 2% 2% 6%;}
 	
 
 	@media screen and (orientation:portrait) {
 	   	#background{background-image: url('{{authorThumbPath}}');}
-	  	blockquote p, blockquote footer{font-size: 1em;}
+	  	blockquote p, blockquote footer{font-size: 0.9em;}
 	}
 	@media screen and (orientation:landscape) {
 	  	#background{
 	  		background-image: url('{{authorPhotoPath}}');
-	  		background-size: 100% auto; 
+	  		background-size: auto 100%; 
 			background-position-x: {{quoteDirectionSlide}};
 		}
 	  	blockquote p, blockquote footer{
+	  		text-indent: -2%;
 	  		font-size: 0.5em;
-	  		line-height: 1.1em;
-	  		padding-bottom: 1%;
-	  		padding-top: 1%;
+	  		line-height: 1.2em;
 	  	}
 	}
 		
