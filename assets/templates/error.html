@@ -215,10 +215,11 @@
 		$(window).resize(updateScaling);
 		
 		// menu opening listening
-		$("footer nav a.modal").click(function(event){openMenu(event);});
+		$("footer nav a.modal").click(function(event){event.preventDefault(); openMenu(event);});
 
 		// tweet button listener
 		$('#twitter-menu-item').click(function(event) {
+			event.preventDefault();
 			window.open(
 						'https://twitter.com/share?url='+encodeURIComponent(directUrl)+'&via=thequotetribune&text=Words%20from%20'+authorName.replace(/ /g,'%20')+':',
 						'twitter',
@@ -229,6 +230,7 @@
 		
 		// fb sharer button listener
 		$('#facebook-menu-item').click(function(event) {
+			event.preventDefault();
 			window.open(
 						'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(directUrl+'?fbrefresh=BLO'),
 						'facebook-share-dialog', 
@@ -354,7 +356,7 @@
 			<nav id="menu">		
 				<a href="/" id="home-menu-item">BACK HOME</a>
 
-				<a href="#" id="register-menu-item" class="modal" alt="About"></a>
+				<a href="" id="register-menu-item" class="modal" alt="About"></a>
 			</nav>
 			
 			<section id="register-content">
