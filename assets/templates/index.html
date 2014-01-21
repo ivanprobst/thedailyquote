@@ -243,14 +243,14 @@
 			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)');
 			$.ajax({
 				type: "GET",
-				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor,
+				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=4&explaintext=&titles='+wikipediaAuthor,
 				dataType: "jsonp",
 				success: function(data){
 					if(data.query.pages[-1])
 						return;
 					for(var key in data.query.pages){
 						var wikiData = data.query.pages[key];
-						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
+						$("article#wikipedia p").html(wikiData.extract);
 					}
 					$("article#wikipedia").show();
 				},
