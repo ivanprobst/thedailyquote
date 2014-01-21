@@ -2,14 +2,15 @@ thequotetribune
 ===============
 
 tobd
+* real mobile implem.
 * ...
+* db replications / backups
+* promote
 
 tobf
 * create better template (separate in different parts to build the page)
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
-* monitor facebook access token
-* db replications / backups
 * autostart forever on server reboot
 * nginx gzip, caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
 * s3 caching?
@@ -17,7 +18,6 @@ tobf
 * does it make sense to redirect to (static) error pages, rather than generate them on the go?
 * DOM for quote and author
 * prevent generation of a large DB array when building schedule (limit quote fetched to the 3 months span)
-* real mobile implem.
 
 admin enhanced
 * fix auto-dater when fetching quote from quotesome
