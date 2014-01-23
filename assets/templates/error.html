@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-	<title>The Quote Tribune</title>
+	<title>The Quote Tribune &mdash; Error, we are doomed</title>
+	<meta name="description=" content="{{quoteText}}">
 	
 	<link rel="shortcut icon" href="favicon.ico" /> 
 	<link rel="alternate" type="application/rss+xml" title="The Quote Tribune" href="/rss.xml" />
@@ -245,14 +246,14 @@
 			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)');
 			$.ajax({
 				type: "GET",
-				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=10&titles='+wikipediaAuthor,
+				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=4&explaintext=&titles='+wikipediaAuthor,
 				dataType: "jsonp",
 				success: function(data){
 					if(data.query.pages[-1])
 						return;
 					for(var key in data.query.pages){
 						var wikiData = data.query.pages[key];
-						$("article#wikipedia p").html((wikiData.extract).replace(/(<([^>]+)>)/ig,"")+" &#8230;");
+						$("article#wikipedia p").html(wikiData.extract);
 					}
 					$("article#wikipedia").show();
 				},
@@ -316,15 +317,17 @@
 </script>
 <![endif]-->
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-46593993-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; 
 
-  ga('create', 'UA-46593993-1', 'thequotetribune.com');
-  ga('send', 'pageview');
+	ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
 
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
 </script>
 </head>
 
