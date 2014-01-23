@@ -2,13 +2,11 @@ thequotetribune
 ===============
 
 tobd
-* real mobile implem.
-* ...
-* db replications / backups
 * promote
 
 tobf
-* create better template (separate in different parts to build the page)
+* create better template (separate in different parts to build the page, change <title> according to home/preview)
+* improved sitemap for google search
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
 * autostart forever on server reboot

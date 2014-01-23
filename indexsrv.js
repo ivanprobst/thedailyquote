@@ -221,7 +221,7 @@ function tick(){
 	DB.getItem('quotes', {'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()}, function(item){
 		if(item){
 			todayQuote = new Quote(item);
-			if(!firstRun) updateSocial();
+			if(!firstRun) setTimeout(updateSocial,2000);
 		}
 		else
 			todayQuote.setTodayNoQuote();
