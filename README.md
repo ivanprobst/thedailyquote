@@ -2,11 +2,12 @@ thequotetribune
 ===============
 
 tobd
-* promote
+* ...
 
 tobf
 * create better template (separate in different parts to build the page, change <title> according to home/preview)
 * improved sitemap for google search
+* re-check background image stuff (http://css-tricks.com/perfect-full-page-background-image/)
 * handle carriage return and links in quote txt
 * clean data setting in quote and author
 * autostart forever on server reboot
