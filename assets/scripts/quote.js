@@ -9,7 +9,7 @@ function Quote (options){
     this.pubDate		= options.pubDate || {};
     this.fontSize 		= options.fontSize || '48px';
 
-    // set some data (keep old  that are not specified in options)
+    // set some data (keep old that are not specified in options)
     this.setData = function(options){
         options = options || {};
 

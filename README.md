@@ -2,18 +2,17 @@ thequotetribune
 ===============
 
 tobd
-* ...
+* switch to mongoose
+* switch to mustache / handlebars (separate in different parts to build the page, change <title> according to home/preview)
+* store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 
 tobf
-* create better template (separate in different parts to build the page, change <title> according to home/preview)
 * improved sitemap for google search
 * re-check background image stuff (http://css-tricks.com/perfect-full-page-background-image/)
 * handle carriage return and links in quote txt
-* clean data setting in quote and author
-* autostart forever on server reboot
+* server monitoring
 * nginx gzip, caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
 * s3 caching?
-* store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 * does it make sense to redirect to (static) error pages, rather than generate them on the go?
 * DOM for quote and author
 * prevent generation of a large DB array when building schedule (limit quote fetched to the 3 months span)
