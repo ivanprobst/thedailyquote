@@ -5,7 +5,11 @@ var http = require('http'),
 // internal modules
 var DB = require('./assets/scripts/db.js'),
 	templater = require('./assets/scripts/templater.js'),
-	Quote = require('./assets/scripts/quote.js');
+	Quote = require('./assets/scripts/quote.js'),
+	Models = require('./assets/scripts/models.js');
+
+// inits
+var models = new Models();
 
 // run that server
 console.log('# running admin on http://127.0.0.1:8125/');
@@ -92,11 +96,21 @@ http.createServer(function (request, response) {
 			var parsedData = JSON.parse(sentData);
 			console.log(parsedData);
 
-			if(parsedData._id)
-				DB.updateItem('quotes', {_id: new ObjectID(parsedData._id)}, parsedData.my_item, sendDataToClient);
-			else
-				DB.insertItem('quotes', parsedData.my_item, sendDataToClient);
-
+			if(parsedData._id){
+				models.Quote.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
+					if(err) return console.log('update failure: '+ err);
+					console.log('updated: ');
+					console.log(raw)
+				});
+			}
+			else{
+				var quote = new models.Quote(parsedData.my_item);
+				quote.save(function(err, prod, nb){
+					if(err) return console.log('save failure: '+ err);
+					console.log('saved: ');
+					console.log(prod);
+				});
+			}
 		});
 		return;
 	}

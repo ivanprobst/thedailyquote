@@ -205,7 +205,7 @@
 		var formattedDate = {year : parseInt($('#pubdate').val().substr(0,4)), month : (parseInt($('#pubdate').val().substr(5,2))-1), day : parseInt($('#pubdate').val().substr(8,2))};
 
 		var data = {
-			_id:  		$('#quote-id').val(),
+			_id: $('#quote-id').val() == '' ? null : $('#quote-id').val(),
 			my_item:{
 				authorID:	$('#q-authorID').val(),
 				quotesomeUrl: $('#quote-quotesome').val(),

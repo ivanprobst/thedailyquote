@@ -5,6 +5,7 @@ tobd
 * switch to mongoose
 * switch to mustache / handlebars (separate in different parts to build the page, change <title> according to home/preview)
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
+* proper logging
 
 tobf
 * improved sitemap for google search
@@ -15,7 +16,6 @@ tobf
 * s3 caching?
 * does it make sense to redirect to (static) error pages, rather than generate them on the go?
 * DOM for quote and author
-* prevent generation of a large DB array when building schedule (limit quote fetched to the 3 months span)
 
 admin enhanced
 * fix auto-dater when fetching quote from quotesome
