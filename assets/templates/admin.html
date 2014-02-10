@@ -221,7 +221,12 @@
 		  type: "POST",
 		  url: '/admin-upsert-quote',
 		  data: JSON.stringify(data),
-		  success: fetchSchedule
+		  success: function(dataFromServer){
+		  	if($.parseJSON(dataFromServer)._id){
+				setQuoteData(dataFromServer);
+			}
+			fetchSchedule();
+		  }
 		});
 	}
 
@@ -240,32 +245,32 @@
 		  	data: JSON.stringify(formattedDate),
 			success: setQuoteData
 		});
+	}
 
-		function setQuoteData(data){
-			console.log('got quote data back from node:');
-			console.log(data);
+	function setQuoteData(data){
+		console.log('got quote data back from node:');
+		console.log(data);
 
-			if(!data) {setAlert('error','no quote returned'); return;}
-			setAlert('success','quote retrieved');
-			$('#add-quote input, #add-quote textarea').val('');
-			$('#add-quote input[type="submit"]').val('update quote');
-			$.each($.parseJSON(data), function(key, value){
-				console.log("set field "+key+" to "+value);
-				if(key=='pubDate'){			
-					$('#add-quote input[name = "date"]').val(value.year+'-'+('0'+(value.month+1)).slice(-2)+'-'+('0'+value.day).slice(-2));
-				}
-				else if(key=='text')
-					$('#add-quote textarea[name = "text"]').val(value);
-				else if($('#add-quote input[name = "'+key+'"]'))
-					$('#add-quote input[name = "'+key+'"]').val(value);
-				else
-					$('#quote-dirt').append(key+" : "+value+" | ");
-			});
+		if(!data) {setAlert('error','no quote returned'); return;}
+		setAlert('success','quote retrieved');
+		$('#add-quote input, #add-quote textarea').val('');
+		$('#add-quote input[type="submit"]').val('update quote');
+		$.each($.parseJSON(data), function(key, value){
+			console.log("set field "+key+" to "+value);
+			if(key=='pubDate'){			
+				$('#add-quote input[name = "date"]').val(value.year+'-'+('0'+(value.month+1)).slice(-2)+'-'+('0'+value.day).slice(-2));
+			}
+			else if(key=='text')
+				$('#add-quote textarea[name = "text"]').val(value);
+			else if($('#add-quote input[name = "'+key+'"]'))
+				$('#add-quote input[name = "'+key+'"]').val(value);
+			else
+				$('#quote-dirt').append(key+" : "+value+" | ");
+		});
 
-			$('#preview').attr('href','/quote/'+$.parseJSON(data)._id);
+		$('#preview').attr('href','/quote/'+$.parseJSON(data)._id);
 
-			checkAuthorID($('#add-quote input[name = "authorID"]').val());
-		}
+		checkAuthorID($('#add-quote input[name = "authorID"]').val());
 	}
 
 	// check authorID existence
@@ -301,7 +306,12 @@
 			  type: "POST",
 			  url: '/admin-upsert-author',
 			  data: JSON.stringify(data),
-			  success: fetchAuthors
+			  success: function(dataFromServer){
+		  	if($.parseJSON(dataFromServer)._id){
+				setAuthorData(dataFromServer);
+			}
+			fetchAuthors();
+		  }
 			});
 		}
 		else{
@@ -331,21 +341,21 @@
 			data: _id,
 			success: setAuthorData
 		});
+	}
 
-		function setAuthorData(data){
-			console.log('got author data back from node:');
-			console.log(data);
+	function setAuthorData(data){
+		console.log('got author data back from node:');
+		console.log(data);
 
-			$('#add-author input').val('');
-			$('#add-author input[type="submit"]').val('update author');
-			$.each($.parseJSON(data), function(key, value){
-				console.log("set field "+key+" to "+value);
-				if($('#add-author input[name = "'+key+'"]'))
-					$('#add-author input[name = "'+key+'"]').val(value);
-				else
-					$('#author-dirt').append(key+" : "+value+" | ");
-			});
-		}
+		$('#add-author input').val('');
+		$('#add-author input[type="submit"]').val('update author');
+		$.each($.parseJSON(data), function(key, value){
+			console.log("set field "+key+" to "+value);
+			if($('#add-author input[name = "'+key+'"]'))
+				$('#add-author input[name = "'+key+'"]').val(value);
+			else
+				$('#author-dirt').append(key+" : "+value+" | ");
+		});
 	}
 
 	// fetch authors function

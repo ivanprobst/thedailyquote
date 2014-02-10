@@ -1,11 +1,8 @@
 // external modules
-var http = require('http'),
-	mongoose = require('mongoose');
+var http = require('http');
 
 // internal modules
-var DB = require('./assets/scripts/db.js'),
-	templater = require('./assets/scripts/templater.js'),
-	Quote = require('./assets/scripts/quote.js'),
+var templater = require('./assets/scripts/templater.js'),
 	Models = require('./assets/scripts/models.js');
 
 // inits
@@ -33,7 +30,7 @@ http.createServer(function (request, response) {
 	    $.Mac = /(Intel|PPC) Mac OS X ?([0-9\._]*)[\)\;]/.exec(ua)[2].replace(/_/g, '.') || true;
 	if (/Windows NT/.test(ua))
 	    $.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
-	console.log('test:'+$.Mobile+', and: '+$.Mac);
+	console.log('browser type: '+$.Mobile+', and vers: '+$.Mac);
 
 	// serve admin home page...
 	if(request.url == '/admin' && request.method != 'POST'){
@@ -49,7 +46,7 @@ http.createServer(function (request, response) {
 	else if((request.url).match(/\/quote\/[a-f0-9]{24}/)){
 		console.log("...received quote preview request:");
 
-		models.Quote.findById(mongoose.Types.ObjectId(request.url.match(/\/quote\/([a-f0-9]+)/)[1]), function(err, quote){
+		models.Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1], function(err, quote){
 			if(err) return console.log('find error: '+err); // ??? return some kind of page if error
 
 			templater.getQuotePage(quote, function(htmlpage){
@@ -91,16 +88,14 @@ http.createServer(function (request, response) {
 			if(parsedData._id){
 				models.Quote.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
 					if(err) return console.log('update failure: '+ err);
-					console.log('updated: ');
-					console.log(raw)
+					sendDataToClient(null, raw);
 				});
 			}
 			else{
 				var quote = new models.Quote(parsedData.my_item);
 				quote.save(function(err, prod, nb){
 					if(err) return console.log('save failure: '+ err);
-					console.log('saved: ');
-					console.log(prod);
+					sendDataToClient(null, prod);
 				});
 			}
 		});
@@ -160,9 +155,9 @@ http.createServer(function (request, response) {
 			console.log(sentData);
 
 			if(sentData && sentData != 'null' && sentData != '')
-				DB.getItem('authors', {_id: new ObjectID(sentData)}, sendDataToClient);
+				models.Author.findById(sentData, sendDataToClient);
 			else
-				DB.getCollectionArray('authors', sendDataToClient);
+				models.Author.find({}, sendDataToClient);
 		});
 		return;
 	}
@@ -178,11 +173,19 @@ http.createServer(function (request, response) {
 			var parsedData = JSON.parse(sentData);
 			console.log(parsedData);
 
-			if(parsedData._id)
-				DB.updateItem('authors', {_id: new ObjectID(parsedData._id)}, parsedData.my_item, sendDataToClient);
-			else
-				DB.insertItem('authors', parsedData.my_item, sendDataToClient);
-
+			if(parsedData._id){
+				models.Author.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
+					if(err) return console.log('update failure: '+ err);
+					sendDataToClient(null, raw);
+				});
+			}
+			else{
+				var author = new models.Author(parsedData.my_item);
+				author.save(function(err, prod, nb){
+					if(err) return console.log('save failure: '+ err);
+					sendDataToClient(null, prod);
+				});
+			}
 		});
 		return;
 	}
@@ -197,18 +200,10 @@ http.createServer(function (request, response) {
 		request.on('end', function(data){
 			console.log(sentData);
 
-			if(sentData && sentData != 'null' && sentData != '')
-				DB.removeItem('authors', {_id: new ObjectID(sentData)}, sendDataToClient);
-			else
-				sendDataToClient('_id error');
-		});
-		return;
-	}
-	// execute peace of code
-	else if(request.url == '/admin-db-action'){
-		console.log('...received db action request');
-		mongo.connect('mongodb://localhost:27017/thequotetribune', function(err, db) {
-			// YOUR ACTION
+			models.Author.remove({_id: sentData}, function(err){
+				if(err) return console.log('removal failure: '+ err);
+				sendDataToClient(null, 'ACK');
+			});
 		});
 		return;
 	}
