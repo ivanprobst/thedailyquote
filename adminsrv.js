@@ -1,6 +1,6 @@
 // external modules
 var http = require('http'),
-	ObjectID = require('mongodb').ObjectID;
+	mongoose = require('mongoose');
 
 // internal modules
 var DB = require('./assets/scripts/db.js'),
@@ -49,18 +49,10 @@ http.createServer(function (request, response) {
 	else if((request.url).match(/\/quote\/[a-f0-9]{24}/)){
 		console.log("...received quote preview request:");
 
-		var quoteID = new ObjectID(request.url.match(/\/quote\/([a-f0-9]+)/)[1]);
-		console.log(quoteID);
+		models.Quote.findById(mongoose.Types.ObjectId(request.url.match(/\/quote\/([a-f0-9]+)/)[1]), function(err, quote){
+			if(err) return console.log('find error: '+err); // ??? return some kind of page if error
 
-		// generate preview quote
-		DB.getItem('quotes', {_id: quoteID}, function(item){
-			var quotePreview = new Quote(item);
-			if($.Mobile)
-				quotePreview.template = 'assets/templates/mobile.html';
-			if(!item)
-				quotePreview.setNoQuoteToday();
-
-			templater.getQuotePage(quotePreview, function(htmlpage){
+			templater.getQuotePage(quote, function(htmlpage){
 				response.writeHead(200, {'Content-Type': 'text/html'});
 				response.write(htmlpage);
 				response.end();
