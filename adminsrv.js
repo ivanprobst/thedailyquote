@@ -1,12 +1,14 @@
 // external modules
-var http = require('http');
+var http = require('http'),
+	mongoose = require('mongoose');
 
 // internal modules
 var templater = require('./assets/scripts/templater.js'),
-	Models = require('./assets/scripts/models.js');
+	Quote = require("./assets/models/quote.js").Quote,
+	Author = require("./assets/models/author.js").Author;
 
 // inits
-var models = new Models();
+mongoose.connect('mongodb://localhost:27017/testtribune');
 
 // run that server
 console.log('# running admin on http://127.0.0.1:8125/');
@@ -46,7 +48,7 @@ http.createServer(function (request, response) {
 	else if((request.url).match(/\/quote\/[a-f0-9]{24}/)){
 		console.log("...received quote preview request:");
 
-		models.Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1], function(err, quote){
+		Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1], function(err, quote){
 			if(err) return console.log('find error: '+err); // ??? return some kind of page if error
 
 			templater.getQuotePage(quote, function(htmlpage){
@@ -69,7 +71,7 @@ http.createServer(function (request, response) {
 			var objectDate = JSON.parse(sentData);
 			console.log(objectDate);
 			
-			models.Quote.findOne({'pubDate.year' : objectDate.year, 'pubDate.month' : objectDate.month, 'pubDate.day' : objectDate.day}, sendDataToClient);
+			Quote.findOne({'pubDate.year' : objectDate.year, 'pubDate.month' : objectDate.month, 'pubDate.day' : objectDate.day}, sendDataToClient);
 		});
 		return;
 	}
@@ -86,13 +88,13 @@ http.createServer(function (request, response) {
 			console.log(parsedData);
 
 			if(parsedData._id){
-				models.Quote.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
+				Quote.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
 					if(err) return console.log('update failure: '+ err);
 					sendDataToClient(null, raw);
 				});
 			}
 			else{
-				var quote = new models.Quote(parsedData.my_item);
+				var quote = new Quote(parsedData.my_item);
 				quote.save(function(err, prod, nb){
 					if(err) return console.log('save failure: '+ err);
 					sendDataToClient(null, prod);
@@ -105,7 +107,7 @@ http.createServer(function (request, response) {
 	else if(request.url.match(/\/admin-get-schedule/)){
 		console.log('...received schedule request:');
 	
-		models.Quote.find(function(err, items){
+		Quote.find(function(err, items){
 			if(err)	return console.log("find error: "+err);
 
 			console.log('listing all quotes:');
@@ -155,9 +157,9 @@ http.createServer(function (request, response) {
 			console.log(sentData);
 
 			if(sentData && sentData != 'null' && sentData != '')
-				models.Author.findById(sentData, sendDataToClient);
+				Author.findById(sentData, sendDataToClient);
 			else
-				models.Author.find({}, sendDataToClient);
+				Author.find({}, sendDataToClient);
 		});
 		return;
 	}
@@ -174,13 +176,13 @@ http.createServer(function (request, response) {
 			console.log(parsedData);
 
 			if(parsedData._id){
-				models.Author.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
+				Author.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
 					if(err) return console.log('update failure: '+ err);
 					sendDataToClient(null, raw);
 				});
 			}
 			else{
-				var author = new models.Author(parsedData.my_item);
+				var author = new Author(parsedData.my_item);
 				author.save(function(err, prod, nb){
 					if(err) return console.log('save failure: '+ err);
 					sendDataToClient(null, prod);
@@ -200,7 +202,7 @@ http.createServer(function (request, response) {
 		request.on('end', function(data){
 			console.log(sentData);
 
-			models.Author.remove({_id: sentData}, function(err){
+			Author.remove({_id: sentData}, function(err){
 				if(err) return console.log('removal failure: '+ err);
 				sendDataToClient(null, 'ACK');
 			});

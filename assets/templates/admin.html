@@ -222,9 +222,8 @@
 		  url: '/admin-upsert-quote',
 		  data: JSON.stringify(data),
 		  success: function(dataFromServer){
-		  	if($.parseJSON(dataFromServer)._id){
+		  	if($.parseJSON(dataFromServer)._id)
 				setQuoteData(dataFromServer);
-			}
 			fetchSchedule();
 		  }
 		});
@@ -307,9 +306,8 @@
 			  url: '/admin-upsert-author',
 			  data: JSON.stringify(data),
 			  success: function(dataFromServer){
-		  	if($.parseJSON(dataFromServer)._id){
+		  	if($.parseJSON(dataFromServer)._id)
 				setAuthorData(dataFromServer);
-			}
 			fetchAuthors();
 		  }
 			});

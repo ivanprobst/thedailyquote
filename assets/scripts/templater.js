@@ -1,7 +1,7 @@
-var Quote = require('./quote.js'),
-	Author = require('./author.js'),
-	fs = require('fs'),
-	DB = require('./db.js');
+var fs = require('fs'),
+	DB = require('./db.js'),
+	Quote = require("../models/quote.js").Quote,
+	Author = require("../models/author.js").Author;;
 
 var quote = null;
 var author = null;
@@ -10,9 +10,27 @@ var htmlPage = '';
 module.exports = {
 	// handle the index request
 	getQuotePage : function(aQuote, callback){
+		quote = aQuote;
+
+		if(!aQuote)
+			console.log('no quote sent') // ??? prevent effect if no quote is sent
+
+			console.log('quote bef fetch:');
+			console.log(quote);
+
+			Quote.findById(quote._id, function(err, secQuote){
+				console.log('quote after fetch:');
+				console.log(secQuote);
+
+				secQuote.populate('authorID', function(err, upQuote){
+					console.log('populated quote:');
+					console.log(upQuote);
+			});
+		});
+/*
 		quote = new Quote();
 		author = new Author();
-		
+
 		if(aQuote)
 			quote.setData(aQuote.getObjectData());
 		else
@@ -22,7 +40,9 @@ module.exports = {
 			author.setError(quote.errorType);
 			buildQuotePage(callback);
 		}
+
 		else{
+
 			DB.getItem('authors',{authorID: quote.authorID}, function(item){
 				if(item){
 					author.setData(item);
@@ -41,6 +61,7 @@ module.exports = {
 				}
 			});
 		}
+*/
 	},
 
 	getAdminPage : function(callback) {
