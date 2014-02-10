@@ -80,7 +80,7 @@ http.createServer(function (request, response) {
 			var objectDate = JSON.parse(sentData);
 			console.log(objectDate);
 			
-			DB.getItem('quotes', {'pubDate.year' : objectDate.year, 'pubDate.month' : objectDate.month, 'pubDate.day' : objectDate.day}, sendDataToClient);
+			models.Quote.findOne({'pubDate.year' : objectDate.year, 'pubDate.month' : objectDate.month, 'pubDate.day' : objectDate.day}, sendDataToClient);
 		});
 		return;
 	}
@@ -118,7 +118,12 @@ http.createServer(function (request, response) {
 	else if(request.url.match(/\/admin-get-schedule/)){
 		console.log('...received schedule request:');
 	
-		DB.getCollectionArray('quotes', function(items){			
+		models.Quote.find(function(err, items){
+			if(err)	return console.log("find error: "+err);
+
+			console.log('listing all quotes:');
+			console.log(items);
+
 			var schedule = {};
 			if(items){
 				items.forEach(function(item){
@@ -147,7 +152,7 @@ http.createServer(function (request, response) {
 					}
 				});
 			}
-			sendDataToClient(schedule);
+			sendDataToClient(null, schedule);
 		});
 		return;
 	}
@@ -222,7 +227,7 @@ http.createServer(function (request, response) {
 	}
 
 	// stringify and send the data back to client
-	function sendDataToClient(data){
+	function sendDataToClient(err, data){
 		console.log('...sending data back to client:');
 		console.log(data);
 		if(data)
