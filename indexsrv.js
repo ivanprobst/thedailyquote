@@ -3,14 +3,15 @@ var http = require('http'),
 	fs = require('fs'),
 	RSS = require('rss'),
 	Twit = require('twit'),
-	request = require('request');
+	request = require('request'),
+	mongoose = require('mongoose');
 
 // internal modules
 var templater = require('./assets/scripts/templater.js'),
-	DB = require('./assets/scripts/db.js'),
-	Quote = require('./assets/scripts/quote.js');
+	Quote = require("./assets/models/quote.js").Quote;
 
 // cnst
+mongoose.connect('mongodb://localhost:27017/testtribune');
 var dailyTransitionHour = 6; // 6am UTC
 var feed = new RSS({"title":'The Quote Tribune',"description":"Your daily inspirational fix","feed_url":"http://thequotetribune.com/rss.xml","site_url":"http://thequotetribune.com"});
 var extension_map = {
@@ -22,7 +23,6 @@ var extension_map = {
 // varz
 var todayQuote = new Quote();
 var firstRun = true;
-var today = new Date();
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
@@ -51,14 +51,13 @@ http.createServer(function (request, response) {
 	if(request.url == '/'){
 		console.log('...processing index page request');
 
-		var tmpQuote = new Quote();
-		tmpQuote.setData(todayQuote.getObjectData());
+		/* ??? mobile template solution needed
 		if($.Mobile)
 			tmpQuote.template = 'assets/templates/mobile.html';
-
-		templater.getQuotePage(tmpQuote, function(htmlPage){
+		*/
+		templater.getQuotePage(todayQuote, function(htmlpage){
 			response.writeHead(200, {'Content-Type': 'text/html'});
-			response.write(htmlPage);
+			response.write(htmlpage);
 			response.end();
 		});
 		return;
@@ -71,31 +70,27 @@ http.createServer(function (request, response) {
 		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);
 
 		// get relevant quote
-		DB.getItem('quotes', {'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(item){
-			var quotePreview = new Quote(item);
+		Quote.findOne({'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(err, quote){
+			if(err) return console.log('find error: '+err); // ??? return some kind of page if no quote found
+
+			quote.populate('author', function(err, quote){
+				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
+
+				templater.getQuotePage(quote, function(htmlpage){
+					response.writeHead(200, {'Content-Type': 'text/html'});
+					response.write(htmlpage);
+					response.end();
+				});
+			});
+
+			/* ??? template handling of mobile + error and date check
 			if($.Mobile)
 				quotePreview.template = 'assets/templates/mobile.html';
 			if(!item)
 				quotePreview.setTooEarlyQuote();
 			if(!(year < today.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
 				quotePreview.setUnpublishedQuote();
-
-			templater.getQuotePage(quotePreview, function(htmlpage){
-				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(htmlpage);
-				response.end();
-			});
-		});
-		return;
-	}
-	// if weird page asked, serve error page
-	else if(!(request.url.match(/\.[0-9a-z]+$/)) || request.url.match(/\.[0-9a-z]+$/) == ''){
-		console.log('...processing unknown page request');
-
-		templater.getQuotePage(null, function(htmlpage){
-			response.writeHead(200, {'Content-Type': 'text/html'});
-			response.write(htmlpage);
-			response.end();
+			*/
 		});
 		return;
 	}
@@ -104,6 +99,19 @@ http.createServer(function (request, response) {
 		response.writeHead(200, {'Content-Type': 'application/rss+xml'});
 		response.write(feed.xml());
 		response.end();
+		return;
+	}
+	// if weird page asked, serve error page
+	else if(!(request.url.match(/\.[0-9a-z]+$/)) || request.url.match(/\.[0-9a-z]+$/) == ''){
+		console.log('...processing unknown page request');
+
+/* ??? generate error page
+		templater.getQuotePage(null, function(htmlpage){
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.write(htmlpage);
+			response.end();
+		});
+*/
 		return;
 	}
 	
@@ -120,35 +128,36 @@ http.createServer(function (request, response) {
 	file.on('error',function(err){
 		console.error('!!! ERR (file asked to server doesn\'t exist): '+err);
 		
-		// return 404 page
+		/* ??? generate error page
 		templater.getQuotePage(null, function(htmlpage){
 			response.writeHead(404, {'Content-Type': 'text/html'});
 			response.write(htmlpage);
 			response.end();
 		});
+		*/
 	});
 }).listen(8124);
 
 
-
-
-// social stuff init
+// rss init
 console.log('...setting up rss feed');
-DB.getMappingAuthorID(function(mapping){
-	DB.getCollectionArray('quotes', function(items){
-		if(items && items.length > 0){
-			for(var i=0; i<items.length; i++){
-				var aQuote = new Quote(items[i]); // maybe limit number of rss item generated?
-				if(mapping[aQuote.authorID] && (aQuote.pubDate.year < today.getFullYear() || (aQuote.pubDate.year == today.getFullYear() && aQuote.pubDate.month < today.getMonth()) || (aQuote.pubDate.year == today.getFullYear() && aQuote.pubDate.month == today.getMonth() && aQuote.pubDate.day <= today.getDate()))){
-					var aDate = new Date (aQuote.pubDate.year, aQuote.pubDate.month, aQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
-					var aFormattedDate = ('0'+aQuote.pubDate.day).slice(-2)+'-'+('0'+(aQuote.pubDate.month+1)).slice(-2)+'-'+aQuote.pubDate.year;
-					feed.item({title: 'Words from '+mapping[aQuote.authorID].name, description: aQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: mapping[aQuote.authorID].name});
-					console.log('-> rss item added (quote: '+aQuote.text+', from '+mapping[aQuote.authorID].name+')');
-				}
+Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]}).populate('author').exec(function(err, quotes){
+	if(err) return console.log('!!! ERR (NO RSS FEED CREATED): '+err); // if error, abort
+
+	if(quotes && quotes.length > 0){
+		var today = new Date();
+		for(var i=0; i<quotes.length; i++){
+			var quote = quotes[i]; // maybe limit number of rss item generated?
+			console.log(quote);
+			if(quote.pubDate.year < today.getFullYear() || (quote.pubDate.year == today.getFullYear() && quote.pubDate.month < today.getMonth()) || (quote.pubDate.year == today.getFullYear() && quote.pubDate.month == today.getMonth() && quote.pubDate.day <= today.getDate())){
+				var aDate = new Date (quote.pubDate.year, quote.pubDate.month, quote.pubDate.day, dailyTransitionHour, 0, 0, 0);
+				var aFormattedDate = ('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year;
+				feed.item({title: 'Words from '+quote.author.name, description: quote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: quote.author.name});
+				console.log('-> rss item added (quote: '+quote.text+', from '+quote.author.name+')');
 			}
-			console.log('# rss feed completed');
 		}
-	});
+		console.log('# rss feed completed');
+	}
 });
 
 
@@ -210,7 +219,7 @@ function updateSocial(){
 // transition stuff init
 tick();
 function tick(){
-	today = new Date();
+	var today = new Date();
 	var quoteDay = new Date();
 	quoteDay.setDate(quoteDay.getHours() < dailyTransitionHour ? quoteDay.getDate()-1 : quoteDay.getDate()); // check if we should still display prev day quote
 
@@ -218,19 +227,17 @@ function tick(){
 	console.log('# tick now @'+today+', next tick in: '+delay);
 
 	// update today's quote
-	DB.getItem('quotes', {'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()}, function(item){
-		if(item){
-			todayQuote = new Quote(item);
-			if(!firstRun) setTimeout(updateSocial,2000);
-		}
-		else
-			todayQuote.setTodayNoQuote();
+	Quote.findOne({'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()}, function(err, quote){ // ??? merge find and populate
+		if(err) return console.log('find error: '+err); // ??? return some kind of page if no quote found
 
-		// EMERGENCY SWITCH !!!
-		// todayQuote.setBackupQuote();
+		quote.populate('author', function(err, quote){
+			if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
 
-		firstRun = false;
-		console.log("# the quote today is: "+todayQuote.text + ', from: '+todayQuote.authorID);
+			todayQuote = quote;
+			console.log("# the quote today is: "+todayQuote.text + ', from: '+todayQuote.author.name);
+			if(!firstRun) setTimeout(updateSocial, 2000);
+			firstRun = false;
+		});
 	});
 
 	setTimeout(tick,delay);
