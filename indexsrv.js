@@ -4,11 +4,11 @@ var http = require('http'),
 	RSS = require('rss'),
 	Twit = require('twit'),
 	request = require('request'),
-	mongoose = require('mongoose');
+	mongoose = require('mongoose'),
+	handlebars = require("handlebars");
 
 // internal modules
-var templater = require('./assets/scripts/templater.js'),
-	Quote = require("./assets/models/quote.js").Quote;
+var Quote = require("./assets/models/quote.js").Quote;
 
 // cnst
 mongoose.connect('mongodb://localhost:27017/testtribune');
@@ -23,6 +23,7 @@ var extension_map = {
 // varz
 var todayQuote = new Quote();
 var firstRun = true;
+var qPage = handlebars.compile(fs.readFileSync('assets/templates/index.html', "utf8"));
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
@@ -55,11 +56,10 @@ http.createServer(function (request, response) {
 		if($.Mobile)
 			tmpQuote.template = 'assets/templates/mobile.html';
 		*/
-		templater.getQuotePage(todayQuote, function(htmlpage){
-			response.writeHead(200, {'Content-Type': 'text/html'});
-			response.write(htmlpage);
-			response.end();
-		});
+
+		response.writeHead(200, {'Content-Type': 'text/html'});
+		response.write(qPage(todayQuote));
+		response.end();
 		return;
 	}
 	// if quote preview asked, serve preview page
@@ -76,11 +76,9 @@ http.createServer(function (request, response) {
 			quote.populate('author', function(err, quote){
 				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
 
-				templater.getQuotePage(quote, function(htmlpage){
-					response.writeHead(200, {'Content-Type': 'text/html'});
-					response.write(htmlpage);
-					response.end();
-				});
+				response.writeHead(200, {'Content-Type': 'text/html'});
+				response.write(qPage(quote));
+				response.end();
 			});
 
 			/* ??? template handling of mobile + error and date check

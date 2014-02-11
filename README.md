@@ -2,8 +2,7 @@ thequotetribune
 ===============
 
 tobd
-* switch to mongoose
-* switch to mustache / handlebars (separate in different parts to build the page, change <title> according to home/preview)
+* switch to handlebars (separate in different parts to build the page, change <title> according to home/preview, get all properties to work)
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 * proper logging
 * update production
@@ -32,7 +31,8 @@ modules
 * twit: https://github.com/ttezel/twit
 * request: https://github.com/mikeal/request
 * rss: https://github.com/dylang/node-rss
-* mongodb: http://mongodb.github.io/node-mongodb-native/
+* mongoose: https://github.com/LearnBoost/mongoose
+* handlebars: https://github.com/wycats/handlebars.js
 
 icons ref
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project

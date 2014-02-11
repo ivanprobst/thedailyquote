@@ -1,14 +1,16 @@
 // external modules
 var http = require('http'),
-	mongoose = require('mongoose');
+	fs = require('fs'),
+	mongoose = require('mongoose'),
+	handlebars = require("handlebars");
 
 // internal modules
-var templater = require('./assets/scripts/templater.js'),
-	Quote = require("./assets/models/quote.js").Quote,
+var Quote = require("./assets/models/quote.js").Quote,
 	Author = require("./assets/models/author.js").Author;
 
 // inits
 mongoose.connect('mongodb://localhost:27017/testtribune');
+var qPage = handlebars.compile(fs.readFileSync('assets/templates/index.html', "utf8"));
 
 // run that server
 console.log('# running admin on http://127.0.0.1:8125/');
@@ -37,9 +39,11 @@ http.createServer(function (request, response) {
 	// serve admin home page...
 	if(request.url == '/admin' && request.method != 'POST'){
 		console.log('...received admin page request');
-		templater.getAdminPage(function(htmlPage){
+		fs.readFile('assets/templates/index.html', "utf8", function(err, adminPage){
+			if(err) throw err; // ???
+
 			response.writeHead(200, {'Content-Type': 'text/html'});
-			response.write(htmlPage);
+			response.write(adminPage);
 			response.end();
 		});
 		return;
@@ -54,11 +58,9 @@ http.createServer(function (request, response) {
 			quote.populate('author', function(err, quote){
 				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
 
-				templater.getQuotePage(quote, function(htmlpage){
-					response.writeHead(200, {'Content-Type': 'text/html'});
-					response.write(htmlpage);
-					response.end();
-				});
+				response.writeHead(200, {'Content-Type': 'text/html'});
+				response.write(qPage(quote));
+				response.end();
 			});
 		});
 		return;

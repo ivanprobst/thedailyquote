@@ -20,11 +20,11 @@
 	<!-- facebook og -->
 	<meta property="fb:admins" content="541693035" />
 	<meta property="fb:app_id" content="135996736500002" /> 
-	<meta property="og:url" content="{{directUrl}}">
-	<meta property="og:title" content="Words from {{authorName}}">
-	<meta property="og:description" content="&#8220;{{quoteText}}&#8221;" />
+	<meta property="og:url" content="{{directUrl???}}">
+	<meta property="og:title" content="Words from {{author.name}}">
+	<meta property="og:description" content="&#8220;{{text}}&#8221;" />
 	<meta property="og:type" content="website">
-	<meta property="og:image" content="{{authorThumbPath}}">
+	<meta property="og:image" content="{{authorThumbPath???}}">
 	<meta property="og:site_name" content="The Quote Tribune">
 	
 <style type="text/css">
@@ -48,9 +48,9 @@
 		background-repeat: no-repeat;
 		background-size: auto 100%;
 		
-		background-image: url('{{authorPhotoPath}}');
-		max-width: {{authorPhotoWidth}}px; max-height: {{authorPhotoHeight}}px;
-		background-position-x: {{quoteDirectionSlide}}; background-position-y: center;
+		background-image: url('{{author.photoUrl}}');
+		max-width: {{author.photoWidth}}px; max-height: {{author.photoHeight}}px;
+		background-position-x: {{author.quoteDirectionSlide}}; background-position-y: center;
 	}
 		#container img#bg{
 			display: none;
@@ -105,11 +105,11 @@
 		line-height: 1.3em;
 		opacity: 0.7;
 		
-		left: {{authorPositionLeft}}; right: {{authorPositionRight}}; top: {{authorPositionTop}}; bottom: {{authorPositionBottom}};
-		max-width: {{authorBlockWidth}};
-		color: {{authorBlockFontColor}};
-		font-size: {{quoteBlockFontSize}};
-		background: {{authorBlockBackgroundColor}};
+		left: {{author.quotePositionLeft}}; right: {{author.quotePositionRight}}; top: {{author.quotePositionTop}}; bottom: {{author.quotePositionBottom}};
+		max-width: {{author.quoteWidth}};
+		color: {{author.quoteFontColor}};
+		font-size: {{fontSize}};
+		background: {{author.quoteBackgroundColor}};
 	}	
 		blockquote p{text-indent: -3%;}
 		blockquote footer{margin-top: 10px;}
@@ -344,15 +344,15 @@
 }(document, 'script', 'facebook-jssdk'));</script>
 
 	<div id="container">
-		<img id="bg" src="{{authorPhotoPath}}" />
+		<img id="bg" src="{{author.photoUrl}}" />
 		<header class="bar">
 			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE &sim;</a></h1>
 			<h2>your daily inspirational fix</h2>
 		</header>
 		
 		<blockquote>
-			<p>&#8220;{{quoteText}}&#8221;</p>
-			<footer id="{{authorWikipediaID}}">&mdash; {{authorName}}</footer>
+			<p>&#8220;{{text}}&#8221;</p>
+			<footer id="{{author.wikipediaID}}">&mdash; {{author.name}}</footer>
 		</blockquote>
 		
 		<footer class="bar">
@@ -367,15 +367,15 @@
 			<section id="quotedetails-content">
 				<h3>ABOUT TODAY'S QUOTE</h3>
 				<article id="direct-url">
-					<p><strong>Direct link:</strong> <a href="{{directUrl}}">{{directUrl}}</a></p>
+					<p><strong>Direct link:</strong> <a href="{{directUrl???}}">{{directUrl???}}</a></p>
 				</article>
-				{{#authorQuotesomeUrl}}
+				{{#if author.quotesomeUrl}}
 				<article id="more-quotes">
 					<h4>More on Quotesome</h4>
-					{{#quoteQuotesomeUrl}}<p>The quote: <a href="{{quoteQuotesomeUrl}}" target="_blank">{{quoteQuotesomeUrl}}</a></p>{{/quoteQuotesomeUrl}}
-					<p>The author: <a href="{{authorQuotesomeUrl}}" target="_blank">{{authorQuotesomeUrl}}</a></p>
+					{{#if quotesomeUrl}}<p>The quote: <a href="{{quotesomeUrl}}" target="_blank">{{quotesomeUrl}}</a></p>{{/if}}
+					<p>The author: <a href="{{author.quotesomeUrl}}" target="_blank">{{author.quotesomeUrl}}</a></p>
 				</article>
-				{{/authorQuotesomeUrl}}
+				{{/if}}
 				<article id="wikipedia">
 					<h4></h4>
 					<p></p>
