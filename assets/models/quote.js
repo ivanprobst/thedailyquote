@@ -5,8 +5,8 @@ var quoteSchema = new mongoose.Schema({
 	quotesomeUrl: 	{type: String, default: ''},
 	fontSize: 		{type: String, default: '48px'},
 	pubDate: 		{day: Number, month: Number, year: Number},
-	authorCode: 	{type: String, default: ''},
-	authorID: 		{type: String, ref: 'Author'}
+	authorCode:		{type: String, default: ''},
+	author: 		{type: String, ref: 'Author'}
 });
 
 var Quote = mongoose.model('Quote', quoteSchema);

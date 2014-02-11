@@ -51,10 +51,15 @@ http.createServer(function (request, response) {
 		Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1], function(err, quote){
 			if(err) return console.log('find error: '+err); // ??? return some kind of page if error
 
-			templater.getQuotePage(quote, function(htmlpage){
-				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(htmlpage);
-				response.end();
+			quote.populate('author', function(err, quote){
+				console.log('populated quote:');
+				console.log(quote);
+
+				templater.getQuotePage(quote, function(htmlpage){
+					response.writeHead(200, {'Content-Type': 'text/html'});
+					response.write(htmlpage);
+					response.end();
+				});
 			});
 		});
 		return;

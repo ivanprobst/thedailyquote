@@ -2,7 +2,7 @@ var	mongoose = require('mongoose');
 
 var authorSchema = new mongoose.Schema({
 	// content var
-    authorID: 				{type: String, default: ''},
+    authorCode:				{type: String, default: ''},
     name: 					{type: String, default: ''},
     quotesomeUrl: 			{type: String, default: ''},
     wikipediaID: 			{type: String, default: ''},

@@ -126,8 +126,8 @@
 		});
 
 		// check if authorID exists when quote field change
-		$("#quote-input #authorCode").keyup(function(event){
-			checkAuthorID($("#quote-input #authorCode").val());
+		$("#quote-input #q-authorCode").keyup(function(event){
+			checkAuthorID($("#quote-input #q-authorCode").val());
 		});
 		
 		// fetch schedule link listener
@@ -204,8 +204,8 @@
 		var data = {
 			_id: $('#quote-id').val() == '' ? null : $('#quote-id').val(),
 			my_item:{
-				authorCode:	$('#authorCode').val(),
-				authorID:	$('#q-authorID').val(),
+				authorCode:	$('#q-authorCode').val(),
+				author:		$('#author').val(),
 				quotesomeUrl: $('#quote-quotesome').val(),
 				text:		$('#quote-text').val(),
 				pubDate:	formattedDate,
@@ -267,21 +267,21 @@
 
 		$('#preview').attr('href','/quote/'+$.parseJSON(data)._id);
 
-		checkAuthorID($("#quote-input #authorCode").val());
+		checkAuthorID($("#quote-input #q-authorCode").val());
 	}
 
 	// check authorID existence
 	function checkAuthorID(id_to_check){
 		for(var i = 0; i<currentAuthors.length; i++){
-			$("#quote-input #authorCode").removeClass();
-			if((currentAuthors[i])['authorID'] == id_to_check){
-				$("#quote-input #authorCode").addClass('correct');
-				$("#quote-input #q-authorID").val((currentAuthors[i])['_id']);
+			$("#quote-input #q-authorCode").removeClass();
+			if((currentAuthors[i])['authorCode'] == id_to_check){
+				$("#quote-input #q-authorCode").addClass('correct');
+				$("#quote-input #author").val((currentAuthors[i])['_id']);
 				break;
 			}
 			else{
-				$("#quote-input #authorCode").addClass('incorrect');
-				$("#quote-input #q-authorID").val('');
+				$("#quote-input #q-authorCode").addClass('incorrect');
+				$("#quote-input #author").val('');
 			}
 		}
 	}
@@ -290,7 +290,7 @@
 	function addAuthor(){
 		console.log("posting new author to server...");
 
-		if($('#author-input #a-authorID').val() && $('#author-input #a-authorID').val() != ''){
+		if($('#author-input #a-authorCode').val() && $('#author-input #a-authorCode').val() != ''){
 			var formData = {};
 			$('#author-input fieldset input').each(function(index){
 				if($(this).val() && $(this).val() != '' && $(this).attr('name') != '_id')
@@ -314,7 +314,7 @@
 			});
 		}
 		else{
-			alert('please enter an authorID');
+			alert('please enter an authorCode');
 		}
 	}
 
@@ -375,7 +375,7 @@
 			currentAuthors = $.parseJSON(data);
 			currentAuthors.sort(SortByName);
 
-			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaID"></td><td class="quotesomeUrl"></td><td></td><td class="photoUrl"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
+			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorCode"></td><td class="name"></td><td class="wikipediaID"></td><td class="quotesomeUrl"></td><td></td><td class="photoUrl"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
 			
 			$('#author-output table tbody').empty();
 			$.each(currentAuthors, function(index, value){
@@ -443,10 +443,10 @@
 				data = data.contents.replace(/<script[^>]*>[sS]*?<\/script>/gi, '');
 				if (data.length > 0){
 					$('#author').val($('.row .author', data).html());
-					$('#q-authorID').val((($('.author', data).html()).toLowerCase()).replace(/ /g,'_'));
+					$('#q-authorCode').val((($('.author', data).html()).toLowerCase()).replace(/ /g,'_'));
 					$('#quote-quotesome').val(url);
 					$('#quote-text').val($('.quote-block-quote-text', data).html());
-					checkAuthorID($('#q-authorID').val());
+					checkAuthorID($('#authorCode').val());
 					var now = new Date();
 					if(!freeDaySet)
 						$('#pubdate').val(now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+(now.getDate())).slice(-2));
@@ -482,8 +482,8 @@
 	}
 
 	function SortByName(a, b){
-  		var aName = a.authorID.toLowerCase();
-	  	var bName = b.authorID.toLowerCase(); 
+  		var aName = a.authorCode.toLowerCase();
+	  	var bName = b.authorCode.toLowerCase(); 
 	  	return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
 	}
 	
@@ -510,8 +510,8 @@
 			
 				<form id="add-quote" onsubmit="return false;">
 					<input id="quote-id" name="_id" type="text" size="60" placeholder="_id" disabled />
-					<input id="q-authorID" name="authorID" type="text" size="60" placeholder="authorID" disabled />
-					<input id="authorCode" class="incorrect" name="authorCode" type="text" size="60" placeholder="author code" />
+					<input id="author" name="author" type="text" size="60" placeholder="author" disabled />
+					<input id="q-authorCode" class="incorrect" name="authorCode" type="text" size="60" placeholder="author code" />
 					<input id="quote-quotesome" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>
@@ -546,7 +546,7 @@
 					<fieldset id="data">
 						<legend>Data</legend>
 						<input id="author-id" name="_id" type="text" size="60" placeholder="_id"  disabled/>
-						<input id="a-authorID" name="authorID" type="text" size="60" placeholder="authorID" required />
+						<input id="a-authorCode" name="authorCode" type="text" size="60" placeholder="authorCode" required />
 						<input id="author-name" name="name" type="text" size="60" placeholder="author" />
 						<input id="author-wiki" name="wikipediaID" type="text" size="60" placeholder="wikipediaID" />
 						<input id="author-quotesome" name="quotesomeUrl" type="url" size="100" placeholder="quotesome url" />
