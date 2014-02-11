@@ -126,15 +126,12 @@
 		});
 
 		// check if authorID exists when quote field change
-		$("#quote-input #q-authorID").keyup(function(event){
-			checkAuthorID($("#quote-input #q-authorID").val());
+		$("#quote-input #authorCode").keyup(function(event){
+			checkAuthorID($("#quote-input #authorCode").val());
 		});
 		
 		// fetch schedule link listener
 		$("a#fetch-schedule").click(fetchSchedule);
-		
-		// fetch schedule link listener
-		$("#db-action a").click(dbAction);
 		
 		// fetch quote link listener
 		$('#schedule').on('click', 'p.quote', function(event){
@@ -207,6 +204,7 @@
 		var data = {
 			_id: $('#quote-id').val() == '' ? null : $('#quote-id').val(),
 			my_item:{
+				authorCode:	$('#authorCode').val(),
 				authorID:	$('#q-authorID').val(),
 				quotesomeUrl: $('#quote-quotesome').val(),
 				text:		$('#quote-text').val(),
@@ -269,19 +267,22 @@
 
 		$('#preview').attr('href','/quote/'+$.parseJSON(data)._id);
 
-		checkAuthorID($('#add-quote input[name = "authorID"]').val());
+		checkAuthorID($("#quote-input #authorCode").val());
 	}
 
 	// check authorID existence
 	function checkAuthorID(id_to_check){
 		for(var i = 0; i<currentAuthors.length; i++){
-			$("#quote-input #q-authorID").removeClass();
+			$("#quote-input #authorCode").removeClass();
 			if((currentAuthors[i])['authorID'] == id_to_check){
-				$("#quote-input #q-authorID").addClass('correct');
+				$("#quote-input #authorCode").addClass('correct');
+				$("#quote-input #q-authorID").val((currentAuthors[i])['_id']);
 				break;
 			}
-			else
-				$("#quote-input #q-authorID").addClass('incorrect');
+			else{
+				$("#quote-input #authorCode").addClass('incorrect');
+				$("#quote-input #q-authorID").val('');
+			}
 		}
 	}
 
@@ -480,17 +481,6 @@
 		}
 	}
 
-	// fetch schedule function
-	function dbAction(){
-		console.log("executing db action...");
-		
-		$.ajax({
-			type: "POST",
-			url: '/admin-db-action',
-			success: null
-		});
-	}
-
 	function SortByName(a, b){
   		var aName = a.authorID.toLowerCase();
 	  	var bName = b.authorID.toLowerCase(); 
@@ -520,8 +510,8 @@
 			
 				<form id="add-quote" onsubmit="return false;">
 					<input id="quote-id" name="_id" type="text" size="60" placeholder="_id" disabled />
-					<input id="author" name="author" type="text" size="60" placeholder="author (won't go in DB)" disabled />
-					<input id="q-authorID"  class="incorrect" name="authorID" type="text" size="60" placeholder="authorID" />
+					<input id="q-authorID" name="authorID" type="text" size="60" placeholder="authorID" disabled />
+					<input id="authorCode" class="incorrect" name="authorCode" type="text" size="60" placeholder="author code" />
 					<input id="quote-quotesome" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>
@@ -546,10 +536,6 @@
 				
 				<article id="unscheduled">
 				</article>
-			</section>
-			
-			<section id="db-action">
-				<h3><a href="#">CUSTOM DB ACTION</a></h3>
 			</section>
 		</div>
 

@@ -6,6 +6,7 @@ tobd
 * switch to mustache / handlebars (separate in different parts to build the page, change <title> according to home/preview)
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 * proper logging
+* update production
 
 tobf
 * improved sitemap for google search

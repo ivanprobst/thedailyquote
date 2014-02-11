@@ -12,21 +12,51 @@ module.exports = {
 	getQuotePage : function(aQuote, callback){
 		quote = aQuote;
 
-		if(!aQuote)
+		if(!quote)
 			console.log('no quote sent') // ??? prevent effect if no quote is sent
 
-			console.log('quote bef fetch:');
+		console.log('quote bef fetch:');
+		console.log(quote);
+
+		Author.findOne({authorID: quote.authorID}, function(err, author){
+			quote.authorID = author;
+			if (err) return console.log('err: '+err);
+			console.log('The quote is:');
 			console.log(quote);
+		});
 
-			Quote.findById(quote._id, function(err, secQuote){
-				console.log('quote after fetch:');
-				console.log(secQuote);
 
-				secQuote.populate('authorID', function(err, upQuote){
-					console.log('populated quote:');
-					console.log(upQuote);
+
+/*
+		Quote
+		.findOne({ _id: quote._id })
+		.populate({path: 'authorID', match: {authorID: this.authorID}})
+		.exec(function (err, theQuote) {
+			if (err) return console.log('err: '+err);
+			console.log('The quote is:');
+			console.log(theQuote);
+		});
+
+		Quote
+		.findOne({ _id: quote._id })
+		.populate('authorID')
+		.exec(function (err, theQuote) {
+		  if (err) return console.log('err: '+err);
+		  console.log('The quote is:');
+		  console.log(theQuote);
+		})
+*/
+/*
+		Quote.findById(quote._id, function(err, secQuote){
+			console.log('quote after fetch:');
+			console.log(secQuote);
+
+			secQuote.populate('authorID', function(err, upQuote){
+				console.log('populated quote:');
+				console.log(upQuote);
 			});
 		});
+*/
 /*
 		quote = new Quote();
 		author = new Author();
