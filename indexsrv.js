@@ -147,8 +147,7 @@ Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]}).populate('au
 	if(quotes && quotes.length > 0){
 		var today = new Date();
 		for(var i=0; i<quotes.length; i++){
-			var quote = quotes[i]; // maybe limit number of rss item generated?
-			console.log(quote);
+			var quote = quotes[i]; // ??? maybe limit number of rss item generated
 			if(quote.pubDate.year < today.getFullYear() || (quote.pubDate.year == today.getFullYear() && quote.pubDate.month < today.getMonth()) || (quote.pubDate.year == today.getFullYear() && quote.pubDate.month == today.getMonth() && quote.pubDate.day <= today.getDate())){
 				var aDate = new Date (quote.pubDate.year, quote.pubDate.month, quote.pubDate.day, dailyTransitionHour, 0, 0, 0);
 				var aFormattedDate = ('0'+quote.pubDate.day).slice(-2)+'-'+('0'+(quote.pubDate.month+1)).slice(-2)+'-'+quote.pubDate.year;
@@ -164,45 +163,44 @@ Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]}).populate('au
 // global social stuff updater
 function updateSocial(){
 	console.log('...sending social updates');
-	DB.getMappingAuthorID(function(mapping){
-		if(mapping && todayQuote.pubDate && mapping[todayQuote.authorID]){
-			var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
-			var aFormattedDate = ('0'+todayQuote.pubDate.day).slice(-2)+'-'+('0'+(todayQuote.pubDate.month+1)).slice(-2)+'-'+todayQuote.pubDate.year;
-			var thumb = mapping[todayQuote.authorID].photoUrl ? (mapping[todayQuote.authorID].photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg") : '';
-			var name = mapping[todayQuote.authorID].name ? mapping[todayQuote.authorID].name : '';
+	// ??? check if today's quote is ok
+	var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
+	var aFormattedDate = ('0'+todayQuote.pubDate.day).slice(-2)+'-'+('0'+(todayQuote.pubDate.month+1)).slice(-2)+'-'+todayQuote.pubDate.year;
+	var thumb = todayQuote.author.photoUrl ? (todayQuote.author.photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg") : '';
+	var name = todayQuote.author.name ? todayQuote.author.name : '';
 
-			// add rss item
-			feed.item({title: 'Words from '+name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: name});
-			console.log('# rss item added');
+	// add rss item
+	feed.item({title: 'Words from '+name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: name});
+	console.log('# rss item added');
 
-			// ping twitter
-			var T = new Twit({
-				consumer_key:         'CoNoEzyQ5OqXv2PkAxA'
-			  , consumer_secret:      'ESTtXkBGGFH8rxZPHMENC3TRoRNlUsUO7lP4pWlvSU'
-			  , access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z'
-			  , access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
-			});
-			T.post('statuses/update', { status: 'Words from '+name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
-				if(err) return console.error("!!! ERR (posting update to twitter): "+err);
-				else console.log("# posted to twitter: "+reply);
-			});
+	// ping twitter
+	var T = new Twit({
+		consumer_key:         'CoNoEzyQ5OqXv2PkAxA',
+		consumer_secret:      'ESTtXkBGGFH8rxZPHMENC3TRoRNlUsUO7lP4pWlvSU',
+		access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z',
+		access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
+	});
+	T.post('statuses/update', { status: 'Words from '+name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
+		if(err) return console.error("!!! ERR (posting update to twitter): "+err);
+		else console.log("# posted to twitter: "+reply);
+	});
 
-			// ping facebook
-			var url = 'https://graph.facebook.com/1410710079162036/links';
-			var token = 'CAAB7sDUrcSIBAH4C9U8ZBZBjZCmL4T9ltxifkidZCOHUI2YP7DZCpyW1Os22MAPqjfuL0XKVcX8X86q2ZC6LDOZCeEc6LQeZAw0iACSUNOdSIAD6cvow3Ni1fV4BsjCE5boRDLXoMVZBVSxiZBxEi8CUYCRf2xpp2wJ5rErHaOmBV8ijrdpe5q9usT';
-			var params = {
-				access_token: token,
-				link: 'http://thequotetribune.com/quote/'+aFormattedDate,
-				message: 'In today\'s edition',
-				picture: thumb
-			};
-			request.post({url: url, qs: params}, function(err, resp, body) {
-				  if (err) return console.error("!!! ERR (posting update to facebook): ", err);
-				  body = JSON.parse(body);
-				  if (body.error) return console.error("!!! ERR (posting update to facebook, returned from facebook): ", body.error);
+	// ping facebook
+	var url = 'https://graph.facebook.com/1410710079162036/links';
+	var token = 'CAAB7sDUrcSIBAH4C9U8ZBZBjZCmL4T9ltxifkidZCOHUI2YP7DZCpyW1Os22MAPqjfuL0XKVcX8X86q2ZC6LDOZCeEc6LQeZAw0iACSUNOdSIAD6cvow3Ni1fV4BsjCE5boRDLXoMVZBVSxiZBxEi8CUYCRf2xpp2wJ5rErHaOmBV8ijrdpe5q9usT';
+	var params = {
+		access_token: token,
+		link: 'http://thequotetribune.com/quote/'+aFormattedDate,
+		message: 'In today\'s edition',
+		picture: thumb
+	};
+	request.post({url: url, qs: params}, function(err, resp, body) {
+		  if (err) return console.error("!!! ERR (posting update to facebook): ", err);
+		  body = JSON.parse(body);
+		  if (body.error) return console.error("!!! ERR (posting update to facebook, returned from facebook): ", body.error);
 
-				  console.log('# posted to facebook: '+JSON.stringify(body, null, '\t'));
-			});
+		  console.log('# posted to facebook: '+JSON.stringify(body, null, '\t'));
+	});
 
 /* STUFF TO GENERATE EXTENDED ACCESS TOKEN
 				var extUrl = "https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=135996736500002&client_secret=bf9e38c6bcd00d0e3b4ccdc1408db739&fb_exchange_token=CAAB7sDUrcSIBAOgEG2zZBHpUpQj83bJDXn1ePf3SPZAZCeNT3mTitQwS9KAx14NZAtZBmKiz576E6qn2JZBo2oIYuC1cVGcmxDg7lv1iPg5L1hQUZBIaWyY5lZCZB38Xp0W0XFSO6KmQXwxU8lWYDsH3h2ZAuMvW0OMbo8HOGeGl3hf9pfLGnMFi3FQCcVBUh4724ZD";
@@ -211,8 +209,6 @@ function updateSocial(){
 					console.log(body);
 				});
 */
-		}
-	});
 }
 
 
