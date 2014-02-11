@@ -49,11 +49,10 @@ http.createServer(function (request, response) {
 		console.log("...received quote preview request:");
 
 		Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1], function(err, quote){
-			if(err) return console.log('find error: '+err); // ??? return some kind of page if error
+			if(err) return console.log('find error: '+err); // ??? return some kind of page if no quote found
 
 			quote.populate('author', function(err, quote){
-				console.log('populated quote:');
-				console.log(quote);
+				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
 
 				templater.getQuotePage(quote, function(htmlpage){
 					response.writeHead(200, {'Content-Type': 'text/html'});

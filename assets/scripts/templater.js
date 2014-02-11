@@ -4,7 +4,6 @@ var fs = require('fs'),
 	Author = require("../models/author.js").Author;;
 
 var quote = null;
-var author = null;
 var htmlPage = '';
 
 module.exports = {
@@ -15,45 +14,10 @@ module.exports = {
 		if(!quote)
 			console.log('no quote sent') // ??? prevent effect if no quote is sent
 
-		console.log('quote bef fetch:');
+		console.log('quote bef build:');
 		console.log(quote);
 
-
-/*
-		quote = new Quote();
-		author = new Author();
-
-		if(aQuote)
-			quote.setData(aQuote.getObjectData());
-		else
-			quote.set404Quote();
-
-		if(quote.errorType && quote.errorType != ''){
-			author.setError(quote.errorType);
-			buildQuotePage(callback);
-		}
-
-		else{
-
-			DB.getItem('authors',{authorID: quote.authorID}, function(item){
-				if(item){
-					author.setData(item);
-					buildQuotePage(callback);
-				}
-				else{
-					DB.isOn(function(status){
-						if(status)
-							quote.setNoAuthorQuote();
-						else
-							quote.set404Quote();
-						
-						author.setError(quote.errorType);
-						buildQuotePage(callback);
-					});
-				}
-			});
-		}
-*/
+		buildQuotePage(callback);
 	},
 
 	getAdminPage : function(callback) {
@@ -79,31 +43,31 @@ function buildQuotePage(callback){
 	file.on('error', function(err){console.error('no index file found...');});
 	file.on('end', function(err){
 		
-		console.log('...building a quote page with text: '+quote.text+', from: '+author.name+', wiki ref: '+author.wikipediaID);
+		console.log('...building a quote page with text: '+quote.text+', from: '+quote.author.name+', wiki ref: '+quote.author.wikipediaID);
 		// init quote content
 		parseTemplate('quoteText', quote.text);
-		parseTemplate('authorName', author.name);
+		parseTemplate('authorName', quote.author.name);
 		parseTemplate('quoteQuotesomeUrl', quote.quotesomeUrl);
-		parseTemplate('authorQuotesomeUrl', author.quotesomeUrl);
-		parseTemplate('authorWikipediaID', author.wikipediaID);
+		parseTemplate('authorQuotesomeUrl', quote.author.quotesomeUrl);
+		parseTemplate('authorWikipediaID', quote.author.wikipediaID);
 
 		// photo
-		parseTemplate('authorPhotoPath', author.photoUrl);
-		parseTemplate('authorThumbPath', (author.photoUrl).replace(/\.[0-9a-z]+$/,'_thumb.jpg'));
-		parseTemplate('authorPhotoWidth', author.photoWidth);
-		parseTemplate('authorPhotoHeight', author.photoHeight);
-		parseTemplate('quoteDirectionSlide', author.quoteDirectionSlide);
+		parseTemplate('authorPhotoPath', quote.author.photoUrl);
+		parseTemplate('authorThumbPath', (quote.author.photoUrl).replace(/\.[0-9a-z]+$/,'_thumb.jpg'));
+		parseTemplate('authorPhotoWidth', quote.author.photoWidth);
+		parseTemplate('authorPhotoHeight', quote.author.photoHeight);
+		parseTemplate('quoteDirectionSlide', quote.author.quoteDirectionSlide);
 
 		// init quote styling
-		parseTemplate('authorBarsColor', author.barsBackgroundColor);
-		parseTemplate('authorBlockFontColor', author.quoteFontColor);
+		parseTemplate('authorBarsColor', quote.author.barsBackgroundColor);
+		parseTemplate('authorBlockFontColor', quote.author.quoteFontColor);
 		parseTemplate('quoteBlockFontSize', quote.fontSize);
-		parseTemplate('authorBlockWidth', author.quoteWidth);
-		parseTemplate('authorBlockBackgroundColor', author.quoteBackgroundColor);
-		parseTemplate('authorPositionLeft', author.quotePositionLeft);
-		parseTemplate('authorPositionRight', author.quotePositionRight);
-		parseTemplate('authorPositionTop', author.quotePositionTop);
-		parseTemplate('authorPositionBottom', author.quotePositionBottom);
+		parseTemplate('authorBlockWidth', quote.author.quoteWidth);
+		parseTemplate('authorBlockBackgroundColor', quote.author.quoteBackgroundColor);
+		parseTemplate('authorPositionLeft', quote.author.quotePositionLeft);
+		parseTemplate('authorPositionRight', quote.author.quotePositionRight);
+		parseTemplate('authorPositionTop', quote.author.quotePositionTop);
+		parseTemplate('authorPositionBottom', quote.author.quotePositionBottom);
 
 		// random
 		if(quote.errorType && quote.errorType != '')
