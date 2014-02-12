@@ -62,20 +62,21 @@ http.createServer(function (request, response) {
 	else if((request.url).match(/\/quote\/[a-f0-9]{24}/)){
 		console.log("...received quote preview request:");
 
-		Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1], function(err, quote){
-			if(err) return console.log('find error: '+err); // ??? return some kind of page if no quote found
-
-			quote.populate('author', function(err, quote){
-				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
-
-				// data prep
-				var dataToTemplate = quote.toObject();
-				dataToTemplate.isAdmin = true;
-
-				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(qPage(dataToTemplate));
+		Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1]).populate('author').exec(function(err, quote){
+			if(err || !quote){
+				response.writeHead(404, {'Content-Type': 'text/html'});
+				response.write('');
 				response.end();
-			});
+				return console.log('!!! ERR (can\'t findbyid preview\'s quote or populate issue): '+err);
+			}
+
+			// data prep
+			var dataToTemplate = quote.toObject();
+			dataToTemplate.isAdmin = true;
+
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.write(qPage(dataToTemplate));
+			response.end();
 		});
 		return;
 	}

@@ -26,7 +26,7 @@ var desktopPage = handlebars.compile(fs.readFileSync('assets/templates/desktop.h
 var mobilePage = handlebars.compile(fs.readFileSync('assets/templates/mobile.html', "utf8"));
 handlebars.registerHelper('formatDirectUrl', function(pubDate){
 	if(pubDate)
-		return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+pubDate.month+1).slice(-2)+'-'+pubDate.year;
+		return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+(parseInt(pubDate.month)+1)).slice(-2)+'-'+pubDate.year;
 	else return '';
 });
 handlebars.registerHelper('formatThumbUrl', function(photoUrl){
@@ -38,6 +38,7 @@ handlebars.registerHelper('formatThumbUrl', function(photoUrl){
 // varz
 var todayQuote = new Quote();
 var firstRun = true;
+
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
@@ -77,26 +78,29 @@ http.createServer(function (request, response) {
 		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);
 
 		// get relevant quote
-		Quote.findOne({'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day}, function(err, quote){
-			if(err) return console.log('find error: '+err); // ??? return some kind of page if no quote found
+		Quote.findOne({'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day})
+		.populate('author')
+		.exec(function(err, quote){
+			if(err || !quote){sendQuoteError(null); return console.log('!!! ERR (can\'t findone preview\'s quote or populate issue): '+err);}
 
-			quote.populate('author', function(err, quote){
-				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
+			// send other error page if it's a future quote
+			var today = new Date();
+			if(!(year < today.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate()))){
+				Quote.findOne({authorCode : 'err_unpublished'})
+				.populate('author')
+				.exec(function(err, quote){
+					if(err || !quote){sendQuoteError(null); return console.log('!!! ERR (can\'t findone error\'s quote or populate issue): '+err);}
+					sendQuoteError(quote);
+				});
+				return;
+			}
 
-					/* ??? template handling of mobile + error and date check
-					if(!item)
-						quotePreview.setTooEarlyQuote();
-					if(!(year < today.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
-						quotePreview.setUnpublishedQuote();
-					*/
+			// data prep
+			var dataToTemplate = quote.toObject();
 
-				// data prep
-				var dataToTemplate = quote.toObject();
-
-				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(finalPage(dataToTemplate));
-				response.end();
-			});
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.write(finalPage(dataToTemplate));
+			response.end();
 		});
 		return;
 	}
@@ -110,14 +114,7 @@ http.createServer(function (request, response) {
 	// if weird page asked, serve error page
 	else if(!(request.url.match(/\.[0-9a-z]+$/)) || request.url.match(/\.[0-9a-z]+$/) == ''){
 		console.log('...processing unknown page request');
-
-/* ??? generate error page
-		templater.getQuotePage(null, function(htmlpage){
-			response.writeHead(200, {'Content-Type': 'text/html'});
-			response.write(htmlpage);
-			response.end();
-		});
-*/
+		sendQuoteError(null);
 		return;
 	}
 	
@@ -133,14 +130,7 @@ http.createServer(function (request, response) {
 	// log when can't stream the file
 	file.on('error',function(err){
 		console.error('!!! ERR (file asked to server doesn\'t exist): '+err);
-		
-		/* ??? generate error page
-		templater.getQuotePage(null, function(htmlpage){
-			response.writeHead(404, {'Content-Type': 'text/html'});
-			response.write(htmlpage);
-			response.end();
-		});
-		*/
+		sendQuoteError(null);
 	});
 
 	function sendQuoteError(quote){
@@ -153,7 +143,7 @@ http.createServer(function (request, response) {
 			dataToTemplate.author = Author.get404();
 		}
 		else
-			quote.toObject();
+			dataToTemplate = quote.toObject();
 
 		dataToTemplate.isError = true;
 		console.log(dataToTemplate);
@@ -168,7 +158,9 @@ http.createServer(function (request, response) {
 
 // rss init
 console.log('...setting up rss feed');
-Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]}).populate('author').exec(function(err, quotes){
+Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]})
+.populate('author')
+.exec(function(err, quotes){
 	if(err) return console.log('!!! ERR (NO RSS FEED CREATED): '+err); // if error, abort
 
 	if(quotes && quotes.length > 0){
@@ -190,44 +182,45 @@ Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]}).populate('au
 // global social stuff updater
 function updateSocial(){
 	console.log('...sending social updates');
-	// ??? check if today's quote is ok
-	var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
-	var aFormattedDate = ('0'+todayQuote.pubDate.day).slice(-2)+'-'+('0'+(todayQuote.pubDate.month+1)).slice(-2)+'-'+todayQuote.pubDate.year;
-	var thumb = todayQuote.author.photoUrl ? (todayQuote.author.photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg") : '';
-	var name = todayQuote.author.name ? todayQuote.author.name : '';
+	if(todayQuote){ // might be unnecessary due to check in tick
+		var aDate = new Date (todayQuote.pubDate.year, todayQuote.pubDate.month, todayQuote.pubDate.day, dailyTransitionHour, 0, 0, 0);
+		var aFormattedDate = ('0'+todayQuote.pubDate.day).slice(-2)+'-'+('0'+(todayQuote.pubDate.month+1)).slice(-2)+'-'+todayQuote.pubDate.year;
+		var thumb = todayQuote.author.photoUrl ? (todayQuote.author.photoUrl).replace(/\.[0-9a-z]+$/,"_thumb.jpg") : '';
+		var name = todayQuote.author.name ? todayQuote.author.name : '';
 
-	// add rss item
-	feed.item({title: 'Words from '+name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: name});
-	console.log('# rss item added');
+		// add rss item
+		feed.item({title: 'Words from '+name, description: todayQuote.text, url: 'http://thequotetribune.com/quote/'+aFormattedDate, guid: 'quote'+aFormattedDate, date: aDate, author: name});
+		console.log('# rss item added');
 
-	// ping twitter
-	var T = new Twit({
-		consumer_key:         'CoNoEzyQ5OqXv2PkAxA',
-		consumer_secret:      'ESTtXkBGGFH8rxZPHMENC3TRoRNlUsUO7lP4pWlvSU',
-		access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z',
-		access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
-	});
-	T.post('statuses/update', { status: 'Words from '+name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
-		if(err) return console.error("!!! ERR (posting update to twitter): "+err);
-		else console.log("# posted to twitter: "+reply);
-	});
+		// ping twitter
+		var T = new Twit({
+			consumer_key:         'CoNoEzyQ5OqXv2PkAxA',
+			consumer_secret:      'ESTtXkBGGFH8rxZPHMENC3TRoRNlUsUO7lP4pWlvSU',
+			access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z',
+			access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
+		});
+		T.post('statuses/update', { status: 'Words from '+name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
+			if(err) return console.error("!!! ERR (posting update to twitter): "+err);
+			else console.log("# posted to twitter: "+reply);
+		});
 
-	// ping facebook
-	var url = 'https://graph.facebook.com/1410710079162036/links';
-	var token = 'CAAB7sDUrcSIBAH4C9U8ZBZBjZCmL4T9ltxifkidZCOHUI2YP7DZCpyW1Os22MAPqjfuL0XKVcX8X86q2ZC6LDOZCeEc6LQeZAw0iACSUNOdSIAD6cvow3Ni1fV4BsjCE5boRDLXoMVZBVSxiZBxEi8CUYCRf2xpp2wJ5rErHaOmBV8ijrdpe5q9usT';
-	var params = {
-		access_token: token,
-		link: 'http://thequotetribune.com/quote/'+aFormattedDate,
-		message: 'In today\'s edition',
-		picture: thumb
-	};
-	request.post({url: url, qs: params}, function(err, resp, body) {
-		  if (err) return console.error("!!! ERR (posting update to facebook): ", err);
-		  body = JSON.parse(body);
-		  if (body.error) return console.error("!!! ERR (posting update to facebook, returned from facebook): ", body.error);
+		// ping facebook
+		var url = 'https://graph.facebook.com/1410710079162036/links';
+		var token = 'CAAB7sDUrcSIBAH4C9U8ZBZBjZCmL4T9ltxifkidZCOHUI2YP7DZCpyW1Os22MAPqjfuL0XKVcX8X86q2ZC6LDOZCeEc6LQeZAw0iACSUNOdSIAD6cvow3Ni1fV4BsjCE5boRDLXoMVZBVSxiZBxEi8CUYCRf2xpp2wJ5rErHaOmBV8ijrdpe5q9usT';
+		var params = {
+			access_token: token,
+			link: 'http://thequotetribune.com/quote/'+aFormattedDate,
+			message: 'In today\'s edition',
+			picture: thumb
+		};
+		request.post({url: url, qs: params}, function(err, resp, body) {
+			  if (err) return console.error("!!! ERR (posting update to facebook): ", err);
+			  body = JSON.parse(body);
+			  if (body.error) return console.error("!!! ERR (posting update to facebook, returned from facebook): ", body.error);
 
-		  console.log('# posted to facebook: '+JSON.stringify(body, null, '\t'));
-	});
+			  console.log('# posted to facebook: '+JSON.stringify(body, null, '\t'));
+		});
+	}
 
 /* STUFF TO GENERATE EXTENDED ACCESS TOKEN
 				var extUrl = "https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=135996736500002&client_secret=bf9e38c6bcd00d0e3b4ccdc1408db739&fb_exchange_token=CAAB7sDUrcSIBAOgEG2zZBHpUpQj83bJDXn1ePf3SPZAZCeNT3mTitQwS9KAx14NZAtZBmKiz576E6qn2JZBo2oIYuC1cVGcmxDg7lv1iPg5L1hQUZBIaWyY5lZCZB38Xp0W0XFSO6KmQXwxU8lWYDsH3h2ZAuMvW0OMbo8HOGeGl3hf9pfLGnMFi3FQCcVBUh4724ZD";
