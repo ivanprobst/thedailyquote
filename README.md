@@ -2,30 +2,29 @@ thequotetribune
 ===============
 
 tobd
-* switch to handlebars (separate in different parts to build the page, change <title> according to home/preview, get all properties to work)
+* switch to handlebars (separate in different parts to build the page, change <title> according to home/preview)
+* does it make sense to redirect to (static) error pages, rather than generate them on the go?
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
-* proper logging
-* update production
+* ...
+* admin - list all quotes with edit + delete buttons
+* proper logs
+* ...
+* update SB database, test run
 
 tobf
 * improved sitemap for google search
 * re-check background image stuff (http://css-tricks.com/perfect-full-page-background-image/)
-* handle carriage return and links in quote txt
+* handle carriage return in quote txt
 * server monitoring
 * nginx gzip, caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
 * s3 caching?
-* does it make sense to redirect to (static) error pages, rather than generate them on the go?
-* DOM for quote and author
 
 admin enhanced
 * fix auto-dater when fetching quote from quotesome
-* auto reload id when adding a quote / author
 * prevent adding author with existing author_id
 * quote/author update/creation feedback on browser
 * authorID and pubDate duplicate check
-* delete items
 * schedule in red when a quote is there but is missing something (date, etc.)
-* handle schedule duplicates (check when upserting in db, check when fetching schedule)
 
 modules
 * twit: https://github.com/ttezel/twit

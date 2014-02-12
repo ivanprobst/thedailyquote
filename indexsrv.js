@@ -8,7 +8,8 @@ var http = require('http'),
 	handlebars = require("handlebars");
 
 // internal modules
-var Quote = require("./assets/models/quote.js").Quote;
+var Quote = require("./assets/models/quote.js").Quote,
+	Author = require("./assets/models/author.js").Author;
 
 // cnst
 mongoose.connect('mongodb://localhost:27017/testtribune');
@@ -23,17 +24,31 @@ var extension_map = {
 // varz
 var todayQuote = new Quote();
 var firstRun = true;
-var qPage = handlebars.compile(fs.readFileSync('assets/templates/index.html', "utf8"));
+
+// templating stuff
+var desktopPage = handlebars.compile(fs.readFileSync('assets/templates/index.html', "utf8"));
+var mobilePage = handlebars.compile(fs.readFileSync('assets/templates/mobile.html', "utf8"));
+var finalePage = null;
+handlebars.registerHelper('formatDirectUrl', function(pubDate){
+	return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+pubDate.month+1).slice(-2)+'-'+pubDate.year;
+});
+handlebars.registerHelper('formatThumbUrl', function(photoUrl){
+	return photoUrl.replace(/\.[0-9a-z]+$/,'_thumb.jpg');
+});
+
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
 http.createServer(function (request, response) {
 	console.log('# index srv asked for: '+request.url);
 
+	// templating presets
 	var ua = request.headers['user-agent'];
-    var $ = {};
-	if (/mobile/i.test(ua))
-	    $.Mobile = true;
+	if(/mobile/i.test(ua))
+		finalPage = mobilePage;
+	else
+		finalPage = desktopPage;
+/*
 	if (/like Mac OS X/.test(ua)) {
 	    $.iOS = /CPU( iPhone)? OS ([0-9\._]+) like Mac OS X/.exec(ua)[2].replace(/_/g, '.');
 	    $.iPhone = /iPhone/.test(ua);
@@ -47,18 +62,18 @@ http.createServer(function (request, response) {
 	    $.Mac = /(Intel|PPC) Mac OS X ?([0-9\._]*)[\)\;]/.exec(ua)[2].replace(/_/g, '.') || true;
 	if (/Windows NT/.test(ua))
 	    $.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
+*/
 
 	// if home page asked, serve home page...
 	if(request.url == '/'){
 		console.log('...processing index page request');
 
-		/* ??? mobile template solution needed
-		if($.Mobile)
-			tmpQuote.template = 'assets/templates/mobile.html';
-		*/
+		// data prep
+		var dataToTemplate = todayQuote.toObject();
+		dataToTemplate.isIndex = true;
 
 		response.writeHead(200, {'Content-Type': 'text/html'});
-		response.write(qPage(todayQuote));
+		response.write(finalPage(dataToTemplate));
 		response.end();
 		return;
 	}
@@ -76,19 +91,20 @@ http.createServer(function (request, response) {
 			quote.populate('author', function(err, quote){
 				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
 
+					/* ??? template handling of mobile + error and date check
+					if(!item)
+						quotePreview.setTooEarlyQuote();
+					if(!(year < today.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
+						quotePreview.setUnpublishedQuote();
+					*/
+
+				// data prep
+				var dataToTemplate = quote.toObject();
+
 				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(qPage(quote));
+				response.write(finalPage(dataToTemplate));
 				response.end();
 			});
-
-			/* ??? template handling of mobile + error and date check
-			if($.Mobile)
-				quotePreview.template = 'assets/templates/mobile.html';
-			if(!item)
-				quotePreview.setTooEarlyQuote();
-			if(!(year < today.getFullYear() || (year == today.getFullYear() && month < today.getMonth()) || (year == today.getFullYear() && month == today.getMonth() && day <= today.getDate())))
-				quotePreview.setUnpublishedQuote();
-			*/
 		});
 		return;
 	}

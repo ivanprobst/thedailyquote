@@ -39,7 +39,7 @@ http.createServer(function (request, response) {
 	// serve admin home page...
 	if(request.url == '/admin' && request.method != 'POST'){
 		console.log('...received admin page request');
-		fs.readFile('assets/templates/index.html', "utf8", function(err, adminPage){
+		fs.readFile('assets/templates/admin.html', "utf8", function(err, adminPage){
 			if(err) throw err; // ???
 
 			response.writeHead(200, {'Content-Type': 'text/html'});
@@ -58,8 +58,12 @@ http.createServer(function (request, response) {
 			quote.populate('author', function(err, quote){
 				if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
 
+				// data prep
+				var dataToTemplate = quote.toObject();
+				dataToTemplate.isAdmin = true;
+
 				response.writeHead(200, {'Content-Type': 'text/html'});
-				response.write(qPage(quote));
+				response.write(qPage(dataToTemplate));
 				response.end();
 			});
 		});
