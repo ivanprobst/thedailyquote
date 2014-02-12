@@ -2,10 +2,8 @@ thequotetribune
 ===============
 
 tobd
-* admin - list all quotes with edit + delete buttons
-* ...
 * proper logs
-* update SB database, test run
+* update SB database, migrate quotes, create error user, test run
 
 tobf
 * improved sitemap for google search

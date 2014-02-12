@@ -2,6 +2,7 @@ var config = {}
 
 config.db = process.env.DB || 'mongodb://localhost:27017/thequotetribune';
 config.port = process.env.PORT || 8124;
+config.adminport = 8125;
 
 config.twitter = {};
 config.twitter.consumer_key = 'CoNoEzyQ5OqXv2PkAxA';

@@ -24,7 +24,7 @@ handlebars.registerHelper('formatThumbUrl', function(photoUrl){
 });
 
 // run that server
-console.log('# running admin on http://127.0.0.1:'+config.port);
+console.log('# running admin on http://127.0.0.1:'+config.adminport);
 http.createServer(function (request, response) {
 	console.log('# admin srv asked for: '+request.url);
 
@@ -81,22 +81,6 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
-	// serve quote by day request
-	else if(request.url.match(/\/admin-get-quote-by-day/)){
-		console.log('...received quote request:');
-		var sentData = ''; 
-
-		request.on('data', function(data){
-			sentData += data;
-		});
-		request.on('end', function(data){
-			var objectDate = JSON.parse(sentData);
-			console.log(objectDate);
-			
-			Quote.findOne({'pubDate.year' : objectDate.year, 'pubDate.month' : objectDate.month, 'pubDate.day' : objectDate.day}, sendDataToClient);
-		});
-		return;
-	}
 	// serve quote upsert request
 	else if(request.url.match(/\/admin-upsert-quote/)){
 		console.log('...received a posted quote item:');
@@ -125,45 +109,21 @@ http.createServer(function (request, response) {
 		});
 		return;
 	}
-	// serve schedule request
-	else if(request.url.match(/\/admin-get-schedule/)){
-		console.log('...received schedule request:');
-	
-		Quote.find(function(err, items){
-			if(err)	return console.log("find error: "+err);
+	// serve authors request
+	else if(request.url.match(/\/admin-get-quotes/)){
+		console.log('...received authors list request:');
+		var sentData = ''; 
 
-			console.log('listing all quotes:');
-			console.log(items);
+		request.on('data', function(data){
+			sentData += data;
+		});
+		request.on('end', function(data){
+			console.log(sentData);
 
-			var schedule = {};
-			if(items){
-				items.forEach(function(item){
-					if(item.pubDate && !(item.pubDate instanceof Date)){
-						console.log('- on schedule: '+item.pubDate.year+'->'+item.pubDate.month+'->'+item.pubDate.day);
-						var year = item.pubDate.year;
-						var month = item.pubDate.month;
-						var day = item.pubDate.day;
-						var jsonLevel1 = {};
-						var jsonLevel2 = {};
-						if(schedule[year]){
-							jsonLevel1 = schedule[year];
-							if(jsonLevel1[month]){
-								((schedule[year])[month])[day] = item._id;
-							}
-							else{
-								jsonLevel2[day] = item._id;
-								(schedule[year])[month] = jsonLevel2;
-							}
-						}
-						else{
-							jsonLevel2[day] = item._id;
-							jsonLevel1[month] = jsonLevel2;
-							schedule[year] = jsonLevel1;
-						}
-					}
-				});
-			}
-			sendDataToClient(null, schedule);
+			if(sentData && sentData != 'null' && sentData != '')
+				Quote.findById(sentData, sendDataToClient);
+			else
+				Quote.find({}, sendDataToClient);
 		});
 		return;
 	}
@@ -182,6 +142,24 @@ http.createServer(function (request, response) {
 				Author.findById(sentData, sendDataToClient);
 			else
 				Author.find({}, sendDataToClient);
+		});
+		return;
+	}
+	// serve quote removal request
+	else if(request.url == '/admin-remove-quote'){
+		console.log('...received quote removal request:');
+		var sentData = ''; 
+
+		request.on('data', function(data){
+			sentData += data;
+		});
+		request.on('end', function(data){
+			console.log(sentData);
+
+			Quote.remove({_id: sentData}, function(err){
+				if(err) return console.log('removal failure: '+ err);
+				sendDataToClient(null, 'ACK');
+			});
 		});
 		return;
 	}
@@ -245,5 +223,5 @@ http.createServer(function (request, response) {
 			response.write(JSON.stringify(data));
 		response.end();
 	}
-}).listen(config.port);
+}).listen(config.adminport);
 
