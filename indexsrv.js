@@ -21,14 +21,9 @@ var extension_map = {
 	".html":"text/html"
 };
 
-// varz
-var todayQuote = new Quote();
-var firstRun = true;
-
 // templating stuff
 var desktopPage = handlebars.compile(fs.readFileSync('assets/templates/index.html', "utf8"));
 var mobilePage = handlebars.compile(fs.readFileSync('assets/templates/mobile.html', "utf8"));
-var finalePage = null;
 handlebars.registerHelper('formatDirectUrl', function(pubDate){
 	return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+pubDate.month+1).slice(-2)+'-'+pubDate.year;
 });
@@ -36,6 +31,9 @@ handlebars.registerHelper('formatThumbUrl', function(photoUrl){
 	return photoUrl.replace(/\.[0-9a-z]+$/,'_thumb.jpg');
 });
 
+// varz
+var todayQuote = new Quote();
+var firstRun = true;
 
 // server
 console.log('# running server on http://127.0.0.1:8124/');
@@ -43,26 +41,12 @@ http.createServer(function (request, response) {
 	console.log('# index srv asked for: '+request.url);
 
 	// templating presets
+	var finalPage = null;
 	var ua = request.headers['user-agent'];
 	if(/mobile/i.test(ua))
 		finalPage = mobilePage;
 	else
 		finalPage = desktopPage;
-/*
-	if (/like Mac OS X/.test(ua)) {
-	    $.iOS = /CPU( iPhone)? OS ([0-9\._]+) like Mac OS X/.exec(ua)[2].replace(/_/g, '.');
-	    $.iPhone = /iPhone/.test(ua);
-	    $.iPad = /iPad/.test(ua);
-	}
-	if (/Android/.test(ua))
-	    $.Android = /Android ([0-9\.]+)[\);]/.exec(ua)[1];
-	if (/webOS\//.test(ua))
-	    $.webOS = /webOS\/([0-9\.]+)[\);]/.exec(ua)[1];
-	if (/(Intel|PPC) Mac OS X/.test(ua))
-	    $.Mac = /(Intel|PPC) Mac OS X ?([0-9\._]*)[\)\;]/.exec(ua)[2].replace(/_/g, '.') || true;
-	if (/Windows NT/.test(ua))
-	    $.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
-*/
 
 	// if home page asked, serve home page...
 	if(request.url == '/'){
