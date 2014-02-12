@@ -2,11 +2,9 @@ thequotetribune
 ===============
 
 tobd
-* store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
-* ...
 * admin - list all quotes with edit + delete buttons
-* proper logs
 * ...
+* proper logs
 * update SB database, test run
 
 tobf

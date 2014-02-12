@@ -9,10 +9,11 @@ var http = require('http'),
 
 // internal modules
 var Quote = require("./assets/models/quote.js").Quote,
-	Author = require("./assets/models/author.js").Author;
+	Author = require("./assets/models/author.js").Author,
+	config = require('./assets/config/config');
 
 // cnst
-mongoose.connect('mongodb://localhost:27017/testtribune');
+mongoose.connect(config.db);
 var dailyTransitionHour = 6; // 6am UTC
 var feed = new RSS({"title":'The Quote Tribune',"description":"Your daily inspirational fix","feed_url":"http://thequotetribune.com/rss.xml","site_url":"http://thequotetribune.com"});
 var extension_map = {
@@ -41,7 +42,7 @@ var firstRun = true;
 
 
 // server
-console.log('# running server on http://127.0.0.1:8124/');
+console.log('# running server on http://127.0.0.1:'+config.port);
 http.createServer(function (request, response) {
 	console.log('# index srv asked for: '+request.url);
 
@@ -153,7 +154,7 @@ http.createServer(function (request, response) {
 		response.end();
 		return;
 	}
-}).listen(8124);
+}).listen(config.port);
 
 
 // rss init
@@ -194,10 +195,10 @@ function updateSocial(){
 
 		// ping twitter
 		var T = new Twit({
-			consumer_key:         'CoNoEzyQ5OqXv2PkAxA',
-			consumer_secret:      'ESTtXkBGGFH8rxZPHMENC3TRoRNlUsUO7lP4pWlvSU',
-			access_token:         '2164553251-5GdLiB1qs4VB1fHHlfy26HkkLDpHRRJy2rgaW3Z',
-			access_token_secret:  'HdRkfoP2jW7D7I5FKFepWoBlRBfv8Zqx0EFwCAlJi3du7'
+			consumer_key:         config.twitter.consumer_key,
+			consumer_secret:      config.twitter.consumer_secret,
+			access_token:         config.twitter.access_token,
+			access_token_secret:  config.twitter.access_token_secret
 		});
 		T.post('statuses/update', { status: 'Words from '+name+' - '+'http://thequotetribune.com/quote/'+aFormattedDate}, function(err, reply) {
 			if(err) return console.error("!!! ERR (posting update to twitter): "+err);
@@ -205,8 +206,8 @@ function updateSocial(){
 		});
 
 		// ping facebook
-		var url = 'https://graph.facebook.com/1410710079162036/links';
-		var token = 'CAAB7sDUrcSIBAH4C9U8ZBZBjZCmL4T9ltxifkidZCOHUI2YP7DZCpyW1Os22MAPqjfuL0XKVcX8X86q2ZC6LDOZCeEc6LQeZAw0iACSUNOdSIAD6cvow3Ni1fV4BsjCE5boRDLXoMVZBVSxiZBxEi8CUYCRf2xpp2wJ5rErHaOmBV8ijrdpe5q9usT';
+		var url = config.facebook.url;
+		var token = config.facebook.token;
 		var params = {
 			access_token: token,
 			link: 'http://thequotetribune.com/quote/'+aFormattedDate,

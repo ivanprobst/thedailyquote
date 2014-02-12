@@ -6,10 +6,11 @@ var http = require('http'),
 
 // internal modules
 var Quote = require("./assets/models/quote.js").Quote,
-	Author = require("./assets/models/author.js").Author;
+	Author = require("./assets/models/author.js").Author,
+	config = require('./assets/config/config');
 
 // inits
-mongoose.connect('mongodb://localhost:27017/testtribune');
+mongoose.connect(config.db);
 var qPage = handlebars.compile(fs.readFileSync('assets/templates/desktop.html', "utf8"));
 handlebars.registerHelper('formatDirectUrl', function(pubDate){
 	if(pubDate)
@@ -23,7 +24,7 @@ handlebars.registerHelper('formatThumbUrl', function(photoUrl){
 });
 
 // run that server
-console.log('# running admin on http://127.0.0.1:8125/');
+console.log('# running admin on http://127.0.0.1:'+config.port);
 http.createServer(function (request, response) {
 	console.log('# admin srv asked for: '+request.url);
 
@@ -244,5 +245,5 @@ http.createServer(function (request, response) {
 			response.write(JSON.stringify(data));
 		response.end();
 	}
-}).listen(8125);
+}).listen(config.port);
 
