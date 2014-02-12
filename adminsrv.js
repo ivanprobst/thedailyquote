@@ -10,7 +10,17 @@ var Quote = require("./assets/models/quote.js").Quote,
 
 // inits
 mongoose.connect('mongodb://localhost:27017/testtribune');
-var qPage = handlebars.compile(fs.readFileSync('assets/templates/index.html', "utf8"));
+var qPage = handlebars.compile(fs.readFileSync('assets/templates/desktop.html', "utf8"));
+handlebars.registerHelper('formatDirectUrl', function(pubDate){
+	if(pubDate)
+		return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+pubDate.month+1).slice(-2)+'-'+pubDate.year;
+	else return '';
+});
+handlebars.registerHelper('formatThumbUrl', function(photoUrl){
+	if(photoUrl)
+		return photoUrl.replace(/\.[0-9a-z]+$/,'_thumb.jpg');
+	else return '';
+});
 
 // run that server
 console.log('# running admin on http://127.0.0.1:8125/');

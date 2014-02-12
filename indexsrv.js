@@ -22,13 +22,17 @@ var extension_map = {
 };
 
 // templating stuff
-var desktopPage = handlebars.compile(fs.readFileSync('assets/templates/index.html', "utf8"));
+var desktopPage = handlebars.compile(fs.readFileSync('assets/templates/desktop.html', "utf8"));
 var mobilePage = handlebars.compile(fs.readFileSync('assets/templates/mobile.html', "utf8"));
 handlebars.registerHelper('formatDirectUrl', function(pubDate){
-	return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+pubDate.month+1).slice(-2)+'-'+pubDate.year;
+	if(pubDate)
+		return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+pubDate.month+1).slice(-2)+'-'+pubDate.year;
+	else return '';
 });
 handlebars.registerHelper('formatThumbUrl', function(photoUrl){
-	return photoUrl.replace(/\.[0-9a-z]+$/,'_thumb.jpg');
+	if(photoUrl)
+		return photoUrl.replace(/\.[0-9a-z]+$/,'_thumb.jpg');
+	else return '';
 });
 
 // varz
@@ -52,14 +56,18 @@ http.createServer(function (request, response) {
 	if(request.url == '/'){
 		console.log('...processing index page request');
 
-		// data prep
-		var dataToTemplate = todayQuote.toObject();
-		dataToTemplate.isIndex = true;
+		if(todayQuote){
+			// data prep
+			var dataToTemplate = todayQuote.toObject();
+			dataToTemplate.isIndex = true;
 
-		response.writeHead(200, {'Content-Type': 'text/html'});
-		response.write(finalPage(dataToTemplate));
-		response.end();
-		return;
+			response.writeHead(200, {'Content-Type': 'text/html'});
+			response.write(finalPage(dataToTemplate));
+			response.end();
+			return;
+		}
+		else
+			sendQuoteError(null);
 	}
 	// if quote preview asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]$/)){
@@ -134,6 +142,27 @@ http.createServer(function (request, response) {
 		});
 		*/
 	});
+
+	function sendQuoteError(quote){
+		console.log('...processing error page request');
+
+		// data prep
+		var dataToTemplate = {};
+		if(!quote || !quote.author){
+			dataToTemplate = Quote.get404();
+			dataToTemplate.author = Author.get404();
+		}
+		else
+			quote.toObject();
+
+		dataToTemplate.isError = true;
+		console.log(dataToTemplate);
+
+		response.writeHead(404, {'Content-Type': 'text/html'});
+		response.write(finalPage(dataToTemplate));
+		response.end();
+		return;
+	}
 }).listen(8124);
 
 
@@ -221,17 +250,15 @@ function tick(){
 	console.log('# tick now @'+today+', next tick in: '+delay);
 
 	// update today's quote
-	Quote.findOne({'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()}, function(err, quote){ // ??? merge find and populate
-		if(err) return console.log('find error: '+err); // ??? return some kind of page if no quote found
+	Quote.findOne({'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()})
+	.populate('author')
+	.exec(function(err, quote){
+		if(err || !quote){todayQuote = null; return console.log('!!! ERR (can\'t findone today\'s quote or populate issue): '+err);}
 
-		quote.populate('author', function(err, quote){
-			if(err) return console.log('find error: '+err); // ??? return some kind of page if no author found
-
-			todayQuote = quote;
-			console.log("# the quote today is: "+todayQuote.text + ', from: '+todayQuote.author.name);
-			if(!firstRun) setTimeout(updateSocial, 2000);
-			firstRun = false;
-		});
+		todayQuote = quote;
+		console.log("# the quote today is: "+todayQuote.text + ', from: '+todayQuote.author.name);
+		if(!firstRun) updateSocial;
+		firstRun = false;
 	});
 
 	setTimeout(tick,delay);

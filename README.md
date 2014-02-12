@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* switch to handlebars (separate in different parts to build the page, change <title> according to home/preview)
 * does it make sense to redirect to (static) error pages, rather than generate them on the go?
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 * ...

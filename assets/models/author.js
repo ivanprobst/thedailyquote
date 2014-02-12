@@ -21,6 +21,25 @@ var authorSchema = new mongoose.Schema({
     quotePositionBottom:	{type: String, default: 'auto'}
 });
 
+authorSchema.statics.get404 = function(){
+    return {
+        authorCode:             '404',
+        name:                   '300 (+104) PAGE NOT FOUND',
+        photoUrl:               'https://s3-eu-west-1.amazonaws.com/thequotetribune/photos/_err_404.jpg',
+        photoWidth:             3100,
+        photoHeight:            1408,
+        quoteDirectionSlide:    'center',
+        barsBackgroundColor:    '#fff',
+        quoteFontColor:         '#fff',
+        quoteWidth:             '30%',
+        quoteBackgroundColor:   'none',
+        quotePositionRight:     'auto',
+        quotePositionBottom:    'auto',
+        quotePositionLeft:      '2%',
+        quotePositionTop:       '3%'
+    };
+}
+
 var Author = mongoose.model('Author', authorSchema);
 
 module.exports = {Author: Author};
