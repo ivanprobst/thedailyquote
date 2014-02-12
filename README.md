@@ -2,7 +2,6 @@ thequotetribune
 ===============
 
 tobd
-* does it make sense to redirect to (static) error pages, rather than generate them on the go?
 * store dev-prod configs (http://stackoverflow.com/questions/5869216/how-to-store-node-js-deployment-settings-configuration-files)
 * ...
 * admin - list all quotes with edit + delete buttons
