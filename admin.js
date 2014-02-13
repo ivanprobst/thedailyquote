@@ -2,15 +2,15 @@
 var http = require('http'),
 	fs = require('fs'),
 	mongoose = require('mongoose'),
-	handlebars = require("handlebars");
+	handlebars = require("handlebars"),
+	winston = require('winston');
 
 // internal modules
 var Quote = require("./assets/models/quote.js").Quote,
 	Author = require("./assets/models/author.js").Author,
 	config = require('./assets/config/config');
 
-// inits
-mongoose.connect(config.db);
+// templating conf
 var qPage = handlebars.compile(fs.readFileSync('assets/templates/desktop.html', "utf8"));
 handlebars.registerHelper('formatDirectUrl', function(pubDate){
 	if(pubDate)
@@ -23,10 +23,25 @@ handlebars.registerHelper('formatThumbUrl', function(photoUrl){
 	else return '';
 });
 
+// logger conf
+var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)({colorize: true, timestamp: true}),
+      new (winston.transports.File)({filename: config.log.adminfile, colorize: true, timestamp: true})
+    ]
+});
+
+
+// db init
+logger.info('# RUNNING DB ON %s', config.db);
+var options = {}; options.server = {};
+options.server.socketOptions = { keepAlive: 1 };
+mongoose.connect(config.db);
+
 // run that server
-console.log('# running admin on http://127.0.0.1:'+config.adminport);
+logger.info('# RUNNING SERVER ON http://127.0.0.1:%s', config.port);
 http.createServer(function (request, response) {
-	console.log('# admin srv asked for: '+request.url);
+	logger.info('admin server asked for: %s', request.url);
 
 	var ua = request.headers['user-agent'];
     	var $ = {};
@@ -45,11 +60,11 @@ http.createServer(function (request, response) {
 	    $.Mac = /(Intel|PPC) Mac OS X ?([0-9\._]*)[\)\;]/.exec(ua)[2].replace(/_/g, '.') || true;
 	if (/Windows NT/.test(ua))
 	    $.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
-	console.log('browser type: '+$.Mobile+', and vers: '+$.Mac);
+	logger.info('browser type: %j',$);
 
 	// serve admin home page...
 	if(request.url == '/admin' && request.method != 'POST'){
-		console.log('...received admin page request');
+		logger.info('processing index page request: %s', request.url);
 		fs.readFile('assets/templates/admin.html', "utf8", function(err, adminPage){
 			if(err) throw err; // ???
 
@@ -61,14 +76,14 @@ http.createServer(function (request, response) {
 	}
 	// serve quote preview page...
 	else if((request.url).match(/\/quote\/[a-f0-9]{24}/)){
-		console.log("...received quote preview request:");
+		logger.info('processing preview request: %s', request.url);
 
 		Quote.findById(request.url.match(/\/quote\/([a-f0-9]+)/)[1]).populate('author').exec(function(err, quote){
 			if(err || !quote){
 				response.writeHead(404, {'Content-Type': 'text/html'});
 				response.write('');
 				response.end();
-				return console.log('!!! ERR (can\'t findbyid preview\'s quote or populate issue): '+err);
+				return logger.error('can\'t "findbyid" preview\'s quote or populate issue (err: %s), returning an empty page',err);
 			}
 
 			// data prep
@@ -83,7 +98,6 @@ http.createServer(function (request, response) {
 	}
 	// serve quote upsert request
 	else if(request.url.match(/\/admin-upsert-quote/)){
-		console.log('...received a posted quote item:');
 		var sentData = ''; 
 
 		request.on('data', function(data){
@@ -91,34 +105,33 @@ http.createServer(function (request, response) {
 		});
 		request.on('end', function(data){
 			var parsedData = JSON.parse(sentData);
-			console.log(parsedData);
+			logger.info('received a posted quote item: %j', parsedData);
 
 			if(parsedData._id){
 				Quote.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
-					if(err) return console.log('update failure: '+ err);
+					if(err) return logger.error('quote update failure: %s', err);
 					sendDataToClient(null, raw);
 				});
 			}
 			else{
 				var quote = new Quote(parsedData.my_item);
 				quote.save(function(err, prod, nb){
-					if(err) return console.log('save failure: '+ err);
+					if(err) return logger.error('new quote save failure: %s', err);
 					sendDataToClient(null, prod);
 				});
 			}
 		});
 		return;
 	}
-	// serve authors request
+	// serve quotes request
 	else if(request.url.match(/\/admin-get-quotes/)){
-		console.log('...received authors list request:');
 		var sentData = ''; 
 
 		request.on('data', function(data){
 			sentData += data;
 		});
 		request.on('end', function(data){
-			console.log(sentData);
+			logger.info('received quote(s) request: %s', sentData);
 
 			if(sentData && sentData != 'null' && sentData != '')
 				Quote.findById(sentData, sendDataToClient);
@@ -129,14 +142,13 @@ http.createServer(function (request, response) {
 	}
 	// serve authors request
 	else if(request.url.match(/\/admin-get-authors/)){
-		console.log('...received authors list request:');
 		var sentData = ''; 
 
 		request.on('data', function(data){
 			sentData += data;
 		});
 		request.on('end', function(data){
-			console.log(sentData);
+			logger.info('received author(s) request: %s', sentData);
 
 			if(sentData && sentData != 'null' && sentData != '')
 				Author.findById(sentData, sendDataToClient);
@@ -147,17 +159,16 @@ http.createServer(function (request, response) {
 	}
 	// serve quote removal request
 	else if(request.url == '/admin-remove-quote'){
-		console.log('...received quote removal request:');
 		var sentData = ''; 
 
 		request.on('data', function(data){
 			sentData += data;
 		});
 		request.on('end', function(data){
-			console.log(sentData);
+			logger.info('received quote removal request: %s', sentData);
 
 			Quote.remove({_id: sentData}, function(err){
-				if(err) return console.log('removal failure: '+ err);
+				if(err) return logger.error('quote removal failure: %s', err);
 				sendDataToClient(null, 'ACK');
 			});
 		});
@@ -165,7 +176,6 @@ http.createServer(function (request, response) {
 	}
 	// serve author upsert request
 	else if(request.url.match(/\/admin-upsert-author/)){
-		console.log('...received a posted author item:');
 		var sentData = ''; 
 
 		request.on('data', function(data){
@@ -173,18 +183,18 @@ http.createServer(function (request, response) {
 		});
 		request.on('end', function(data){
 			var parsedData = JSON.parse(sentData);
-			console.log(parsedData);
+			logger.info('received a posted author item: %j', parsedData);
 
 			if(parsedData._id){
 				Author.update({_id: parsedData._id}, parsedData.my_item, {}, function(err, nb, raw){
-					if(err) return console.log('update failure: '+ err);
+				if(err) return logger.error('author update failure: %s', err);
 					sendDataToClient(null, raw);
 				});
 			}
 			else{
 				var author = new Author(parsedData.my_item);
 				author.save(function(err, prod, nb){
-					if(err) return console.log('save failure: '+ err);
+				if(err) return logger.error('new author save failure: %s', err);
 					sendDataToClient(null, prod);
 				});
 			}
@@ -193,17 +203,16 @@ http.createServer(function (request, response) {
 	}
 	// serve author removal request
 	else if(request.url == '/admin-remove-author'){
-		console.log('...received authors removal request:');
 		var sentData = ''; 
 
 		request.on('data', function(data){
 			sentData += data;
 		});
 		request.on('end', function(data){
-			console.log(sentData);
+			logger.info('received author removal request: %s', sentData);
 
 			Author.remove({_id: sentData}, function(err){
-				if(err) return console.log('removal failure: '+ err);
+				if(err) return logger.error('author removal failure: %s', err);
 				sendDataToClient(null, 'ACK');
 			});
 		});
@@ -211,14 +220,14 @@ http.createServer(function (request, response) {
 	}
 	// if nothing found, return this
 	else{
-		response.write('no api found');
+		logger.error('no api entry found');
+		response.write('no api entry found');
 		response.end();
 	}
 
 	// stringify and send the data back to client
 	function sendDataToClient(err, data){
-		console.log('...sending data back to client:');
-		console.log(data);
+		logger.info('sending data back to client: %j', data);
 		if(data)
 			response.write(JSON.stringify(data));
 		response.end();

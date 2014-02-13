@@ -3,6 +3,19 @@ var config = {}
 config.db = process.env.DB || 'mongodb://localhost:27017/thequotetribune';
 config.port = process.env.PORT || 8124;
 config.adminport = 8125;
+config.extensionmap = {
+	".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",
+	".js":"text/javascript",".css":"text/css",
+	".html":"text/html"
+};
+config.transitiontime = 6; // UCT quote transition time
+
+config.log = {};
+config.log.indexfile = 'logs/index.log';
+config.log.errorfile = 'logs/error.log';
+config.log.adminfile = 'logs/admin.log';
+
+config.rss = {"title":'The Quote Tribune',"description":"Your daily inspirational fix","feed_url":"http://thequotetribune.com/rss.xml","site_url":"http://thequotetribune.com"};
 
 config.twitter = {};
 config.twitter.consumer_key = 'CoNoEzyQ5OqXv2PkAxA';

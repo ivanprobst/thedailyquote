@@ -2,30 +2,18 @@ thequotetribune
 ===============
 
 tobd
-* proper logs
 * update SB database, migrate quotes, create error user, test run
 
 tobf
+* server monitoring
 * improved sitemap for google search
 * re-check background image stuff (http://css-tricks.com/perfect-full-page-background-image/)
-* handle carriage return in quote txt
-* server monitoring
-* nginx gzip, caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
-* s3 caching?
+* perf: nginx gzip, s3 caching and static files handling (http://blog.argteam.com/coding/hardening-node-js-for-production-part-2-using-nginx-to-avoid-node-js-load/)
 
 admin enhanced
-* fix auto-dater when fetching quote from quotesome
+* list in red quotes/authors with missing elements
 * prevent adding author with existing author_id
 * quote/author update/creation feedback on browser
-* authorID and pubDate duplicate check
-* schedule in red when a quote is there but is missing something (date, etc.)
-
-modules
-* twit: https://github.com/ttezel/twit
-* request: https://github.com/mikeal/request
-* rss: https://github.com/dylang/node-rss
-* mongoose: https://github.com/LearnBoost/mongoose
-* handlebars: https://github.com/wycats/handlebars.js
 
 icons ref
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project

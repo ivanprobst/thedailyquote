@@ -2,6 +2,7 @@
 ## Specifics
 #################
 node_modules/
+logs/
 
 #################
 ## Eclipse
