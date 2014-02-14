@@ -1,7 +1,7 @@
 var config = {}
 
-config.db = process.env.DB || 'mongodb://localhost:27017/thequotetribune';
-config.port = process.env.PORT || 8124;
+config.db = process.env.DB || 'mongodb://localhost:27017/testtribune';
+config.port = process.env.PORT || 8134;
 config.adminport = 8125;
 config.extensionmap = {
 	".png":"image/png",".jpg":"image/jpg",".gif":"image/gif",".ico":"image/x-icon",
