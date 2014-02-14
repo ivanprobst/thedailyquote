@@ -89,7 +89,7 @@ http.createServer(function (request, response) {
 		Quote.findOne({'pubDate.year' : year, 'pubDate.month' : month, 'pubDate.day' : day})
 		.populate('author')
 		.exec(function(err, quote){
-			if(err || !quote){sendQuoteError(null); return logger.error('can\'t "findone" preview\'s quote or populate issue, err: %s',err);}
+			if(err || !quote || !quote.author){sendQuoteError(null); return logger.error('can\'t "findone" preview\'s quote or populate issue, err: %s',err);}
 
 			// send other error page if it's a future quote
 			var today = new Date();

@@ -39,7 +39,7 @@ options.server.socketOptions = { keepAlive: 1 };
 mongoose.connect(config.db);
 
 // run that server
-logger.info('# RUNNING SERVER ON http://127.0.0.1:%s', config.port);
+logger.info('# RUNNING SERVER ON http://127.0.0.1:%s', config.adminport);
 http.createServer(function (request, response) {
 	logger.info('admin server asked for: %s', request.url);
 
@@ -227,7 +227,7 @@ http.createServer(function (request, response) {
 
 	// stringify and send the data back to client
 	function sendDataToClient(err, data){
-		logger.info('sending data back to client: %j', data);
+		logger.info('sending data back to client: %s', data);
 		if(data)
 			response.write(JSON.stringify(data));
 		response.end();

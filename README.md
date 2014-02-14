@@ -2,7 +2,7 @@ thequotetribune
 ===============
 
 tobd
-* update SB database, migrate quotes, create error user, test run
+* ...
 
 tobf
 * server monitoring

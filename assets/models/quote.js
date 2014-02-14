@@ -14,7 +14,7 @@ quoteSchema.statics.get404 = function () {
 	return {
 		text: 			'Something went wrong. We are mighty angry about it. We go have a look, you stay back there.',
 		authorCode:		'404',
-		fontSize: 		'48px',
+		fontSize: 		'56px',
 		author: 		Author.get404()
 	};
 }
