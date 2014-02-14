@@ -236,6 +236,25 @@ function updateSocial(){
 }
 
 
+Quote.find({}, function(err,quotes){
+	Author.find({}, function(err,authors){
+		quotes.forEach(function(quote){
+			console.log(quote);
+			var authorID = '';
+			authors.forEach(function(author){
+				if(quote.authorID == author.authorID){
+					authorID = author._id;
+					return;
+				}
+			});
+logger.info('quote: %j', quote.toObject());
+logger.info('authorID: %s, authorCode: %s', authorID, quote.authorID);
+			//Quote.update({_id: quote._id}, {$set :{author: authorID, authorCode: quote.authorID}, $unset:{authorID:''}}, function(err, nb, raw){if(err) return logger.error(err); logger.info(raw);});
+		});
+	});
+});
+
+
 // transition stuff init
 tick();
 function tick(){
@@ -251,7 +270,7 @@ function tick(){
 	Quote.findOne({'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()})
 	.populate('author')
 	.exec(function(err, quote){
-		if(err || !quote){todayQuote = null; return logger.error('can\'t "findone" today\'s quote or populate issue (%s)',err);} // ??? if fails, maybe set delay to 5min to retry shortly after
+		if(err || !quote || !quote.author){todayQuote = null; return logger.error('can\'t "findone" today\'s quote or populate issue (%s)', err);} // ??? if fails, maybe set delay to 5min to retry shortly after
 
 		todayQuote = quote;
 		logger.info('the quote today is: "%s", from %s', todayQuote.text, todayQuote.author.name);
