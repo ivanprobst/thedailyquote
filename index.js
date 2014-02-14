@@ -236,25 +236,6 @@ function updateSocial(){
 }
 
 
-Quote.find({}, function(err,quotes){
-	Author.find({}, function(err,authors){
-		quotes.forEach(function(quote){
-			console.log(quote);
-			var authorID = '';
-			authors.forEach(function(author){
-				if(quote.authorID == author.authorID){
-					authorID = author._id;
-					return;
-				}
-			});
-logger.info('quote: %j', quote.toObject());
-logger.info('authorID: %s, authorCode: %s', authorID, quote.authorID);
-			//Quote.update({_id: quote._id}, {$set :{author: authorID, authorCode: quote.authorID}, $unset:{authorID:''}}, function(err, nb, raw){if(err) return logger.error(err); logger.info(raw);});
-		});
-	});
-});
-
-
 // transition stuff init
 tick();
 function tick(){
