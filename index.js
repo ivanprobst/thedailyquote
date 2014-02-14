@@ -251,7 +251,7 @@ function tick(){
 	Quote.findOne({'pubDate.year' : quoteDay.getFullYear(), 'pubDate.month' : quoteDay.getMonth(), 'pubDate.day' : quoteDay.getDate()})
 	.populate('author')
 	.exec(function(err, quote){
-		if(err || !quote){todayQuote = null; return logger.error('can\'t "findone" today\'s quote or populate issue (%s)',err);} // ??? if fails, maybe set delay to 5min to retry shortly after
+		if(err || !quote || !quote.author){todayQuote = null; return logger.error('can\'t "findone" today\'s quote or populate issue (%s)', err);} // ??? if fails, maybe set delay to 5min to retry shortly after
 
 		todayQuote = quote;
 		logger.info('the quote today is: "%s", from %s', todayQuote.text, todayQuote.author.name);
