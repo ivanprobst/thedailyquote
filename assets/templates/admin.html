@@ -484,9 +484,14 @@
 	}
 
 	function SortByName(a, b){
-  		var aName = a.authorID.toLowerCase();
-	  	var bName = b.authorID.toLowerCase(); 
-	  	return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+		if(a.authorID && b.authorID){
+  			var aName = a.authorID.toLowerCase();
+	  		var bName = b.authorID.toLowerCase(); 
+	  		return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+		}
+		else{
+			return 0;
+		}
 	}
 	
 </script>
