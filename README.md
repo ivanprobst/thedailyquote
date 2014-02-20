@@ -2,7 +2,8 @@ thequotetribune
 ===============
 
 tobd
-* ...
+* fix tweet encoding glitch
+* finish transfer (merge branch, update, drop and import DBs)
 
 tobf
 * server monitoring
