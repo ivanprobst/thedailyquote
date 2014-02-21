@@ -79,7 +79,7 @@ http.createServer(function (request, response) {
 			sendQuoteError(null);
 	}
 	// if quote preview asked, serve preview page
-	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]$/)){
+	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]($|\?)/)){
 		logger.info('processing preview request: %s', request.url);
 		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
 		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
