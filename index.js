@@ -255,7 +255,7 @@ function tick(){
 
 		todayQuote = quote;
 		logger.info('the quote today is: "%s", from %s', todayQuote.text, todayQuote.author.name);
-		if(!firstRun) updateSocial;
+		if(!firstRun) updateSocial();
 		firstRun = false;
 	});
 }
