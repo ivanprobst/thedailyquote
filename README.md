@@ -2,7 +2,7 @@ thequotetribune
 ===============
 
 tobd
-* ...
+* ....
 
 tobf
 * server monitoring
