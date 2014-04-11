@@ -4,7 +4,7 @@ thequotetribune
 tobd
 * ....
 
-tobf
+tobfixed
 * server monitoring
 * improved sitemap for google search
 * re-check background image stuff (http://css-tricks.com/perfect-full-page-background-image/)
@@ -15,7 +15,65 @@ admin enhanced
 * prevent adding author with existing author_id
 * quote/author update/creation feedback on browser
 
-icons ref
+## features list
+
+### v2.0 (advanced basic features)
+
+* save (set as homepage, download)
+* share (buffer, email, copy direct link)
+* extra quote details (original text if foreign language, source, date)
+* newsletter
+
+### v3.0 (nav)
+
+* navigation through quotes (look for example in daily stuff, like comic strips xkdc)
+* show previous quotes (boards of pics)
+* multi authors-photos support
+* set quotes on random super old date (easter egg style)
+* advanced color scheme (icons, text)
+
+### v4.0 (search)
+
+* super simple by default, but advanced search paterns (codes to input in field)
+* quote tags
+* listing of answers straight away when typing more than 2 chars
+* list thumb pics, quote abbreviated, author
+* link will load a preview overlay?
+
+### v1.0 features (**DONE**)
+
+* auto-scaling
+* about (copyright, about author, contact)
+* share, like (twitter, fb)
+* quote details page
+* auto everyday tweet + fb + RSS
+* groovy design
+* quote auto-update
+* mini admin (give quotesome link -> auto-queue, re-order, edit, schedule check)
+* quotes direct url, SEO friendly, track usage (use webmaster google tools, analytics, etc...)
+
+## random
+
+### resolutions stuff
+
+Voodoo: ratio of 0.45, min height of 1300
+
+Checks:
+
+* 1366x768 (25%) - ok
+* 1920x1080 (11%) - assumed ok by calculation
+* 1280x1024 (10%) - assumed ok by calculation
+* 1024x768 (9%) - ok
+* 1280x800 (8%) - ok
+* 1440x900 (7%) - ok
+* 1680x1050 (6%) - ok
+* 1600x900 (5%) - ok
+* 1920x1200 (3%) - ok
+* 1360x768 (2%) - ok
+* 2560x1440 (1%) - ok except some too short pics
+
+### icons refs
+
 * quote: <a href="http://thenounproject.com/noun/quote/#icon-No23118" target="_blank">Quote</a> designed by <a href="http://thenounproject.com/i" target="_blank">irene hoffman</a> from The Noun Project
 * share: <a href="http://thenounproject.com/noun/network/#icon-No14269" target="_blank">Network</a> designed by <a href="http://thenounproject.com/gregpabst" target="_blank">Greg Pabst</a> from The Noun Project
 * save: <a href="http://thenounproject.com/noun/paper-clip/#icon-No17647" target="_blank">Paper Clip</a> designed by <a href="http://thenounproject.com/tinyxl" target="_blank">Erin Standley</a> from The Noun Project
