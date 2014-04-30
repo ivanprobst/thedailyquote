@@ -216,9 +216,9 @@
 	$(document).ready(function(){
 	
 		// couple of var init
-		var authorName = $('blockquote footer').html().substring(2);
-		var wikipediaAuthor = $('blockquote footer').attr('id');
-		var directUrl = $('#direct-url a').html();
+		var authorName = '{{author.name}}';
+		var wikipediaAuthor = '{{author.wikipediaID}}';
+		var directUrl =' {{formatDirectUrl text}}';
 		originalQuoteFontSize = parseInt($('blockquote').css('font-size'));
 		originalAuthorPhotoWidth = parseInt($('#container').css('max-width'));
 		originalAuthorPhotoHeight = parseInt($('#container').css('max-height'));
@@ -381,7 +381,7 @@
 			{{else}}
 				<nav id="menu" class="classic">
 					<a href="" id="twitter-menu-item" target="_blank"></a>
-					<a href="" id="facebook-menu-item" target="_blank"></a>
+					<!--<a href="" id="facebook-menu-item" target="_blank"></a>-->
 					<a href="" id="quotedetails-menu-item" class="modal" alt="More Information"></a>
 					<a href="" id="register-menu-item" class="modal" alt="About"></a>
 				</nav>
