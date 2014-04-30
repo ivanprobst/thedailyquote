@@ -65,18 +65,31 @@ http.createServer(function (request, response) {
 	if(request.url == '/'){
 		logger.info('processing index page request: %s', request.url);
 
-		if(todayQuote){
-			// data prep
-			var dataToTemplate = todayQuote.toObject();
-			dataToTemplate.isIndex = true;
+		Quote.find(null, function (err, docs) {
+			var random = Math.floor(Math.random()*docs.length);
+			console.log('id: '+docs[random]._id);
 
-			response.writeHead(200, {'Content-Type': 'text/html'});
-			response.write(finalPage(dataToTemplate));
-			response.end();
-			return;
-		}
-		else
-			sendQuoteError(null);
+			Quote.findOne({"_id":docs[random]._id})
+			.populate('author')
+			.exec(function(err, quote){
+				if(err || !quote || !quote.author){return logger.error('can\'t "findone" random quote or populate issue (%s)', err);} // ??? if fails, maybe set delay to 5min to retry shortly after
+
+				logger.info('your random quote is: "%s", from %s', quote.text, quote.author.name);
+
+				if(quote){
+					// data prep
+					var dataToTemplate = quote.toObject();
+					dataToTemplate.isIndex = true;
+
+					response.writeHead(200, {'Content-Type': 'text/html'});
+					response.write(finalPage(dataToTemplate));
+					response.end();
+					return;
+				}
+				else
+					sendQuoteError(null);
+			});
+		});
 	}
 	// if quote preview asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]($|\?)/)){
@@ -126,21 +139,22 @@ http.createServer(function (request, response) {
 		sendQuoteError(null);
 		return;
 	}
-	
-	// if asked other, set header and stream the file when existing
-	var requestExtension = config.extensionmap[request.url.match(/\.[0-9a-z]+$/)];
-	var cleanedUrl = request.url.replace(/([a-z]+\/)+/,''); // keep only the file name
-	if(!requestExtension) requestExtension = 'text/plain';
-	response.writeHead(200, {'Content-Type': requestExtension});
-	logger.info('processing file request: %s (cleaned version: %s)', request.url, cleanedUrl);
-	var file = fs.createReadStream(('.'+cleanedUrl));
-	file.pipe(response);
+	else{
+		// if asked other, set header and stream the file when existing
+		var requestExtension = config.extensionmap[request.url.match(/\.[0-9a-z]+$/)];
+		var cleanedUrl = request.url.replace(/([a-z]+\/)+/,''); // keep only the file name
+		if(!requestExtension) requestExtension = 'text/plain';
+		response.writeHead(200, {'Content-Type': requestExtension});
+		logger.info('processing file request: %s (cleaned version: %s)', request.url, cleanedUrl);
+		var file = fs.createReadStream(('.'+cleanedUrl));
+		file.pipe(response);
 
-	// log when can't stream the file
-	file.on('error',function(err){
-		logger.error('file asked to server doesn\'t exist (%s, err: %s), send 404', request.url, err);
-		sendQuoteError(null);
-	});
+		// log when can't stream the file
+		file.on('error',function(err){
+			logger.error('file asked to server doesn\'t exist (%s, err: %s), send 404', request.url, err);
+			sendQuoteError(null);
+		});
+	}
 
 	function sendQuoteError(quote){
 		logger.info('processing error page request');
@@ -164,6 +178,7 @@ http.createServer(function (request, response) {
 
 
 // rss init
+/*
 logger.info('setting up rss feed');
 Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]})
 .populate('author')
@@ -184,6 +199,7 @@ Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]})
 		logger.info('--> rss feed completed');
 	}
 });
+*/
 
 
 // global social stuff updater
@@ -235,7 +251,7 @@ function updateSocial(){
 */
 }
 
-
+/*
 // transition stuff init
 tick();
 function tick(){
@@ -259,3 +275,4 @@ function tick(){
 		firstRun = false;
 	});
 }
+*/
