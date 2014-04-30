@@ -122,6 +122,7 @@
 	}	
 		blockquote p{text-indent: -3%;}
 		blockquote footer{margin-top: 10px;}
+		blockquote footer a{color: {{author.quoteFontColor}};}
 		
 	#container>footer{
 		border-top: 1px solid #555;
@@ -363,7 +364,12 @@
 		
 		<blockquote>
 			<p>&#8220;{{text}}&#8221;</p>
-			<footer id="{{author.wikipediaID}}">&mdash; {{author.name}}</footer>
+			
+			{{#if author.wikipediaID}}
+				<footer id="{{author.wikipediaID}}">&mdash; <a href="http://en.wikipedia.org/wiki/{{author.wikipediaID}}" target="_blank">{{author.name}}</a></footer>
+			{{else}}
+				<footer>&mdash; {{author.name}}</footer>
+			{{/if}}
 		</blockquote>
 		
 		<footer class="bar">
