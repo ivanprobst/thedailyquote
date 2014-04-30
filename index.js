@@ -37,7 +37,7 @@ var logger = new (winston.Logger)({
     transports: [
       new (winston.transports.Console)({colorize: true, timestamp: true}),
       new (winston.transports.File)({name: 'index', filename: config.log.indexfile, colorize: true, timestamp: true}),
-      new (winston.transports.File)({name: 'error', level: 'error', filename: 'logs/error.log', colorize: true, timestamp: true})
+      new (winston.transports.File)({name: 'error', level: 'error', filename: config.log.errorfile, colorize: true, timestamp: true})
     ]
 });
 
