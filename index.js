@@ -16,7 +16,12 @@ var Quote = require('./assets/models/quote.js').Quote,
 // templating conf
 var desktopPage = handlebars.compile(fs.readFileSync('assets/templates/desktop.html', "utf8"));
 var mobilePage = handlebars.compile(fs.readFileSync('assets/templates/mobile.html', "utf8"));
-handlebars.registerHelper('formatDirectUrl', function(pubDate){
+handlebars.registerHelper('formatDirectUrl', function(text){
+	if(text)
+		return 'http://thequotetribune.com/rquote/'+text.substring(0,15).replace(/\s+/g, '_').toLowerCase();
+	else return '';
+});
+handlebars.registerHelper('formatDirectUrl_old', function(pubDate){
 	if(pubDate)
 		return 'http://thequotetribune.com/quote/'+('0'+pubDate.day).slice(-2)+'-'+('0'+(parseInt(pubDate.month)+1)).slice(-2)+'-'+pubDate.year;
 	else return '';
@@ -67,9 +72,8 @@ http.createServer(function (request, response) {
 
 		Quote.find(null, function (err, docs) {
 			var random = Math.floor(Math.random()*docs.length);
-			console.log('id: '+docs[random]._id);
 
-			Quote.findOne({"_id":docs[random]._id})
+			Quote.findById(docs[random]._id)
 			.populate('author')
 			.exec(function(err, quote){
 				if(err || !quote || !quote.author){return logger.error('can\'t "findone" random quote or populate issue (%s)', err);} // ??? if fails, maybe set delay to 5min to retry shortly after
@@ -84,16 +88,52 @@ http.createServer(function (request, response) {
 					response.writeHead(200, {'Content-Type': 'text/html'});
 					response.write(finalPage(dataToTemplate));
 					response.end();
-					return;
 				}
 				else
 					sendQuoteError(null);
 			});
 		});
+		return;
+	}
+	// if quote preview asked, serve preview page
+	else if((request.url).match(/\/rquote\/[a-z\u00E0-\u00FC_]{15}$/)){
+		logger.info('processing preview of random request: %s', request.url);
+
+		var text = request.url.match(/[a-z\u00E0-\u00FC_]{15}$/)[0];
+		// get relevant quote
+		Quote.find(null, function(err, docs){
+			docs.every(function(doc){
+				if(doc.text.substring(0,15).replace(/\s+/g, '_').toLowerCase() == text){
+					Quote.findById(doc._id)
+					.populate('author')
+					.exec(function(err, quote){
+						if(err || !quote || !quote.author){return logger.error('can\'t "findone" previewed random quote or populate issue (%s)', err);} // ??? if fails, maybe set delay to 5min to retry shortly after
+
+						logger.info('your previewed random quote is: "%s", from %s', quote.text, quote.author.name);
+
+						if(quote){
+							// data prep
+							var dataToTemplate = quote.toObject();
+							dataToTemplate.isIndex = true;
+
+							response.writeHead(200, {'Content-Type': 'text/html'});
+							response.write(finalPage(dataToTemplate));
+							response.end();
+						}
+						else
+							sendQuoteError(null);
+					});
+					return false;
+				}
+				else
+					return true;
+			});
+		});
+		return;
 	}
 	// if quote preview asked, serve preview page
 	else if((request.url).match(/\/quote\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]($|\?)/)){
-		logger.info('processing preview request: %s', request.url);
+		logger.info('processing preview of dated request: %s', request.url);
 		var day = parseInt(request.url.match(/\/([0-9][0-9])-/)[1]);
 		var month = parseInt(request.url.match(/-([0-9][0-9])-/)[1]) - 1;
 		var year = parseInt(request.url.match(/-([0-9][0-9][0-9][0-9])/)[1]);
@@ -177,6 +217,20 @@ http.createServer(function (request, response) {
 }).listen(config.port);
 
 
+
+/****************************************/
+/* 				LEGACY 					*/
+/****************************************/
+
+// STUFF TO GENERATE EXTENDED FB ACCESS TOKEN
+/*
+	var extUrl = "https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=135996736500002&client_secret=bf9e38c6bcd00d0e3b4ccdc1408db739&fb_exchange_token=CAAB7sDUrcSIBAOgEG2zZBHpUpQj83bJDXn1ePf3SPZAZCeNT3mTitQwS9KAx14NZAtZBmKiz576E6qn2JZBo2oIYuC1cVGcmxDg7lv1iPg5L1hQUZBIaWyY5lZCZB38Xp0W0XFSO6KmQXwxU8lWYDsH3h2ZAuMvW0OMbo8HOGeGl3hf9pfLGnMFi3FQCcVBUh4724ZD";
+	request.get({url: extUrl}, function(err, resp, body){
+		logger.info("new token: %j", body);
+	});
+*/
+
+
 // rss init
 /*
 logger.info('setting up rss feed');
@@ -203,6 +257,7 @@ Quote.find({$and:[{author: {$exists: true}}, {author: {$ne: ''}}]})
 
 
 // global social stuff updater
+/*
 function updateSocial(){
 	logger.info('sending social updates');
 	if(todayQuote){ // might be unnecessary due to check in tick
@@ -242,17 +297,12 @@ function updateSocial(){
 			  logger.info('-> posted to facebook: %j',body);
 		});
 	}
-
-/* STUFF TO GENERATE EXTENDED ACCESS TOKEN
-	var extUrl = "https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=135996736500002&client_secret=bf9e38c6bcd00d0e3b4ccdc1408db739&fb_exchange_token=CAAB7sDUrcSIBAOgEG2zZBHpUpQj83bJDXn1ePf3SPZAZCeNT3mTitQwS9KAx14NZAtZBmKiz576E6qn2JZBo2oIYuC1cVGcmxDg7lv1iPg5L1hQUZBIaWyY5lZCZB38Xp0W0XFSO6KmQXwxU8lWYDsH3h2ZAuMvW0OMbo8HOGeGl3hf9pfLGnMFi3FQCcVBUh4724ZD";
-	request.get({url: extUrl}, function(err, resp, body){
-		logger.info("new token: %j", body);
-	});
-*/
 }
+*/
 
-/*
+
 // transition stuff init
+/*
 tick();
 function tick(){
 	var today = new Date();
