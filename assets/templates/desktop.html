@@ -29,7 +29,7 @@
 	<!-- facebook og -->
 	<meta property="fb:admins" content="541693035" />
 	<meta property="fb:app_id" content="135996736500002" /> 
-	<meta property="og:url" content="{{formatDirectUrl pubDate}}">
+	<meta property="og:url" content="{{formatDirectUrl text}}">
 	<meta property="og:title" content="Words from {{author.name}}">
 	<meta property="og:description" content="&#8220;{{text}}&#8221;" />
 	<meta property="og:type" content="website">
@@ -254,7 +254,7 @@
 		// wikipedia data call
 		$("article#wikipedia").hide();
 		if(wikipediaAuthor != 'null'){
-			$("article#wikipedia h4").html('About '+authorName+' (more on <a href="http://en.wikipedia.org/wiki/'+wikipediaAuthor+'" target="_blank">Wikipedia</a>)');
+			$("article#wikipedia h4").html('About '+authorName);
 			$.ajax({
 				type: "GET",
 				url: 'http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exsentences=4&explaintext=&titles='+wikipediaAuthor,
@@ -388,7 +388,7 @@
 				<section id="quotedetails-content">
 					<h3>ABOUT THAT QUOTE</h3>
 					<article id="direct-url">
-						<p><strong>Direct link:</strong> <a href="{{formatDirectUrl pubDate}}">{{formatDirectUrl pubDate}}</a></p>
+						<p><strong>Direct link:</strong> <a href="{{formatDirectUrl text}}">{{formatDirectUrl text}}</a></p>
 					</article>
 					{{#if author.quotesomeUrl}}
 					<!--<article id="more-quotes">
