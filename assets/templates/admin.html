@@ -91,6 +91,9 @@
 		#schedule .quote{color: #17A768; cursor: pointer; font-weight: bold;}
 			#schedule .quote:hover{background: #ccc;}
 		#schedule .today{background: #aaa;}
+
+	tr{border-bottom: 1px solid #ccc;}
+	td{padding: 5px 0;}
 	
 </style>
 
@@ -102,11 +105,6 @@
 
 	// INIT
 	$(document).ready(function(){
-		// quotesomefetch link listener
-		$("form#fetch-url input[type='submit']").click(function(event){
-			fetchQuotesome($("form input[type='url']").val());
-		});
-		
 		// add-quote db link listener
 		$("form#add-quote").submit(addQuote);
 
@@ -126,15 +124,12 @@
 		});
 
 		// check if authorID exists when quote field change
-		$("#quote-input #q-authorID").keyup(function(event){
-			checkAuthorID($("#quote-input #q-authorID").val());
+		$("#quote-input #q-authorCode").keyup(function(event){
+			checkAuthorID($("#quote-input #q-authorCode").val());
 		});
 		
 		// fetch schedule link listener
-		$("a#fetch-schedule").click(fetchSchedule);
-		
-		// fetch schedule link listener
-		$("#db-action a").click(dbAction);
+		$("a#fetch-schedule").click(fetchQuotes);
 		
 		// fetch quote link listener
 		$('#schedule').on('click', 'p.quote', function(event){
@@ -153,8 +148,25 @@
 		// admin menu toggling
 		$("a#admin-switch").click(function(event){
 			$('#container>div').toggle();
-			fetchSchedule();
+			fetchQuotes();
 			fetchAuthors();
+		});
+
+		// fetch one quote for edition
+		$('#quotes-list').on('click', 'a.edit', function(event){
+  			event.preventDefault();
+			console.log('id: '+$(this).attr('id'));
+			fetchQuote($(this).attr('id'));
+		});
+
+		// delete one quote
+		$('#quotes-list').on('click', 'a.delete', function(event){
+  			event.preventDefault();
+  			if(confirm("are you sure you want to delete this quote?")){
+				console.log('sending delete id: '+$(this).attr('id'));
+				removeQuote($(this).attr('id'));
+			}
+			else{}
 		});
 
 		// fetch one author for edition
@@ -176,7 +188,7 @@
 
 
 		// get current schedule and authors list
-		fetchSchedule();
+		fetchQuotes();
 		fetchAuthors();
 
 	});
@@ -205,9 +217,10 @@
 		var formattedDate = {year : parseInt($('#pubdate').val().substr(0,4)), month : (parseInt($('#pubdate').val().substr(5,2))-1), day : parseInt($('#pubdate').val().substr(8,2))};
 
 		var data = {
-			_id:  		$('#quote-id').val(),
+			_id: $('#quote-id').val() == '' ? null : $('#quote-id').val(),
 			my_item:{
-				authorID:	$('#q-authorID').val(),
+				authorCode:	$('#q-authorCode').val(),
+				author:		$('#author').val(),
 				quotesomeUrl: $('#quote-quotesome').val(),
 				text:		$('#quote-text').val(),
 				pubDate:	formattedDate,
@@ -221,63 +234,76 @@
 		  type: "POST",
 		  url: '/admin-upsert-quote',
 		  data: JSON.stringify(data),
-		  success: fetchSchedule
+		  success: function(dataFromServer){
+		  	if($.parseJSON(dataFromServer)._id)
+				setQuoteData(dataFromServer);
+			fetchQuotes();
+		  }
 		});
 	}
 
-
-	// fetch quotes function
-	function fetchQuote(pubdate){
-		console.log('fetching quote... '+pubdate);
-		var formattedDate = {year : parseInt($('#'+pubdate).parent().parent().parent().attr('id').substring(1)), month : parseInt($('#'+pubdate).parent().parent().attr('id').substring(1)), day : parseInt($('#'+pubdate).html())};
-
-		console.log('final pubdate...');
-		console.log(formattedDate);
+	// remove authors function
+	function removeQuote(_id){
+		console.log("deleting one quote...");
 			
 		$.ajax({
 			type: "POST",
-			url: '/admin-get-quote-by-day',
-		  	data: JSON.stringify(formattedDate),
+			url: '/admin-remove-quote',
+			data: _id,
+			success: fetchQuotes
+		});
+	}
+
+	// fetch quotes function
+	function fetchQuote(quote_id){
+		console.log('fetching quote... '+quote_id);
+		$.ajax({
+			type: "POST",
+			url: '/admin-get-quotes',
+		  	data: quote_id,
 			success: setQuoteData
 		});
+	}
 
-		function setQuoteData(data){
-			console.log('got quote data back from node:');
-			console.log(data);
+	function setQuoteData(data){
+		console.log('got quote data back from node:');
+		console.log(data);
 
-			if(!data) {setAlert('error','no quote returned'); return;}
-			setAlert('success','quote retrieved');
-			$('#add-quote input, #add-quote textarea').val('');
-			$('#add-quote input[type="submit"]').val('update quote');
-			$.each($.parseJSON(data), function(key, value){
-				console.log("set field "+key+" to "+value);
-				if(key=='pubDate'){			
-					$('#add-quote input[name = "date"]').val(value.year+'-'+('0'+(value.month+1)).slice(-2)+'-'+('0'+value.day).slice(-2));
-				}
-				else if(key=='text')
-					$('#add-quote textarea[name = "text"]').val(value);
-				else if($('#add-quote input[name = "'+key+'"]'))
-					$('#add-quote input[name = "'+key+'"]').val(value);
-				else
-					$('#quote-dirt').append(key+" : "+value+" | ");
-			});
+		if(!data) {setAlert('error','no quote returned'); return;}
+		setAlert('success','quote retrieved');
+		$('#add-quote input, #add-quote textarea').val('');
+		$('#add-quote input[type="submit"]').val('update quote');
+		$.each($.parseJSON(data), function(key, value){
+			console.log("set field "+key+" to "+value);
+			if(key=='pubDate'){			
+				$('#add-quote input[name = "date"]').val(value.year+'-'+('0'+(value.month+1)).slice(-2)+'-'+('0'+value.day).slice(-2));
+			}
+			else if(key=='text')
+				$('#add-quote textarea[name = "text"]').val(value);
+			else if($('#add-quote input[name = "'+key+'"]'))
+				$('#add-quote input[name = "'+key+'"]').val(value);
+			else
+				$('#quote-dirt').append(key+" : "+value+" | ");
+		});
 
-			$('#preview').attr('href','/quote/'+$.parseJSON(data)._id);
+		$('#preview').attr('href','/quote/'+$.parseJSON(data)._id);
 
-			checkAuthorID($('#add-quote input[name = "authorID"]').val());
-		}
+		checkAuthorID($("#quote-input #q-authorCode").val());
 	}
 
 	// check authorID existence
 	function checkAuthorID(id_to_check){
 		for(var i = 0; i<currentAuthors.length; i++){
-			$("#quote-input #q-authorID").removeClass();
-			if((currentAuthors[i])['authorID'] == id_to_check){
-				$("#quote-input #q-authorID").addClass('correct');
+			$("#quote-input #q-authorCode").removeClass();
+			if((currentAuthors[i])['authorCode'] == id_to_check){
+				$("#quote-input #q-authorCode").addClass('correct');
+				$("#quote-input #author").val((currentAuthors[i])['_id']);
 				break;
 			}
-			else
-				$("#quote-input #q-authorID").addClass('incorrect');
+			else{
+				$("#quote-input #q-authorCode").addClass('incorrect');
+				$("#quote-input #author").val('');
+			}
 		}
 	}
 
@@ -285,7 +311,7 @@
 	function addAuthor(){
 		console.log("posting new author to server...");
 
-		if($('#author-input #a-authorID').val() && $('#author-input #a-authorID').val() != ''){
+		if($('#author-input #a-authorCode').val() && $('#author-input #a-authorCode').val() != ''){
 			var formData = {};
 			$('#author-input fieldset input').each(function(index){
 				if($(this).val() && $(this).val() != '' && $(this).attr('name') != '_id')
@@ -301,11 +327,15 @@
 			  type: "POST",
 			  url: '/admin-upsert-author',
 			  data: JSON.stringify(data),
-			  success: fetchAuthors
+			  success: function(dataFromServer){
+		  	if($.parseJSON(dataFromServer)._id)
+				setAuthorData(dataFromServer);
+			fetchAuthors();
+		  }
 			});
 		}
 		else{
-			alert('please enter an authorID');
+			alert('please enter an authorCode');
 		}
 	}
 
@@ -331,21 +361,21 @@
 			data: _id,
 			success: setAuthorData
 		});
+	}
 
-		function setAuthorData(data){
-			console.log('got author data back from node:');
-			console.log(data);
+	function setAuthorData(data){
+		console.log('got author data back from node:');
+		console.log(data);
 
-			$('#add-author input').val('');
-			$('#add-author input[type="submit"]').val('update author');
-			$.each($.parseJSON(data), function(key, value){
-				console.log("set field "+key+" to "+value);
-				if($('#add-author input[name = "'+key+'"]'))
-					$('#add-author input[name = "'+key+'"]').val(value);
-				else
-					$('#author-dirt').append(key+" : "+value+" | ");
-			});
-		}
+		$('#add-author input').val('');
+		$('#add-author input[type="submit"]').val('update author');
+		$.each($.parseJSON(data), function(key, value){
+			console.log("set field "+key+" to "+value);
+			if($('#add-author input[name = "'+key+'"]'))
+				$('#add-author input[name = "'+key+'"]').val(value);
+			else
+				$('#author-dirt').append(key+" : "+value+" | ");
+		});
 	}
 
 	// fetch authors function
@@ -366,7 +396,7 @@
 			currentAuthors = $.parseJSON(data);
 			currentAuthors.sort(SortByName);
 
-			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorID"></td><td class="name"></td><td class="wikipediaID"></td><td class="quotesomeUrl"></td><td></td><td class="photoUrl"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
+			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorCode"></td><td class="name"></td><td class="wikipediaID"></td><td class="quotesomeUrl"></td><td></td><td class="photoUrl"></td><td class="photoWidth"></td><td class="photoHeight"></td>';
 			
 			$('#author-output table tbody').empty();
 			$.each(currentAuthors, function(index, value){
@@ -381,21 +411,52 @@
 	}
 
 	// fetch schedule function
-	function fetchSchedule(){
-		console.log("fetching schedule...");
+	function fetchQuotes(){
+		console.log("fetching quotes...");
 		
 		$.ajax({
 			type: "POST",
-			url: '/admin-get-schedule',
-			success: displaySchedule
+			url: '/admin-get-quotes',
+			success: displayQuotes
 		});
 		
-		function displaySchedule(data){
-			console.log('got schedule back from node:');
+		function displayQuotes(data){
+			console.log('got quotes back from node:');
 			console.log(data);
+
+			// generate schedule {}
+			var schedule = {};
+			var items = $.parseJSON(data);
+			if(items){
+				items.forEach(function(item){
+					if(item.pubDate && !(item.pubDate instanceof Date)){
+						console.log('- on schedule: '+item.pubDate.year+'->'+item.pubDate.month+'->'+item.pubDate.day);
+						var year = item.pubDate.year;
+						var month = item.pubDate.month;
+						var day = item.pubDate.day;
+						var jsonLevel1 = {};
+						var jsonLevel2 = {};
+						if(schedule[year]){
+							jsonLevel1 = schedule[year];
+							if(jsonLevel1[month]){
+								((schedule[year])[month])[day] = item._id;
+							}
+							else{
+								jsonLevel2[day] = item._id;
+								(schedule[year])[month] = jsonLevel2;
+							}
+						}
+						else{
+							jsonLevel2[day] = item._id;
+							jsonLevel1[month] = jsonLevel2;
+							schedule[year] = jsonLevel1;
+						}
+					}
+				});
+			}
 			
+			// set schedule tables var
 			$('#schedule').empty();
-			var json = $.parseJSON(data);
 			var now = new Date();
 			var endDate = new Date(now.getFullYear(), now.getMonth()+3, 1);
 			
@@ -411,79 +472,50 @@
 				if($('#schedule #y'+year+' #m'+month).length == 0)
 					$('#schedule #y'+year).append('<div class="month" id="m'+month+'"><h4>'+monthNames[month]+'<h4></div>');
 				
-				if(json[year] && (json[year])[month] && ((json[year])[month])[day])
-					$('#schedule #y'+year+' #m'+month).append('<div><p class="quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p></div>');
+				if(schedule[year] && (schedule[year])[month] && ((schedule[year])[month])[day])
+					$('#schedule #y'+year+' #m'+month).append('<div><p class="quote" id="'+((schedule[year])[month])[day]+'">'+day+'</p></div>');
 				else
 					$('#schedule #y'+year+' #m'+month).append('<div><p class="no-quote" id="'+year+'-'+month+'-'+day+'">'+day+'</p></div>');
 				
 			}
 			
 			$('#schedule #y'+now.getFullYear()+' #m'+now.getMonth()+' #'+now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate()).addClass('today');
+
+			// LIST ALL QUOTES BELOW
+			items.sort(function(a, b){
+				var realA = 0;
+				if(a.pubDate && a.pubDate.day)
+					realA = (parseInt(a.pubDate.year)*10000)+(parseInt(a.pubDate.month)*100)+parseInt(a.pubDate.day);
+				var realB = 0;
+				if(b.pubDate && b.pubDate.day)
+					realB = (parseInt(b.pubDate.year)*10000)+(parseInt(b.pubDate.month)*100)+parseInt(b.pubDate.day);
+
+ 				return realA-realB;
+			});
+
+			var rowTemplate = '<td class="actions"><a class="edit" href="#">edit</a> | <a class="delete" href="#">del</a></td><td class="_id"></td><td class="authorCode"></td><td class="text"></td><td class="quotesomeUrl"></td><td class="pubDate"></td>';
+			
+			console.log('LISTING ALL QUOTES');
+			console.log(items);
+
+			$('#quotes-list table tbody').empty();
+			$.each(items, function(index, value){
+				console.log('adding a row: '+index);
+				$('#quotes-list table tbody').append('<tr id="r'+index+'">'+rowTemplate+'</tr>');
+				$('#quotes-list table tbody tr#r'+index+' .edit').attr('id', value._id);
+				$('#quotes-list table tbody tr#r'+index+' .delete').attr('id', value._id);
+				$.each(value, function(key, prop){
+					if(key=='pubDate' && prop && prop.day)
+						$('#quotes-list table tbody tr#r'+index+' .pubDate').html(prop.day+'-'+(parseInt(prop.month)+1)+'-'+prop.year);
+					else
+						$('#quotes-list table tbody tr#r'+index+' .'+key).html(prop);
+				});
+			});
 		}
-	}
-
-	// fetch quote detail from quotesome
-	function fetchQuotesome(url){
-		console.log("fetching "+$("form input[type='url']").val()+"...");
-		var ExternalURL = url; // This address must not contain any leading 'http://'
-		var freeDaySet = false;
-
-		var QueryURL = "http://anyorigin.com/get?url=" + ExternalURL + "&callback=?";
-		$.getJSON(QueryURL, function(data){
-			if (data && data != null && typeof data == 'object' && data.contents && data.contents != null && typeof data.contents == 'string'){
-				data = data.contents.replace(/<script[^>]*>[sS]*?<\/script>/gi, '');
-				if (data.length > 0){
-					$('#author').val($('.row .author', data).html());
-					$('#q-authorID').val((($('.author', data).html()).toLowerCase()).replace(/ /g,'_'));
-					$('#quote-quotesome').val(url);
-					$('#quote-text').val($('.quote-block-quote-text', data).html());
-					checkAuthorID($('#q-authorID').val());
-					var now = new Date();
-					if(!freeDaySet)
-						$('#pubdate').val(now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+(now.getDate())).slice(-2));
-				}
-			}
-		});
-		
-					
-		$.ajax({
-			type: "POST",
-			url: '/admin-fetch-schedule',
-			success: updateDate
-		});
-		
-		function updateDate(data){
-			clearQuoteForm();
-			console.log('got something back from node: '+data);
-				
-			var json = $.parseJSON(data);
-			var now = new Date();
-			var safety = 0;
-			while(true){
-				if(!((json[now.getFullYear()]) && ((json[now.getFullYear()])[now.getMonth()]) && (((json[now.getFullYear()])[now.getMonth()])[now.getDate()]))){
-					$('#pubdate').val(now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+(now.getDate())).slice(-2));
-					freeDaySet = true;
-					break;
-				}
-				now.setDate(now.getDate()+1);
-				safety++;
-				if(safety == 60) break;
-			}
-		}
-	}
-
-	// fetch schedule function
-	function dbAction(){
-		console.log("executing db action...");
-		
-		$.ajax({
-			type: "POST",
-			url: '/admin-db-action',
-			success: null
-		});
 	}
 
 	function SortByName(a, b){
+<<<<<<< HEAD
 		if(a.authorID && b.authorID){
   			var aName = a.authorID.toLowerCase();
 	  		var bName = b.authorID.toLowerCase(); 
@@ -492,6 +524,11 @@
 		else{
 			return 0;
 		}
+=======
+  		var aName = a.authorCode.toLowerCase();
+	  	var bName = b.authorCode.toLowerCase(); 
+	  	return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+>>>>>>> cca839df4b612fb92368893a705d8085a915af37
 	}
 	
 </script>
@@ -507,24 +544,16 @@
 		
 		<div id="quote-admin">
 			<h2>Quote admin</h2>
-			<section id="quote-input">
-				<form id="fetch-url" onsubmit="return false;">
-					<input type="url" name="source-url" placeholder="fetch from url" size="100" autofocus required />
-					<div id="quote-dirt"></div>
-					
-					<input type="submit" value="fetch url" />
-				</form>
-			
+			<section id="quote-input">			
 				<form id="add-quote" onsubmit="return false;">
 					<input id="quote-id" name="_id" type="text" size="60" placeholder="_id" disabled />
-					<input id="author" name="author" type="text" size="60" placeholder="author (won't go in DB)" disabled />
-					<input id="q-authorID"  class="incorrect" name="authorID" type="text" size="60" placeholder="authorID" />
+					<input id="author" name="author" type="text" size="60" placeholder="author" disabled />
+					<input id="q-authorCode" class="incorrect" name="authorCode" type="text" size="60" placeholder="author code" />
 					<input id="quote-quotesome" name="quotesomeUrl" type="url" size="60" placeholder="quote url" />
 					<textarea id="quote-text" name="text" rows="5" cols="60" placeholder="quote text"></textarea>
 					<input id="pubdate" name="date" type="date"/>
 					<input id="font-size" name="fontSize" type="text" size="40" placeholder="block font size (48px)" />
 
-					
 					<input type="submit" value="add quote" />
 					<a id="clear-quote" href="#">clear form</a>
 					<a id="preview" href="#" target="_blank">see preview</a>
@@ -538,15 +567,21 @@
 				</article>
 			</section>
 			
-			<section id="quote-unscheduled">
-				<h3>UNSCHEDULED QUOTES</h3>
+			<section id="quotes-list">
+				<h3>QUOTES LIST</h3>
 				
-				<article id="unscheduled">
-				</article>
-			</section>
-			
-			<section id="db-action">
-				<h3><a href="#">CUSTOM DB ACTION</a></h3>
+				<table id="quotes-data">
+					<thead>
+						<th>ACTIONS</th>
+						<th>_id</th>
+						<th>authorID</th>
+						<th>text</th>
+						<th>quotesomeUrl</th>
+						<th>pubDate</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</section>
 		</div>
 
@@ -557,7 +592,7 @@
 					<fieldset id="data">
 						<legend>Data</legend>
 						<input id="author-id" name="_id" type="text" size="60" placeholder="_id"  disabled/>
-						<input id="a-authorID" name="authorID" type="text" size="60" placeholder="authorID" required />
+						<input id="a-authorCode" name="authorCode" type="text" size="60" placeholder="authorCode" required />
 						<input id="author-name" name="name" type="text" size="60" placeholder="author" />
 						<input id="author-wiki" name="wikipediaID" type="text" size="60" placeholder="wikipediaID" />
 						<input id="author-quotesome" name="quotesomeUrl" type="url" size="100" placeholder="quotesome url" />

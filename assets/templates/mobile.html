@@ -1,22 +1,30 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-	<title>The Quote Tribune &mdash; Your daily inspirational fix</title>
+	{{#if isIndex}}
+		<title>The Quote Tribune &mdash; Your random inspirational fix</title>
+	{{else}}
+		{{#if isError}}
+			<title>The Quote Tribune &mdash; Woops!</title>
+		{{else}}
+			<title>The Quote Tribune &mdash; Words from {{author.name}}</title>
+		{{/if}}
+	{{/if}}
 	<meta name="description=" content="Everyday you can find here a new awesome quote with its crazy author's photo. Quotes of the greatest must be heard and shared!">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	
 	<link rel="shortcut icon" href="favicon.ico" /> 
 	<link rel="alternate" type="application/rss+xml" title="The Quote Tribune" href="/rss.xml" />
 	<link href='http://fonts.googleapis.com/css?family=Arbutus+Slab' rel='stylesheet' type='text/css'>
-	<!--<script src="https://s3-eu-west-1.amazonaws.com/thequotetribune/scripts/jquery.min.js"></script>-->
 	
 	<!-- facebook og -->
 	<meta property="fb:admins" content="541693035" />
 	<meta property="fb:app_id" content="135996736500002" /> 
-	<meta property="og:url" content="{{directUrl}}">
-	<meta property="og:title" content="Words from {{authorName}}">
-	<meta property="og:description" content="&#8220;{{quoteText}}&#8221;" />
+	<meta property="og:url" content="{{formatDirectUrl text}}">
+	<meta property="og:title" content="Words from {{author.name}}">
+	<meta property="og:description" content="&#8220;{{text}}&#8221;" />
 	<meta property="og:type" content="website">
-	<meta property="og:image" content="{{authorThumbPath}}">
+	<meta property="og:image" content="{{formatThumbUrl author.photoUrl}}">
 	<meta property="og:site_name" content="The Quote Tribune">
 	
 <style type="text/css">
@@ -44,7 +52,7 @@
 		height: 100%; width: 100%;
 		background-repeat: no-repeat;
 		background-size: auto 100%;
-		background-image: url('{{authorThumbPath}}');
+		background-image: url('{{formatThumbUrl author.photoUrl}}');
 		background-position-x: center; background-position-y: center;
 	}
 	blockquote{
@@ -52,23 +60,24 @@
 		line-height: 1.1em;	
 		color: #fff;
 		background: #888;
-		font-size: {{quoteBlockFontSize}};
+		font-size: {{fontSize}};
 		-webkit-text-size-adjust: none;
 		opacity: 0.8;
 	}	
 		blockquote p{padding: 2% 2% 1% 6%; text-indent: -4%;}
 		blockquote footer{padding: 1% 2% 2% 6%;}
+		blockquote footer a{color: {{author.quoteFontColor}};}
 	
 
 	@media screen and (orientation:portrait) {
-	   	#background{background-image: url('{{authorThumbPath}}');}
+	   	#background{background-image: url('{{formatThumbUrl author.photoUrl}}');}
 	  	blockquote p, blockquote footer{font-size: 0.9em;}
 	}
 	@media screen and (orientation:landscape) {
 	  	#background{
-	  		background-image: url('{{authorPhotoPath}}');
+	  		background-image: url('{{author.photoUrl}}');
 	  		background-size: auto 100%; 
-			background-position-x: {{quoteDirectionSlide}};
+			background-position-x: {{author.quoteDirectionSlide}};
 		}
 	  	blockquote p, blockquote footer{
 	  		text-indent: -2%;
@@ -76,8 +85,6 @@
 	  		line-height: 1.2em;
 	  	}
 	}
-		
-		
 </style>
 
 <script type="text/javascript">
@@ -103,14 +110,18 @@
 	<div id="container">
 		<header>
 			<h1><a href="http://thequotetribune.com">&sim; THE QUOTE TRIBUNE MOBILE &sim;</a></h1>
-			<h2>your daily inspirational fix</h2>
+			<h2>Your random inspirational fix</h2>
 		</header>
 
 		<div id="background"></div>
 		
 		<blockquote>
-			<p>&#8220;{{quoteText}}&#8221;</p>
-			<footer id="{{authorWikipediaID}}">&mdash; {{authorName}}</footer>
+			<p>&#8220;{{text}}&#8221;</p>
+			{{#if author.wikipediaID}}
+				<footer id="{{author.wikipediaID}}">&mdash; <a href="http://en.wikipedia.org/wiki/{{author.wikipediaID}}" target="_blank">{{author.name}}</a></footer>
+			{{else}}
+				<footer>&mdash; {{author.name}}</footer>
+			{{/if}}
 		</blockquote>
 	</div>
 

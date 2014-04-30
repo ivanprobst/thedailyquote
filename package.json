@@ -1,0 +1,27 @@
+{
+  "name": "thequotetribune",
+  "version": "0.1.2",
+  "description": "The Quote Tribune website",
+  "main": "index.js",
+  "dependencies": {
+    "handlebars": "~2.0.0-alpha.1",
+    "rss": "~0.2.1",
+    "mongoose": "~3.8.6",
+    "twit": "~1.1.11",
+    "request": "~2.27.0",
+    "winston": "~0.7.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivanprobst/thequotetribune.git"
+  },
+  "author": "Ivan Probst",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/ivanprobst/thequotetribune/issues"
+  }
+}
